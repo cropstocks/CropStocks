@@ -160,8 +160,8 @@ export default function DocumentGenerator() {
         <div className="relative z-10">
           {docType === 'nda' && (
             <div>
-              <div className="flex justify-center mb-6">
-                <img src="/logo.png" alt="Logo" className="h-20 w-auto object-contain mix-blend-multiply" />
+              <div className="flex justify-center mb-8">
+                <img src="/logo.png" alt="Logo" className="h-32 md:h-48 w-auto object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-2xl font-bold text-center mb-8 uppercase tracking-widest border-b-2 border-black pb-4">Non-Disclosure and Confidentiality Agreement</h1>
               
@@ -223,8 +223,8 @@ export default function DocumentGenerator() {
 
           {docType === 'partnership' && (
             <div>
-              <div className="flex justify-center mb-6">
-                <img src="/logo.png" alt="Logo" className="h-20 w-auto object-contain mix-blend-multiply" />
+              <div className="flex justify-center mb-8">
+                <img src="/logo.png" alt="Logo" className="h-32 md:h-48 w-auto object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-2xl font-bold text-center mb-8 uppercase tracking-widest border-b-2 border-black pb-4">General Partnership Agreement</h1>
               
@@ -278,8 +278,8 @@ export default function DocumentGenerator() {
 
           {docType === 'hiring' && (
             <div>
-              <div className="flex justify-center mb-6">
-                <img src="/logo.png" alt="Logo" className="h-20 w-auto object-contain mix-blend-multiply" />
+              <div className="flex justify-center mb-8">
+                <img src="/logo.png" alt="Logo" className="h-32 md:h-48 w-auto object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-2xl font-bold text-center mb-8 uppercase tracking-widest border-b-2 border-black pb-4">Employment Contract</h1>
               
