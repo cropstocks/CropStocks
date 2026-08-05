@@ -143,10 +143,10 @@ export default function DocumentGenerator() {
         <div className="relative z-10">
           {docType === 'nda' && (
             <div>
-              <div className="flex justify-center mb-6">
-                <img src="/logo.png" alt="Logo" className="h-40 md:h-56 w-auto object-contain mix-blend-multiply" />
+              <div className="flex justify-center -mb-8 md:-mb-16 overflow-hidden max-h-48 md:max-h-64 items-center">
+                <img src="/logo.png" alt="Logo" className="w-full max-w-[600px] object-contain mix-blend-multiply" />
               </div>
-              <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4">Non-Disclosure and Confidentiality Agreement</h1>
+              <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Non-Disclosure and Confidentiality Agreement</h1>
               
               <p className="mb-6">This Non-Disclosure and Confidentiality Agreement is entered into as of <strong>{formData.date}</strong>, by and between <br /><strong>{formData.partyA.toUpperCase()}</strong> (the "Company" or "Disclosing Party"), and <strong>{formData.partyB.toUpperCase()}</strong> (the "Receiving Party").</p>
               
@@ -202,10 +202,10 @@ export default function DocumentGenerator() {
 
           {docType === 'partnership' && (
             <div>
-              <div className="flex justify-center mb-6">
-                <img src="/logo.png" alt="Logo" className="h-40 md:h-56 w-auto object-contain mix-blend-multiply" />
+              <div className="flex justify-center -mb-8 md:-mb-16 overflow-hidden max-h-48 md:max-h-64 items-center">
+                <img src="/logo.png" alt="Logo" className="w-full max-w-[600px] object-contain mix-blend-multiply" />
               </div>
-              <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4">General Partnership Agreement</h1>
+              <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">General Partnership Agreement</h1>
               
               <p className="mb-6">This General Partnership Agreement is entered into as of <strong>{formData.date}</strong>, by and between <br /><strong>{formData.partyA.toUpperCase()}</strong>, and <strong>{formData.partyB.toUpperCase()}</strong> (collectively the "Partners").</p>
               
@@ -253,10 +253,10 @@ export default function DocumentGenerator() {
 
           {docType === 'hiring' && (
             <div>
-              <div className="flex justify-center mb-6">
-                <img src="/logo.png" alt="Logo" className="h-40 md:h-56 w-auto object-contain mix-blend-multiply" />
+              <div className="flex justify-center -mb-8 md:-mb-16 overflow-hidden max-h-48 md:max-h-64 items-center">
+                <img src="/logo.png" alt="Logo" className="w-full max-w-[600px] object-contain mix-blend-multiply" />
               </div>
-              <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4">Employment Contract</h1>
+              <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Employment Contract</h1>
               
               <p className="mb-6">This Employment Contract is entered into as of <strong>{formData.date}</strong>, by and between <br /><strong>{formData.partyA.toUpperCase()}</strong> (the "Employer"), and <strong>{formData.partyB.toUpperCase()}</strong> (the "Employee").</p>
               
