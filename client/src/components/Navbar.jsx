@@ -14,7 +14,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
-              <img src="/logo.png" alt="CropStocks Logo" className="h-10 w-auto object-contain mix-blend-multiply" />
+              <img src="/logo.png" alt="CropStocks Logo" className="h-12 md:h-14 w-auto object-contain mix-blend-multiply scale-125 origin-left" />
             </Link>
           </div>
           <div className="hidden md:flex items-center space-x-4">
