@@ -13,8 +13,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0 flex items-center">
-              <img src="/logo.png" alt="CropStocks Logo" className="h-12 md:h-14 w-auto object-contain mix-blend-multiply scale-125 origin-left" />
+            <Link to="/" className="flex-shrink-0 flex items-center h-16 overflow-hidden mix-blend-multiply">
+              <img src="/logo.png" alt="CropStocks Logo" className="h-20 md:h-24 w-auto object-contain -ml-2" />
             </Link>
           </div>
           <div className="hidden md:flex items-center space-x-4">
