@@ -152,8 +152,8 @@ export default function DocumentGenerator() {
       <div className="relative bg-white p-10 md:p-16 shadow-lg print:shadow-none print:p-0 max-w-4xl mx-auto border border-gray-200 print:border-none font-serif text-gray-900 leading-relaxed text-justify min-h-screen">
         
         {/* Watermark Logo */}
-        <div className="absolute inset-0 flex justify-center items-center pointer-events-none opacity-[0.12] z-0 overflow-hidden">
-           <img src="/logo.png" alt="Watermark" className="w-3/4 md:w-1/2 object-contain mix-blend-multiply" />
+        <div className="absolute print:fixed inset-0 flex justify-center items-center pointer-events-none opacity-[0.12] z-0 overflow-hidden">
+           <img src="/logo.png" alt="Watermark" className="w-3/4 md:w-1/2 print:w-[60%] object-contain mix-blend-multiply" />
         </div>
 
         {/* Content Container (placed above watermark) */}
