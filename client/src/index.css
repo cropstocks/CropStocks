@@ -13,19 +13,19 @@
 
 @layer components {
   .glass-card {
-    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-xl rounded-2xl;
+    @apply bg-white rounded-xl border border-gray-100 shadow-sm;
   }
   .glass-dark {
-    @apply bg-brand-slate/80 backdrop-blur-md border border-white/10 shadow-xl rounded-2xl text-white;
+    @apply bg-brand-slate rounded-xl border border-gray-800 shadow-sm text-white;
   }
   .btn-primary {
-    @apply bg-brand-green hover:bg-brand-green-dark text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md;
+    @apply bg-brand-green hover:bg-brand-green-dark text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200;
   }
   .btn-secondary {
-    @apply bg-brand-gold hover:bg-brand-gold-dark text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md;
+    @apply bg-brand-dark hover:bg-black text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200;
   }
   .btn-outline {
-    @apply border-2 border-brand-green text-brand-green hover:bg-brand-green hover:text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300;
+    @apply border border-brand-green text-brand-green hover:bg-brand-light font-medium py-3 px-6 rounded-lg transition-colors duration-200;
   }
 }
 

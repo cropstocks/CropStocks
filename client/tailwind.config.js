@@ -9,9 +9,9 @@ export default {
       colors: {
         brand: {
           green: {
-            dark: '#064E3B',
-            DEFAULT: '#059669',
-            light: '#10B981',
+            dark: '#00A37A',
+            DEFAULT: '#00D09C',
+            light: '#33D9AF',
           },
           gold: {
             dark: '#D97706',
@@ -22,9 +22,9 @@ export default {
             DEFAULT: '#2563EB',
             dark: '#1E40AF',
           },
-          dark: '#0F172A',
-          slate: '#1E293B',
-          light: '#F0FDF4',
+          dark: '#44475B',
+          slate: '#1C1C28',
+          light: '#F6F6F7',
         }
       },
       fontFamily: {
