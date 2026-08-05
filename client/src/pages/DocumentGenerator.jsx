@@ -149,7 +149,10 @@ export default function DocumentGenerator() {
       </div>
 
       {/* Printable Document Section */}
-      <div className="relative bg-white p-10 md:p-16 shadow-lg print:shadow-none print:p-0 max-w-4xl mx-auto border border-gray-200 print:border-none font-serif text-gray-900 leading-relaxed text-justify min-h-screen">
+      <div 
+        className="relative bg-white p-10 md:p-16 shadow-lg print:shadow-none print:p-0 max-w-4xl mx-auto border border-gray-200 print:border-none text-gray-900 leading-relaxed text-justify min-h-screen"
+        style={{ fontFamily: '"Times New Roman", Times, serif' }}
+      >
         
         {/* Watermark Logo */}
         <div className="absolute print:fixed inset-0 flex justify-center items-center pointer-events-none opacity-20 z-0 overflow-hidden">
@@ -163,7 +166,7 @@ export default function DocumentGenerator() {
               <div className="flex justify-center mb-8">
                 <img src="/logo.png" alt="Logo" className="h-32 md:h-48 w-auto object-contain mix-blend-multiply" />
               </div>
-              <h1 className="text-2xl font-bold text-center mb-8 uppercase tracking-widest border-b-2 border-black pb-4">Non-Disclosure and Confidentiality Agreement</h1>
+              <h1 className="text-2xl font-bold text-center mb-8 uppercase tracking-widest border-b-2 border-black pb-4" style={{ fontFamily: 'inherit' }}>Non-Disclosure and Confidentiality Agreement</h1>
               
               <p className="mb-6">This Non-Disclosure and Confidentiality Agreement (the "Agreement") is entered into as of <strong>{formData.date || '[Date]'}</strong>, by and between <strong>{formData.partyA || '[Company Name]'}</strong>, having its principal place of business at <strong>{formData.addressA || '[Company Address]'}</strong> (the "Company" or "Disclosing Party"), and <strong>{formData.partyB || '[Employee/Partner Name]'}</strong>, residing or having its principal place of business at <strong>{formData.addressB || '[Employee/Partner Address]'}</strong> (the "Receiving Party").</p>
               
@@ -226,7 +229,7 @@ export default function DocumentGenerator() {
               <div className="flex justify-center mb-8">
                 <img src="/logo.png" alt="Logo" className="h-32 md:h-48 w-auto object-contain mix-blend-multiply" />
               </div>
-              <h1 className="text-2xl font-bold text-center mb-8 uppercase tracking-widest border-b-2 border-black pb-4">General Partnership Agreement</h1>
+              <h1 className="text-2xl font-bold text-center mb-8 uppercase tracking-widest border-b-2 border-black pb-4" style={{ fontFamily: 'inherit' }}>General Partnership Agreement</h1>
               
               <p className="mb-6">This General Partnership Agreement (the "Agreement") is entered into as of <strong>{formData.date || '[Date]'}</strong>, by and between <strong>{formData.partyA || '[Partner 1 Name]'}</strong>, residing at <strong>{formData.addressA || '[Partner 1 Address]'}</strong>, and <strong>{formData.partyB || '[Partner 2 Name]'}</strong>, residing at <strong>{formData.addressB || '[Partner 2 Address]'}</strong> (collectively the "Partners").</p>
               
@@ -281,7 +284,7 @@ export default function DocumentGenerator() {
               <div className="flex justify-center mb-8">
                 <img src="/logo.png" alt="Logo" className="h-32 md:h-48 w-auto object-contain mix-blend-multiply" />
               </div>
-              <h1 className="text-2xl font-bold text-center mb-8 uppercase tracking-widest border-b-2 border-black pb-4">Employment Contract</h1>
+              <h1 className="text-2xl font-bold text-center mb-8 uppercase tracking-widest border-b-2 border-black pb-4" style={{ fontFamily: 'inherit' }}>Employment Contract</h1>
               
               <p className="mb-6">This Employment Contract (the "Agreement") is entered into as of <strong>{formData.date || '[Date]'}</strong>, by and between <strong>{formData.partyA || '[Employer Name]'}</strong>, located at <strong>{formData.addressA || '[Employer Address]'}</strong> (the "Employer"), and <strong>{formData.partyB || '[Employee Name]'}</strong>, residing at <strong>{formData.addressB || '[Employee Address]'}</strong> (the "Employee").</p>
               
