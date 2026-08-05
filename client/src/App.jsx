@@ -17,6 +17,7 @@ import InvestorDashboard from './pages/InvestorDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import ListingWizard from './pages/ListingWizard';
 import GuidanceFeed from './pages/GuidanceFeed';
+import DocumentGenerator from './pages/DocumentGenerator';
 
 export default function App() {
   return (
@@ -50,6 +51,9 @@ export default function App() {
                 
                 <Route path="/admin/dashboard" element={
                   <ProtectedRoute allowedRoles={['ADMIN']}><AdminDashboard /></ProtectedRoute>
+                } />
+                <Route path="/documents" element={
+                  <ProtectedRoute><DocumentGenerator /></ProtectedRoute>
                 } />
               </Routes>
             </main>

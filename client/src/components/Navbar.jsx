@@ -37,6 +37,9 @@ export default function Navbar() {
                 >
                   {t('dashboard')}
                 </Link>
+                <Link to="/documents" className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium">
+                  Legal Docs
+                </Link>
                 <button onClick={logout} className="btn-outline text-sm">
                   {t('logout')}
                 </button>
@@ -82,6 +85,9 @@ export default function Navbar() {
               <>
                 <Link to={user.role === 'FARMER' ? '/farmer/dashboard' : user.role === 'ADMIN' ? '/admin/dashboard' : '/investor/dashboard'} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
                   {t('dashboard')}
+                </Link>
+                <Link to="/documents" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
+                  Legal Docs
                 </Link>
                 <button onClick={logout} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-brand-green font-bold hover:bg-gray-50">
                   {t('logout')}
