@@ -1,0 +1,18 @@
+{
+  "app_name": "CropStocks",
+  "login": "Login",
+  "register": "Register",
+  "logout": "Logout",
+  "farmer_portal": "Farmer Portal",
+  "investor_portal": "Investor Portal",
+  "hero_title": "Invest in the Future of Farming",
+  "hero_subtitle": "The stock market for agricultural produce. Connect directly with farmers and grow your wealth while supporting sustainable agriculture.",
+  "get_started": "Get Started",
+  "explore_market": "Explore Market",
+  "risk_low": "Low Risk",
+  "risk_medium": "Medium Risk",
+  "risk_high": "High Risk",
+  "insured": "Insured",
+  "marketplace": "Marketplace",
+  "dashboard": "Dashboard"
+}

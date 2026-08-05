@@ -1,0 +1,196 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums (SQLite doesn't support enums natively, using String) ───
+
+// Role: FARMER, INVESTOR, ADMIN, FIELD_AGENT, VENDOR
+// ListingType: CROP, ANIMAL
+// ListingStatus: PENDING, APPROVED, FUNDING, ACTIVE, HARVESTED, FAILED, CLOSED
+// RiskTier: LOW, MEDIUM, HIGH
+// KYCStatus: PENDING, VERIFIED, REJECTED
+// PayoutType: PROFIT, PRINCIPAL, INSURANCE
+// PayoutStatus: PENDING, PAID, INSURANCE_PAID
+
+model User {
+  id            String   @id @default(uuid())
+  role          String   @default("FARMER") // FARMER, INVESTOR, ADMIN, FIELD_AGENT, VENDOR
+  name          String
+  email         String   @unique
+  phone         String?
+  passwordHash  String
+  kycStatus     String   @default("PENDING") // PENDING, VERIFIED, REJECTED
+  language      String   @default("en") // en, hi
+  linkedBank    String?
+  linkedUPI     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  farmerProfile   FarmerProfile?
+  investorProfile InvestorProfile?
+  listings        Listing[]
+  investments     Investment[]
+  payouts         Payout[]        @relation("RecipientPayouts")
+  progressUpdates ProgressUpdate[] @relation("VerifiedBy")
+  auditLogs       AuditLog[]
+}
+
+model FarmerProfile {
+  id                 String   @id @default(uuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id])
+  aadhaarNo          String?
+  panNo              String?
+  landDetails        String?  // JSON string
+  farmAddress        String?
+  farmSize           String?  // e.g., "5 acres"
+  verificationStatus String   @default("PENDING") // PENDING, VERIFIED, REJECTED
+  verificationNotes  String?
+  documents          String?  // JSON array of file paths
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model InvestorProfile {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id])
+  walletBalance  Float    @default(0)
+  totalInvested  Float    @default(0)
+  totalReturns   Float    @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Listing {
+  id                 String   @id @default(uuid())
+  farmerId           String
+  farmer             User     @relation(fields: [farmerId], references: [id])
+  type               String   // CROP, ANIMAL
+  produceName        String
+  region             String
+  location           String?
+  landSize           String?  // for crops
+  animalCount        Int?     // for animal husbandry
+  capitalRequired    Float
+  capitalRaised      Float    @default(0)
+  inputBreakdown     String?  // JSON: [{name, quantity, unitCost, totalCost}]
+  profitSplitFarmer  Float    @default(60) // percentage
+  profitSplitInvestor Float   @default(40) // percentage
+  status             String   @default("PENDING") // PENDING, APPROVED, FUNDING, ACTIVE, HARVESTED, FAILED, CLOSED
+  insuranceFlag      Boolean  @default(true)
+  riskTier           String   @default("MEDIUM") // LOW, MEDIUM, HIGH
+  cycleDuration      Int      // in days
+  expectedYield      String?
+  expectedPrice      Float?
+  expectedReturn     Float?   // percentage return for investors
+  milestones         String?  // JSON: [{name, date, status}]
+  harvestQuantity    String?
+  harvestRevenue     Float?
+  harvestProof       String?  // file path
+  startDate          DateTime?
+  endDate            DateTime?
+  approvedAt         DateTime?
+  fundedAt           DateTime?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  investments     Investment[]
+  progressUpdates ProgressUpdate[]
+  inputOrders     InputOrder[]
+  insuranceClaims InsuranceClaim[]
+  payouts         Payout[]
+  guidanceTips    GuidanceTip[]
+}
+
+model Investment {
+  id           String   @id @default(uuid())
+  investorId   String
+  investor     User     @relation(fields: [investorId], references: [id])
+  listingId    String
+  listing      Listing  @relation(fields: [listingId], references: [id])
+  amount       Float
+  sharePercent Float    // percentage of total capital this investment represents
+  payoutStatus String   @default("PENDING") // PENDING, PAID, INSURANCE_PAID
+  payoutAmount Float?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ProgressUpdate {
+  id         String   @id @default(uuid())
+  listingId  String
+  listing    Listing  @relation(fields: [listingId], references: [id])
+  stage      String   // SOWING, GROWTH, MID_CYCLE, PRE_HARVEST, HARVEST
+  notes      String
+  mediaUrls  String?  // JSON array of file paths
+  verifiedBy String?
+  verifier   User?    @relation("VerifiedBy", fields: [verifiedBy], references: [id])
+  verified   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model GuidanceTip {
+  id             String  @id @default(uuid())
+  listingId      String?
+  listing        Listing? @relation(fields: [listingId], references: [id])
+  applicableType String  // CROP, ANIMAL, or specific produce name
+  stage          String  // SOWING, GROWTH, MID_CYCLE, PRE_HARVEST, HARVEST
+  content        String
+  language       String  @default("en")
+}
+
+model InputOrder {
+  id                String   @id @default(uuid())
+  listingId         String
+  listing           Listing  @relation(fields: [listingId], references: [id])
+  supplierId        String?
+  items             String   // JSON: [{name, quantity, unitPrice, totalPrice}]
+  status            String   @default("PENDING") // PENDING, ORDERED, SHIPPED, DELIVERED
+  deliveryConfirmed Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model InsuranceClaim {
+  id           String   @id @default(uuid())
+  listingId    String
+  listing      Listing  @relation(fields: [listingId], references: [id])
+  reason       String
+  evidence     String?  // JSON array of file paths / descriptions
+  status       String   @default("PENDING") // PENDING, APPROVED, REJECTED, PAID
+  payoutAmount Float?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Payout {
+  id          String   @id @default(uuid())
+  listingId   String
+  listing     Listing  @relation(fields: [listingId], references: [id])
+  recipientId String
+  recipient   User     @relation("RecipientPayouts", fields: [recipientId], references: [id])
+  amount      Float
+  type        String   // PROFIT, PRINCIPAL, INSURANCE
+  processedAt DateTime?
+  createdAt   DateTime @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  action     String
+  entityType String
+  entityId   String
+  details    String?  // JSON
+  createdAt  DateTime @default(now())
+}

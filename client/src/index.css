@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-body bg-brand-light text-brand-dark;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-bold text-brand-dark;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-xl rounded-2xl;
+  }
+  .glass-dark {
+    @apply bg-brand-slate/80 backdrop-blur-md border border-white/10 shadow-xl rounded-2xl text-white;
+  }
+  .btn-primary {
+    @apply bg-brand-green hover:bg-brand-green-dark text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md;
+  }
+  .btn-secondary {
+    @apply bg-brand-gold hover:bg-brand-gold-dark text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md;
+  }
+  .btn-outline {
+    @apply border-2 border-brand-green text-brand-green hover:bg-brand-green hover:text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
