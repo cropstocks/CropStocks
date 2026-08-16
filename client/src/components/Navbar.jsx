@@ -13,7 +13,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0 flex items-center h-16 overflow-hidden mix-blend-multiply w-48">
+            <Link to="/" className="flex-shrink-0 flex items-center h-16 overflow-hidden w-48">
               <img src="/logo.png" alt="CropStocks Logo" className="h-28 md:h-32 w-auto object-contain -ml-4" />
             </Link>
             <span className="hidden sm:inline-block ml-2 text-xs font-semibold text-brand-green bg-green-50 px-2 py-1 rounded-full border border-green-200 whitespace-nowrap">
