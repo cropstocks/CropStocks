@@ -5,7 +5,7 @@ import { LocaleContext } from '../context/LocaleContext';
 
 export default function Navbar() {
   const { user, logout } = useContext(AuthContext);
-  const { locale, toggleLocale, t } = useContext(LocaleContext);
+  const { locale, changeLocale, t } = useContext(LocaleContext);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
@@ -21,15 +21,19 @@ export default function Navbar() {
             </span>
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/marketplace" className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium">
+            <button onClick={() => alert('In Production')} className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium text-left">
               {t('marketplace')}
-            </Link>
-            <button 
-              onClick={toggleLocale}
-              className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium"
-            >
-              {locale === 'en' ? 'हिन्दी' : 'English'}
             </button>
+            <select
+              value={locale}
+              onChange={(e) => changeLocale(e.target.value)}
+              className="text-gray-700 bg-transparent hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium cursor-pointer outline-none"
+            >
+              <option value="en">English</option>
+              <option value="hi">हिन्दी</option>
+              <option value="gu">ગુજરાતી</option>
+            </select>
+
             {user ? (
               <>
                 <Link 
@@ -47,9 +51,9 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link to="/login" className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium">
+                <button onClick={() => alert('In Production')} className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium text-left">
                   {t('login')}
-                </Link>
+                </button>
                 <a href="https://forms.gle/86m7SFE6ZJudK16F9" target="_blank" rel="noopener noreferrer" className="btn-primary text-sm">
                   Fill Survey
                 </a>
@@ -76,12 +80,19 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link to="/marketplace" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
+            <button onClick={() => alert('In Production')} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
               {t('marketplace')}
-            </Link>
-            <button onClick={toggleLocale} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
-              {locale === 'en' ? 'हिन्दी' : 'English'}
             </button>
+            <select
+              value={locale}
+              onChange={(e) => changeLocale(e.target.value)}
+              className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50 outline-none bg-transparent"
+            >
+              <option value="en">English</option>
+              <option value="hi">हिन्दी</option>
+              <option value="gu">ગુજરાતી</option>
+            </select>
+
             {user ? (
               <>
                 <Link to={user.role === 'FARMER' ? '/farmer/dashboard' : user.role === 'ADMIN' ? '/admin/dashboard' : '/investor/dashboard'} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
@@ -96,9 +107,9 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link to="/login" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
+                <button onClick={() => alert('In Production')} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
                   {t('login')}
-                </Link>
+                </button>
                 <a href="https://forms.gle/86m7SFE6ZJudK16F9" target="_blank" rel="noopener noreferrer" className="block px-3 py-2 rounded-md text-base font-medium text-brand-green font-bold hover:bg-gray-50">
                   Fill Survey
                 </a>

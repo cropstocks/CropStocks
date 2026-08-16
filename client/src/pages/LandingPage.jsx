@@ -23,9 +23,9 @@ export default function LandingPage() {
             <a href="https://forms.gle/86m7SFE6ZJudK16F9" target="_blank" rel="noopener noreferrer" className="btn-primary text-lg px-8 py-3">
               Fill Survey
             </a>
-            <Link to="/marketplace" className="text-sm font-semibold leading-6 text-white hover:text-brand-green transition-colors">
+            <button onClick={() => alert('In Production')} className="text-sm font-semibold leading-6 text-white hover:text-brand-green transition-colors">
               {t('explore_market')} <span aria-hidden="true">→</span>
-            </Link>
+            </button>
           </div>
         </div>
       </div>
