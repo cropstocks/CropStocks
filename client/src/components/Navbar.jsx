@@ -16,6 +16,9 @@ export default function Navbar() {
             <Link to="/" className="flex-shrink-0 flex items-center h-16 overflow-hidden mix-blend-multiply w-48">
               <img src="/logo.png" alt="CropStocks Logo" className="h-28 md:h-32 w-auto object-contain -ml-4" />
             </Link>
+            <span className="hidden sm:inline-block ml-2 text-xs font-semibold text-brand-green bg-green-50 px-2 py-1 rounded-full border border-green-200 whitespace-nowrap">
+              in Development
+            </span>
           </div>
           <div className="hidden md:flex items-center space-x-4">
             <Link to="/marketplace" className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium">
@@ -47,9 +50,9 @@ export default function Navbar() {
                 <Link to="/login" className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium">
                   {t('login')}
                 </Link>
-                <Link to="/register/investor" className="btn-primary text-sm">
-                  {t('get_started')}
-                </Link>
+                <a href="https://forms.gle/86m7SFE6ZJudK16F9" target="_blank" rel="noopener noreferrer" className="btn-primary text-sm">
+                  Fill Survey
+                </a>
               </>
             )}
           </div>
@@ -96,9 +99,9 @@ export default function Navbar() {
                 <Link to="/login" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
                   {t('login')}
                 </Link>
-                <Link to="/register/investor" className="block px-3 py-2 rounded-md text-base font-medium text-brand-green font-bold hover:bg-gray-50">
-                  {t('get_started')}
-                </Link>
+                <a href="https://forms.gle/86m7SFE6ZJudK16F9" target="_blank" rel="noopener noreferrer" className="block px-3 py-2 rounded-md text-base font-medium text-brand-green font-bold hover:bg-gray-50">
+                  Fill Survey
+                </a>
               </>
             )}
           </div>
