@@ -132,7 +132,7 @@ export default function DocumentGenerator() {
       </div>
 
       {/* Printable Document Section */}
-      <div className="relative bg-white p-10 md:p-16 shadow-lg print:shadow-none print:p-0 max-w-4xl mx-auto border border-gray-200 print:border-none font-serif text-black text-[15px] leading-[1.8] text-justify min-h-screen">
+      <div className="relative bg-white shadow-lg print:shadow-none max-w-4xl mx-auto border border-gray-200 print:border-none font-serif text-black text-[15px] leading-[1.8] text-justify min-h-screen">
         
         {/* Watermark Logo */}
         <div className="absolute print:fixed inset-0 flex justify-center items-center pointer-events-none opacity-20 z-0 overflow-hidden">
@@ -140,7 +140,10 @@ export default function DocumentGenerator() {
         </div>
 
         {/* Content Container (placed above watermark) */}
-        <div className="relative z-10">
+        <table className="w-full relative z-10">
+          <tbody className="table-row-group">
+            <tr>
+              <td className="p-10 md:p-16 print:p-0">
           {docType === 'nda' && (
             <div>
               <div className="flex justify-center -mb-8 md:-mb-16 overflow-hidden max-h-48 md:max-h-64 items-center">
@@ -181,22 +184,7 @@ export default function DocumentGenerator() {
               <h2 className="font-bold mb-4">7. MISCELLANEOUS</h2>
               <p className="mb-20">This Agreement represents the entire understanding between the parties regarding the Confidential Information and supersedes any prior agreements. This Agreement shall be governed by the laws of the jurisdiction in which the Company is headquartered, without regard to its conflict of law principles. If any provision of this Agreement is held to be invalid or unenforceable, the remaining provisions will continue in full force.</p>
               
-              <div className="flex justify-between items-center text-center mt-12 mb-16">
-                <div className="w-1/2 flex flex-col items-center">
-                  <div className="border-t border-[#446688] w-64 pt-2">
-                    <p className="uppercase">{formData.partyA}</p>
-                    <p className="italic text-sm">{formData.titleA}</p>
-                  </div>
-                  <p className="mt-8">{formData.date}</p>
-                </div>
-                <div className="w-1/2 flex flex-col items-center">
-                  <div className="border-t border-[#446688] w-64 pt-2">
-                    <p className="uppercase">{formData.partyB}</p>
-                    <p className="italic text-sm">{formData.titleB}</p>
-                  </div>
-                  <p className="mt-8">{formData.date}</p>
-                </div>
-              </div>
+
             </div>
           )}
 
@@ -232,22 +220,7 @@ export default function DocumentGenerator() {
               <h2 className="font-bold mb-4">5. MISCELLANEOUS</h2>
               <p className="mb-20">This Agreement represents the entire understanding between the Partners regarding the operation of the business and supersedes any prior agreements. This Agreement may not be amended or modified except in writing signed by both Partners.</p>
               
-              <div className="flex justify-between items-center text-center mt-12 mb-16">
-                <div className="w-1/2 flex flex-col items-center">
-                  <div className="border-t border-[#446688] w-64 pt-2">
-                    <p className="uppercase">{formData.partyA}</p>
-                    <p className="italic text-sm">{formData.titleA}</p>
-                  </div>
-                  <p className="mt-8">{formData.date}</p>
-                </div>
-                <div className="w-1/2 flex flex-col items-center">
-                  <div className="border-t border-[#446688] w-64 pt-2">
-                    <p className="uppercase">{formData.partyB}</p>
-                    <p className="italic text-sm">{formData.titleB}</p>
-                  </div>
-                  <p className="mt-8">{formData.date}</p>
-                </div>
-              </div>
+
             </div>
           )}
 
@@ -279,26 +252,36 @@ export default function DocumentGenerator() {
               <h2 className="font-bold mb-4">5. MISCELLANEOUS</h2>
               <p className="mb-20">This Agreement represents the entire understanding between the Employer and the Employee regarding the employment relationship. This Agreement may not be amended or modified except in writing signed by both parties.</p>
               
-              <div className="flex justify-between items-center text-center mt-12 mb-16">
-                <div className="w-1/2 flex flex-col items-center">
-                  <div className="border-t border-[#446688] w-64 pt-2">
-                    <p className="uppercase">{formData.partyA}</p>
-                    <p className="italic text-sm">{formData.titleA}</p>
-                  </div>
-                  <p className="mt-8">{formData.date}</p>
-                </div>
-                <div className="w-1/2 flex flex-col items-center">
-                  <div className="border-t border-[#446688] w-64 pt-2">
-                    <p className="uppercase">{formData.partyB}</p>
-                    <p className="italic text-sm">{formData.titleB}</p>
-                  </div>
-                  <p className="mt-8">{formData.date}</p>
-                </div>
-              </div>
+
             </div>
           )}
 
-        </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot className="table-footer-group">
+            <tr>
+              <td className="px-10 md:px-16 print:px-0 pb-10 md:pb-16 print:pb-0">
+                <div className="flex justify-between items-center text-center mt-12 mb-8">
+                  <div className="w-1/2 flex flex-col items-center">
+                    <div className="border-t border-[#446688] w-64 pt-2">
+                      <p className="uppercase">{formData.partyA}</p>
+                      <p className="italic text-sm">{formData.titleA}</p>
+                    </div>
+                    <p className="mt-8">{formData.date}</p>
+                  </div>
+                  <div className="w-1/2 flex flex-col items-center">
+                    <div className="border-t border-[#446688] w-64 pt-2">
+                      <p className="uppercase">{formData.partyB}</p>
+                      <p className="italic text-sm">{formData.titleB}</p>
+                    </div>
+                    <p className="mt-8">{formData.date}</p>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
     </div>
   );
