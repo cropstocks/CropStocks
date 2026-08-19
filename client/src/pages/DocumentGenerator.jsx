@@ -392,30 +392,30 @@ export default function DocumentGenerator() {
                       { p: formData.partyE, t: formData.titleE },
                       { p: formData.partyF, t: formData.titleF },
                     ].map((f, i) => (
-                      <div key={i} className="flex flex-col items-center">
+                      <div key={i} className="flex flex-col items-center h-full">
                         <div className="border-t border-[#446688] w-40 pt-2">
                           <p className="uppercase text-xs font-bold">{f.p}</p>
                           <p className="italic text-[10px]">{f.t}</p>
                         </div>
-                        <p className="mt-4 text-xs">{formData.date}</p>
+                        <p className="mt-auto pt-6 text-xs">{formData.date}</p>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="flex justify-between items-center text-center mt-12 mb-8">
-                    <div className="w-1/2 flex flex-col items-center">
+                  <div className="flex justify-between items-stretch text-center mt-12 mb-8">
+                    <div className="w-1/2 flex flex-col items-center h-full">
                       <div className="border-t border-[#446688] w-64 pt-2">
                         <p className="uppercase">{formData.partyA}</p>
                         <p className="italic text-sm">{formData.titleA}</p>
                       </div>
-                      <p className="mt-8">{formData.date}</p>
+                      <p className="mt-auto pt-8">{formData.date}</p>
                     </div>
-                    <div className="w-1/2 flex flex-col items-center">
+                    <div className="w-1/2 flex flex-col items-center h-full">
                       <div className="border-t border-[#446688] w-64 pt-2">
                         <p className="uppercase">{formData.partyB}</p>
                         <p className="italic text-sm">{formData.titleB}</p>
                       </div>
-                      <p className="mt-8">{formData.date}</p>
+                      <p className="mt-auto pt-8">{formData.date}</p>
                     </div>
                   </div>
                 )}
