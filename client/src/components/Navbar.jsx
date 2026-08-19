@@ -51,9 +51,9 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <button onClick={() => alert('In Production')} className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium text-left">
+                <Link to="/login" className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium text-left">
                   {t('login')}
-                </button>
+                </Link>
                 <a href="https://forms.gle/86m7SFE6ZJudK16F9" target="_blank" rel="noopener noreferrer" className="btn-primary text-sm">
                   Fill Survey
                 </a>
@@ -107,9 +107,9 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <button onClick={() => alert('In Production')} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
+                <Link to="/login" className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
                   {t('login')}
-                </button>
+                </Link>
                 <a href="https://forms.gle/86m7SFE6ZJudK16F9" target="_blank" rel="noopener noreferrer" className="block px-3 py-2 rounded-md text-base font-medium text-brand-green font-bold hover:bg-gray-50">
                   Fill Survey
                 </a>
