@@ -42,7 +42,7 @@ export default function FarmerSurveyForm() {
 
       <div className="relative bg-white shadow-lg print:shadow-none max-w-4xl mx-auto border border-gray-200 print:border-none font-sans text-black text-[15px] leading-[1.8] min-h-screen">
         <div className="absolute print:fixed inset-0 flex justify-center items-center pointer-events-none opacity-20 z-0 overflow-hidden">
-           <img src="/logo.png" alt="Watermark" className="w-3/4 md:w-2/3 print:w-[65%] object-contain mix-blend-multiply" />
+           <img src="/logo.png" alt="Watermark" className="w-1/2 md:w-[45%] print:w-[45%] object-contain mix-blend-multiply" />
         </div>
 
         <table className="w-full relative z-10">
@@ -50,7 +50,7 @@ export default function FarmerSurveyForm() {
             <tr>
               <td className="p-10 md:p-16 print:p-0">
                 <div className="flex justify-center mb-6 items-center">
-                  <img src="/logo.png" alt="Logo" className="w-full max-w-[500px] object-contain mix-blend-multiply" />
+                  <img src="/logo.png" alt="Logo" className="w-full max-w-[250px] md:max-w-[300px] object-contain mix-blend-multiply" />
                 </div>
                 <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">
                   {language === 'English' ? 'Farmer Profile and Agricultural Survey' : 
