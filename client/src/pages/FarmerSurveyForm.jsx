@@ -89,8 +89,14 @@ export default function FarmerSurveyForm() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-brand-light flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md text-center">
+      <div className="min-h-screen bg-brand-light flex flex-col items-center justify-center p-4">
+        {offlineQueue.length > 0 && (
+          <div className="bg-orange-500 text-white p-4 text-center font-bold mb-6 rounded shadow max-w-md w-full animate-fade-in">
+            You have {offlineQueue.length} survey(s) saved securely on this device! 
+            <br/><span className="font-normal text-sm">Please remember to click "Submit Another" and sync them when you reconnect to the internet.</span>
+          </div>
+        )}
+        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md text-center w-full">
           <h2 className="text-2xl font-bold text-brand-green mb-4">Thank You!</h2>
           <p className="text-gray-600 mb-6">Your survey response has been recorded successfully.</p>
           <button onClick={() => window.location.reload()} className="btn-primary px-6 py-2">Submit Another</button>
