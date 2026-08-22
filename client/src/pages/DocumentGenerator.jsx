@@ -5,7 +5,7 @@ export default function DocumentGenerator() {
   const [formData, setFormData] = useState({
     date: new Date().toLocaleDateString('en-GB'), // 01/08/2026 format
     partyA: 'CROPSTOCKS',
-    titleA: '(Chief Executive Officers, Cropstocks.com)',
+    titleA: '(Chief Executive Officers, cropstocks.pages.dev)',
     partyB: 'NAMIT BHATIA',
     titleB: '(Current Partner & Share Holder)',
     purpose: '',
