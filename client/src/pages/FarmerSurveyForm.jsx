@@ -25,6 +25,10 @@ export default function FarmerSurveyForm() {
   };
 
   const syncOfflineSurveys = async () => {
+    if (!navigator.onLine) {
+      alert("You are still offline! Please connect to Wi-Fi or Cellular Data before syncing.");
+      return;
+    }
     if (offlineQueue.length === 0) return;
     setIsSubmitting(true);
     let synced = 0;
