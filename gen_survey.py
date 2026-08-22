@@ -11,6 +11,35 @@ sections = {
     'Gujarati': data[51:77]
 }
 
+guj_translations = {
+    'ફોર્મ યોગ્ય રીતે': 'Please fill the form correctly',
+    'શેર નહીં': 'Your Data will not be shared further',
+    'કલેક્શન': 'Name of Data collector (Only for employees)',
+    'પૂરું નામ': 'Full Name of Farmer',
+    'સંપર્ક': 'Contact Number',
+    'મુખ્ય ખેતી': 'Primary Farming Location (State)',
+    'કઈ ફસલો': 'Which of the crops are currently under cultivation?',
+    'ચેલેન્જોની': 'Indicate the frequency of the following farming challenges',
+    'ઉત્પાદનનો ખર્ચ': 'Cost of Production per season',
+    'સિંચાઇનો': 'What is the primary method of irrigation used on your farm?',
+    'માટીની ગુણવત્તા': 'How would you rate your soil quality?',
+    'કુલ ઉત્પાદન ખર્ચ': 'Total estimated Cost of Production per season',
+    'વેચાણ કિંમત': 'Total estimated Selling Price',
+    'કેટલા હેક્ટર': 'How much land (in Hectares) do you own/rent?',
+    'કૃષિ સહાયતા': 'Which of these agricultural support services would be most beneficial to you?',
+    'કૃષિ યોજનાઓ': 'How would you rate your level of access to government agricultural schemes?',
+    'કેટલી દરે': 'At what rate of interest do you take loan normally?',
+    'બ્યાજનો': 'Type of Interest',
+    'કાળા લેવો': 'From whom do you take loan?',
+    'કેટલી છે (ક્વિન્ટલમાં)': 'How much is the produce (in Quintals)?',
+    'પાકો કેટલીમાં વેચો': 'For how much do you sell the above-mentioned crops?',
+    'મુખ્યત્વે કેવી રીતે વેચો': 'How do you primarily sell your agricultural produce?',
+    'વેચાણ ચેનલ્સ': 'If you use multiple selling channels, please explain',
+    'પ્લેટફોર્મ પર સૂચિબદ્ધ': 'Would you like to list your crop on our platform?',
+    'ટિપ્પણીઓ કે પડકારો': 'Any additional comments or challenges you wish to report?',
+    'કેટલા નંબર': 'What will you rate us? (Only if you are explained before)'
+}
+
 for lang, qs in sections.items():
     for q in qs:
         if q['type'] in (2, 3, 4) and q['options'] and len(q['options'][0]['opts']) > 10:
@@ -18,6 +47,10 @@ for lang, qs in sections.items():
             q['options'] = []
         if q['type'] == 7 and q['options'] and len(q['options'][0]['opts']) > 5:
             q['type'] = 'grid_to_text'
+            
+        # Fix the Gujarati typo for "Primary Farming Location (State)" that was in Hindi
+        if lang == 'Gujarati' and 'मुख्य खेती का स्थान (राज्य)' in q['title']:
+            q['title'] = 'મુખ્ય ખેતીનું સ્થળ (રાજ્ય)'
 
 react_code = """import React, { useState } from 'react';
 
@@ -89,11 +122,18 @@ for lang, qs in sections.items():
         q_type = q['type']
         opts = q['options']
         
+        eng_trans = ""
+        if lang == 'Gujarati':
+            for k, v in guj_translations.items():
+                if k in title:
+                    eng_trans = f' <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[{v}]</span>'
+                    break
+        
         if q_type in (8, 11):
-            react_code += f'                    <div className="mb-6 text-gray-700 italic">{title}</div>\n'
+            react_code += f'                    <div className="mb-6 text-gray-700 italic">{title}{eng_trans}</div>\n'
             continue
             
-        react_code += f'                    <div className="break-inside-avoid">\n                      <label className="block font-semibold text-gray-800 mb-2">{q_counter}. {title}</label>\n'
+        react_code += f'                    <div className="break-inside-avoid">\n                      <label className="block font-semibold text-gray-800 mb-2">{q_counter}. {title}{eng_trans}</label>\n'
         q_counter += 1
         name = f'{lang}_q_{idx}'
         if q_type in (0, 1):
