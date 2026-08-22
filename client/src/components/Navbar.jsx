@@ -45,6 +45,9 @@ export default function Navbar() {
                 <Link to="/documents" className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium">
                   Legal Docs
                 </Link>
+                <Link to="/survey" className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium">
+                  Survey
+                </Link>
                 <button onClick={logout} className="btn-outline text-sm">
                   {t('logout')}
                 </button>
@@ -54,9 +57,9 @@ export default function Navbar() {
                 <Link to="/login" className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium text-left">
                   {t('login')}
                 </Link>
-                <a href="https://forms.gle/86m7SFE6ZJudK16F9" target="_blank" rel="noopener noreferrer" className="btn-primary text-sm">
+                <Link to="/survey" className="btn-primary text-sm">
                   Fill Survey
-                </a>
+                </Link>
               </>
             )}
           </div>
@@ -101,6 +104,9 @@ export default function Navbar() {
                 <Link to="/documents" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
                   Legal Docs
                 </Link>
+                <Link to="/survey" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
+                  Survey
+                </Link>
                 <button onClick={logout} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-brand-green font-bold hover:bg-gray-50">
                   {t('logout')}
                 </button>
@@ -110,9 +116,9 @@ export default function Navbar() {
                 <Link to="/login" className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
                   {t('login')}
                 </Link>
-                <a href="https://forms.gle/86m7SFE6ZJudK16F9" target="_blank" rel="noopener noreferrer" className="block px-3 py-2 rounded-md text-base font-medium text-brand-green font-bold hover:bg-gray-50">
+                <Link to="/survey" className="block px-3 py-2 rounded-md text-base font-medium text-brand-green font-bold hover:bg-gray-50">
                   Fill Survey
-                </a>
+                </Link>
               </>
             )}
           </div>

@@ -18,6 +18,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ListingWizard from './pages/ListingWizard';
 import GuidanceFeed from './pages/GuidanceFeed';
 import DocumentGenerator from './pages/DocumentGenerator';
+import FarmerSurveyForm from './pages/FarmerSurveyForm';
 
 export default function App() {
   return (
@@ -54,6 +55,9 @@ export default function App() {
                 } />
                 <Route path="/documents" element={
                   <ProtectedRoute><DocumentGenerator /></ProtectedRoute>
+                } />
+                <Route path="/survey" element={
+                  <FarmerSurveyForm />
                 } />
               </Routes>
             </main>
