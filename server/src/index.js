@@ -7,6 +7,7 @@ import investmentRoutes from './routes/investment.routes.js';
 import progressRoutes from './routes/progress.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import guidanceRoutes from './routes/guidance.routes.js';
+import surveyRoutes from './routes/survey.routes.js';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use('/api/investments', investmentRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/guidance', guidanceRoutes);
+app.use('/api/survey', surveyRoutes);
 
 const PORT = process.env.PORT || 5000;
 

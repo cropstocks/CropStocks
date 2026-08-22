@@ -194,3 +194,9 @@ model AuditLog {
   details    String?  // JSON
   createdAt  DateTime @default(now())
 }
+
+model SurveyResponse {
+  id        String   @id @default(uuid())
+  data      String   // JSON string containing all form answers
+  createdAt DateTime @default(now())
+}

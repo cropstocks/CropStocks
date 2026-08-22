@@ -18,4 +18,15 @@ router.post('/listings/:id/approve', async (req, res) => {
   }
 });
 
+router.get('/surveys', async (req, res) => {
+  try {
+    const surveys = await prisma.surveyResponse.findMany({
+      orderBy: { createdAt: 'desc' }
+    });
+    res.json(surveys);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;
