@@ -159,7 +159,7 @@ export default function FarmerSurveyForm() {
         <table className="w-full">
           <tbody className="table-row-group">
             <tr>
-              <td className="p-10 md:p-16 print:p-0">
+              <td className="p-4 sm:p-6 md:p-12 print:p-0 max-w-full overflow-hidden w-full">
                 <div className="flex justify-center mb-6 items-center">
                   <img src="/logo.png" alt="Logo" className="w-full max-w-[250px] md:max-w-[300px] object-contain mix-blend-multiply" />
                 </div>
@@ -240,7 +240,7 @@ export default function FarmerSurveyForm() {
                     </div>
                     <div className="break-inside-avoid">
                       <label className="block font-semibold text-gray-800 mb-2">6. Indicate the frequency of the following farming challenges encountered this season:</label>
-                      <div className="overflow-x-auto">
+                      <div className="overflow-x-auto w-full max-w-[90vw] md:max-w-full">
                         <table className="w-full text-left border-collapse">
                           <thead>
                             <tr>
@@ -601,7 +601,7 @@ export default function FarmerSurveyForm() {
                     </div>
                     <div className="break-inside-avoid">
                       <label className="block font-semibold text-gray-800 mb-2">6. इस मौसम में सामना की गई निम्नलिखित खेती की चुनौतियों की आवृत्ति बताएं:</label>
-                      <div className="overflow-x-auto">
+                      <div className="overflow-x-auto w-full max-w-[90vw] md:max-w-full">
                         <table className="w-full text-left border-collapse">
                           <thead>
                             <tr>
@@ -1012,7 +1012,7 @@ export default function FarmerSurveyForm() {
                     </div>
                     <div className="break-inside-avoid">
                       <label className="block font-semibold text-gray-800 mb-2">6. આ મોસમમાં સામનો કરેલી નીચે દર્શાવેલી ખેતીની ચેલેન્જોનું આવર્તન જણાવો</label>
-                      <div className="overflow-x-auto">
+                      <div className="overflow-x-auto w-full max-w-[90vw] md:max-w-full">
                         <table className="w-full text-left border-collapse">
                           <thead>
                             <tr>
