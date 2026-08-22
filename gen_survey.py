@@ -3,7 +3,15 @@ import json
 data = json.load(open('all_questions.json', encoding='utf-8'))
 
 def clean_title(title):
-    return title.split('/')[0].strip().replace("'", "\\'")
+    t = title.split('/')[0].strip().replace("'", "\\'")
+    t = t.replace('((', '(').replace('))', ')')
+    return t
+
+def clean_opt(opt):
+    o = str(opt).replace("'", "\\'")
+    if 'સ rightsધારણ' in o:
+        o = o.replace('સ rightsધારણ', 'સીધા સામાન્ય')
+    return o
 
 sections = {
     'English': data[1:25],
@@ -69,7 +77,7 @@ guj_opt_translations = {
     'સ્થાનિક બજાર / APMC બજાર': 'Local Market / APMC Market',
     'સિધા ખાનગી વેપારીઓ / એગ્રિગેટર્સ સુધી': 'Direct to private merchants / Aggregators',
     'સંધિ કૃષિ': 'Contract farming',
-    'સ rightsધારણ વપરાશકર્તાઓ સુધી (કૃષક બજાર)': 'Direct to consumers (Farmer market)',
+    'સીધા સામાન્ય': 'Direct to consumers (Farmer market)',
     'ઓનલાઇન પ્લેટફોર્મ / ઈ-કોમર્સ': 'Online platform / E-commerce',
     'સહકારી સોસાયટીઓ': 'Cooperative societies',
     'હાં': 'Yes',
@@ -102,6 +110,12 @@ for lang, qs in sections.items():
             
         if lang == 'Gujarati' and 'જો તમે ઘણા વેચાણ ચેનલ્સ નો ઉપયોગ' in q['title']:
             q['title'] = 'જો તમે બહુવિધ વેચાણ ચેનલોનો ઉપયોગ કરો છો, તો કૃપા કરીને સમજાવો'
+            
+        if lang == 'Gujarati' and 'ваша' in q['title']:
+            q['title'] = q['title'].replace('ваша', 'તમારી')
+            
+        if lang == 'Hindi' and 'यदि आप कई बिक्री चैनलों का उपयोग करते हैं' in q['title']:
+            q['title'] = 'यदि आप कई बिक्री चैनलों का उपयोग करते हैं, तो कृपया समझाएं।'
 
 react_code = """import React, { useState } from 'react';
 
@@ -206,8 +220,8 @@ for lang, qs in sections.items():
             if opts and len(opts)>0 and opts[0]['opts']:
                 for o in opts[0]['opts']:
                     if not o: continue
-                    o_clean = str(o).replace("'", "\\'")
-                    opt_tr = get_opt_trans(str(o))
+                    o_clean = clean_opt(o)
+                    opt_tr = get_opt_trans(o_clean)
                     react_code += f'                        <label className="flex items-center space-x-2">\n                          <input type="radio" name="{name}" value="{o_clean}" className="text-brand-green focus:ring-brand-green" onChange={{handleInputChange}} />\n                          <span>{o_clean}{opt_tr}</span>\n                        </label>\n'
             react_code += '                      </div>\n'
         elif q_type == 2:
@@ -215,8 +229,8 @@ for lang, qs in sections.items():
             if opts and len(opts)>0 and opts[0]['opts']:
                 for o in opts[0]['opts']:
                     if not o: continue
-                    o_clean = str(o).replace("'", "\\'")
-                    opt_tr = get_opt_trans(str(o))
+                    o_clean = clean_opt(o)
+                    opt_tr = get_opt_trans(o_clean)
                     react_code += f'                        <label className="flex items-center space-x-2">\n                          <input type="checkbox" name="{name}_{o_clean}" value="{o_clean}" className="text-brand-green focus:ring-brand-green rounded" onChange={{handleInputChange}} />\n                          <span>{o_clean}{opt_tr}</span>\n                        </label>\n'
             react_code += '                      </div>\n'
         elif q_type in (5, 18):
@@ -224,8 +238,8 @@ for lang, qs in sections.items():
             if opts and len(opts)>0 and opts[0]['opts']:
                 for o in opts[0]['opts']:
                     if not o: continue
-                    o_clean = str(o).replace("'", "\\'")
-                    opt_tr = get_opt_trans(str(o))
+                    o_clean = clean_opt(o)
+                    opt_tr = get_opt_trans(o_clean)
                     react_code += f'                        <label className="flex flex-col items-center">\n                          <input type="radio" name="{name}" value="{o_clean}" className="text-brand-green focus:ring-brand-green mb-1" onChange={{handleInputChange}} />\n                          <span className="text-sm">{o_clean}{opt_tr}</span>\n                        </label>\n'
             react_code += '                      </div>\n'
         elif q_type == 7:
@@ -233,24 +247,24 @@ for lang, qs in sections.items():
             if opts and len(opts)>0 and opts[0]['opts']:
                 for o in opts[0]['opts']:
                     if not o: continue
-                    o_clean = str(o).replace("'", "\\'")
-                    opt_tr = get_opt_trans(str(o))
+                    o_clean = clean_opt(o)
+                    opt_tr = get_opt_trans(o_clean)
                     react_code += f'                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">{o_clean}{opt_tr}</th>\n'
             react_code += '                            </tr>\n                          </thead>\n                          <tbody>\n'
             for row in opts:
-                r_name = row['name'].replace("'", "\\'")
+                r_name = clean_opt(row['name'])
                 row_tr = get_opt_trans(row['name'])
                 react_code += f'                            <tr className="border-b border-gray-200">\n                              <td className="p-2 font-medium">{r_name}{row_tr}</td>\n'
                 for o in row['opts']:
                     if not o: continue
-                    o_clean = str(o).replace("'", "\\'")
+                    o_clean = clean_opt(o)
                     react_code += f'                              <td className="p-2 text-center">\n                                <input type="radio" name="{name}_{r_name}" value="{o_clean}" className="text-brand-green" onChange={{handleInputChange}} />\n                              </td>\n'
                 react_code += '                            </tr>\n'
             react_code += '                          </tbody>\n                        </table>\n                      </div>\n'
         elif q_type == 'grid_to_text':
             react_code += '                      <div className="space-y-4 mt-2">\n'
             for row in opts:
-                r_name = row['name'].replace("'", "\\'")
+                r_name = clean_opt(row['name'])
                 row_tr = get_opt_trans(row['name'])
                 react_code += f'                        <div>\n                          <label className="block text-sm text-gray-700 mb-1">{r_name}{row_tr}</label>\n                          <input type="text" name="{name}_{r_name}" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={{handleInputChange}} />\n                        </div>\n'
             react_code += '                      </div>\n'

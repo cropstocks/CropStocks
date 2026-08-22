@@ -785,11 +785,11 @@ export default function FarmerSurveyForm() {
                       </div>
                     </div>
                     <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">21. यदि आप कई बिक्री चैनलों का उपयोग करते हैं, तो कृपया उल्लेख करें कि उपरोक्त फसलों को वे प्रत्येक कितनी दर पर खरीदते हैं।</label>
+                      <label className="block font-semibold text-gray-800 mb-2">21. यदि आप कई बिक्री चैनलों का उपयोग करते हैं, तो कृपया समझाएं।</label>
                       <input type="text" name="Hindi_q_22" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
                     </div>
                     <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">22. क्या आप अपनी फसल को हमारे प्लेटफ़ॉर्म पर सूचीबद्ध करना चाहेंगे?((केवल अगर आपको समझाया गया हो))</label>
+                      <label className="block font-semibold text-gray-800 mb-2">22. क्या आप अपनी फसल को हमारे प्लेटफ़ॉर्म पर सूचीबद्ध करना चाहेंगे?(केवल अगर आपको समझाया गया हो)</label>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <label className="flex items-center space-x-2">
                           <input type="checkbox" name="Hindi_q_23_हाँ" value="हाँ" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
@@ -1167,7 +1167,7 @@ export default function FarmerSurveyForm() {
                       <input type="text" name="Gujarati_q_20" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
                     </div>
                     <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">20. તમે ваша ખેતીનું ઉત્પાદન મુખ્યત્વે કેવી રીતે વેચો છો? <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[How do you primarily sell your agricultural produce?]</span></label>
+                      <label className="block font-semibold text-gray-800 mb-2">20. તમે તમારી ખેતીનું ઉત્પાદન મુખ્યત્વે કેવી રીતે વેચો છો? <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[How do you primarily sell your agricultural produce?]</span></label>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_21" value="સ્થાનિક બજાર / APMC બજાર" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
@@ -1182,8 +1182,8 @@ export default function FarmerSurveyForm() {
                           <span>સંધિ કૃષિ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Contract farming]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_21" value="સ rightsધારણ વપરાશકર્તાઓ સુધી (કૃષક બજાર)" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>સ rightsધારણ વપરાશકર્તાઓ સુધી (કૃષક બજાર) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Direct to consumers (Farmer market)]</span></span>
+                          <input type="radio" name="Gujarati_q_21" value="સીધા સામાન્ય વપરાશકર્તાઓ સુધી (કૃષક બજાર)" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
+                          <span>સીધા સામાન્ય વપરાશકર્તાઓ સુધી (કૃષક બજાર) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Direct to consumers (Farmer market)]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_21" value="ઓનલાઇન પ્લેટફોર્મ / ઈ-કોમર્સ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
@@ -1200,7 +1200,7 @@ export default function FarmerSurveyForm() {
                       <input type="text" name="Gujarati_q_22" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
                     </div>
                     <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">22. શું તમે તમારી પાકને અમારા પ્લેટફોર્મ પર સૂચિબદ્ધ કરવા માંગો છો?((ફક્ત જો તમને સમજાવવામાં આવ્યું હોય)) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Would you like to list your crop on our platform?]</span></label>
+                      <label className="block font-semibold text-gray-800 mb-2">22. શું તમે તમારી પાકને અમારા પ્લેટફોર્મ પર સૂચિબદ્ધ કરવા માંગો છો?(ફક્ત જો તમને સમજાવવામાં આવ્યું હોય) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Would you like to list your crop on our platform?]</span></label>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <label className="flex items-center space-x-2">
                           <input type="checkbox" name="Gujarati_q_23_હાં" value="હાં" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
