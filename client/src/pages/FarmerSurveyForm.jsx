@@ -1034,7 +1034,7 @@ export default function FarmerSurveyForm() {
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="checkbox" name="Gujarati_q_9_ટ્યૂબવેલ (નળકૂપ)" value="ટ્યૂબવેલ (નળકૂપ)" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>ટ્યૂબવેલ (નળકૂપ)</span>
+                          <span>ટ્યૂબવેલ (નળકૂપ) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Tube well]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="checkbox" name="Gujarati_q_9_વર્ષા આધારિત" value="વર્ષા આધારિત" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
@@ -1046,7 +1046,7 @@ export default function FarmerSurveyForm() {
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="checkbox" name="Gujarati_q_9_સ્પ્રિંકલર (છાંટણી) પ્રણાળી" value="સ્પ્રિંકલર (છાંટણી) પ્રણાળી" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>સ્પ્રિંકલર (છાંટણી) પ્રણાળી</span>
+                          <span>સ્પ્રિંકલર (છાંટણી) પ્રણાળી <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Sprinkler system]</span></span>
                         </label>
                       </div>
                     </div>
@@ -1092,7 +1092,7 @@ export default function FarmerSurveyForm() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_14" value="રિયાયતી ખાતર (સબસિડીવાળો ખાતર)" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>રિયાયતી ખાતર (સબસિડીવાળો ખાતર)</span>
+                          <span>રિયાયતી ખાતર (સબસિડીવાળો ખાતર) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Subsidized Fertilizer]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_14" value="ઘટ વ્યાજવાળા કૃષિ લોન" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />

@@ -54,15 +54,15 @@ guj_opt_translations = {
     'અક\u0441\u0430\u0440': 'Often',
     'સંમેશા': 'Always',
     'ખાડી સિંચાઈ': 'Canal irrigation',
-    'ટ્યુબવેલ (નળકૂપ)': 'Tube well',
+    'ટ્યૂબવેલ': 'Tube well',
     'વર્ષા આધારિત': 'Rain-fed',
     'ડ્રિપ સિંચાઈ': 'Drip irrigation',
-    'સ્પ્રિંકલર (છાંયણી) પ્રણાલી': 'Sprinkler system',
-    'રિયાયતી ખાતર (સબસીડીવાળો ખાતર)': 'Subsidized Fertilizer',
-    'ઘટ વ્યાજવાળા કૃષિ લોન': 'Low-interest agriculture loan',
-    'આધુનિક ખેતી પર ટેકનિકલ તાલીમ': 'Technical training on modern farming',
-    'બજાર સુધી પહોંચ અને લોજિસ્ટિક્સ સપોર્ટ': 'Market access and logistics support',
-    'હવામાન પૂર્વાનુમાન ચેતવણી': 'Weather forecast warning',
+    'સ્પ્રિંકલર': 'Sprinkler system',
+    'રિયાયતી ખાતર': 'Subsidized Fertilizer',
+    'ઘટ વ્યાજવાળા': 'Low-interest agriculture loan',
+    'આધુનિક ખેતી': 'Technical training on modern farming',
+    'બજાર સુધી': 'Market access and logistics support',
+    'હવામાન પૂર્વાનુમાન': 'Weather forecast warning',
     'ચક્રવદ્ધિ વ્યાજ': 'Compound interest',
     'સરળ વ્યાજ': 'Simple interest',
     'સ્થાનિક બજાર / APMC બજાર': 'Local Market / APMC Market',
@@ -178,10 +178,14 @@ for lang, qs in sections.items():
                     
         def get_opt_trans(opt_text):
             if lang != 'Gujarati': return ""
-            # EXACT match for options to prevent "ના" matching inside "બજારના"
             for k, v in guj_opt_translations.items():
-                if opt_text.strip() == k:
-                    return f' <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[{v}]</span>'
+                if k == 'હાં' or k == 'ના':
+                    if opt_text.strip() == k:
+                        return f' <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[{v}]</span>'
+                else:
+                    # For longer strings, substring match is safe and avoids typo issues
+                    if k in opt_text:
+                        return f' <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[{v}]</span>'
             return ""
         
         if q_type in (8, 11):
