@@ -40,6 +40,40 @@ guj_translations = {
     'કેટલા નંબર': 'What will you rate us? (Only if you are explained before)'
 }
 
+guj_opt_translations = {
+    'મનન પાંડે': 'Manan Pandey',
+    'મનસ વિનોદ': 'Manas Vinod',
+    'આરાધ્યા ગર્ગ': 'Aradhya Garg',
+    'શ્રેયસ દાસ': 'Shreyas Das',
+    'દેવાંશ મોરે': 'Devansh More',
+    'નમિત ભાટિયા': 'Namit Bhatia',
+    'ઘણો વખત નહીં': 'Rarely',
+    'ક્યારેક-ક્યારેક': 'Sometimes',
+    'અકસાર': 'Often',
+    'અકसार': 'Often',
+    'સંમેશા': 'Always',
+    'ખાડી સિંચાઈ': 'Canal irrigation',
+    'ટ્યુબવેલ (નળકૂપ)': 'Tube well',
+    'વર્ષા આધારિત': 'Rain-fed',
+    'ડ્રિપ સિંચાઈ': 'Drip irrigation',
+    'સ્પ્રિંકલર (છાંયણી) પ્રણાલી': 'Sprinkler system',
+    'રિયાયતી ખાતર (સબસીડીવાળો ખાતર)': 'Subsidized Fertilizer',
+    'ઘટ વ્યાજવાળા કૃષિ લોન': 'Low-interest agriculture loan',
+    'આધુનિક ખેતી પર ટેકનિકલ તાલીમ': 'Technical training on modern farming',
+    'બજાર સુધી પહોંચ અને લોજિસ્ટિક્સ સપોર્ટ': 'Market access and logistics support',
+    'હવામાન પૂર્વાનુમાન ચેતવણી': 'Weather forecast warning',
+    'ચક્રવદ્ધિ વ્યાજ': 'Compound interest',
+    'સરળ વ્યાજ': 'Simple interest',
+    'સ્થાનિક બજાર / APMC બજાર': 'Local Market / APMC Market',
+    'સિધા ખાનગી વેપારીઓ / એગ્રિગેટર્સ સુધી': 'Direct to private merchants / Aggregators',
+    'સંધિ કૃષિ': 'Contract farming',
+    'સ rightsધારણ વપરાશકર્તાઓ સુધી (કૃષક બજાર)': 'Direct to consumers (Farmer market)',
+    'ઓનલાઇન પ્લેટફોર્મ / ઈ-કોમર્સ': 'Online platform / E-commerce',
+    'સહકારી સોસાયટીઓ': 'Cooperative societies',
+    'હાં': 'Yes',
+    'ના': 'No'
+}
+
 for lang, qs in sections.items():
     for q in qs:
         if q['type'] in (2, 3, 4) and q['options'] and len(q['options'][0]['opts']) > 10:
@@ -48,7 +82,6 @@ for lang, qs in sections.items():
         if q['type'] == 7 and q['options'] and len(q['options'][0]['opts']) > 5:
             q['type'] = 'grid_to_text'
             
-        # Fix the Gujarati typo for "Primary Farming Location (State)" that was in Hindi
         if lang == 'Gujarati' and 'मुख्य खेती का स्थान (राज्य)' in q['title']:
             q['title'] = 'મુખ્ય ખેતીનું સ્થળ (રાજ્ય)'
 
@@ -128,6 +161,13 @@ for lang, qs in sections.items():
                 if k in title:
                     eng_trans = f' <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[{v}]</span>'
                     break
+                    
+        def get_opt_trans(opt_text):
+            if lang != 'Gujarati': return ""
+            for k, v in guj_opt_translations.items():
+                if k in opt_text:
+                    return f' <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[{v}]</span>'
+            return ""
         
         if q_type in (8, 11):
             react_code += f'                    <div className="mb-6 text-gray-700 italic">{title}{eng_trans}</div>\n'
@@ -143,43 +183,53 @@ for lang, qs in sections.items():
             if opts and len(opts)>0 and opts[0]['opts']:
                 for o in opts[0]['opts']:
                     if not o: continue
-                    o = str(o).replace("'", "\\'")
-                    react_code += f'                        <label className="flex items-center space-x-2">\n                          <input type="radio" name="{name}" value="{o}" className="text-brand-green focus:ring-brand-green" onChange={{handleInputChange}} />\n                          <span>{o}</span>\n                        </label>\n'
+                    o_clean = str(o).replace("'", "\\'")
+                    opt_tr = get_opt_trans(str(o))
+                    react_code += f'                        <label className="flex items-center space-x-2">\n                          <input type="radio" name="{name}" value="{o_clean}" className="text-brand-green focus:ring-brand-green" onChange={{handleInputChange}} />\n                          <span>{o_clean}{opt_tr}</span>\n                        </label>\n'
             react_code += '                      </div>\n'
         elif q_type == 2:
             react_code += '                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">\n'
             if opts and len(opts)>0 and opts[0]['opts']:
                 for o in opts[0]['opts']:
                     if not o: continue
-                    o = str(o).replace("'", "\\'")
-                    react_code += f'                        <label className="flex items-center space-x-2">\n                          <input type="checkbox" name="{name}_{o}" value="{o}" className="text-brand-green focus:ring-brand-green rounded" onChange={{handleInputChange}} />\n                          <span>{o}</span>\n                        </label>\n'
+                    o_clean = str(o).replace("'", "\\'")
+                    opt_tr = get_opt_trans(str(o))
+                    react_code += f'                        <label className="flex items-center space-x-2">\n                          <input type="checkbox" name="{name}_{o_clean}" value="{o_clean}" className="text-brand-green focus:ring-brand-green rounded" onChange={{handleInputChange}} />\n                          <span>{o_clean}{opt_tr}</span>\n                        </label>\n'
             react_code += '                      </div>\n'
         elif q_type in (5, 18):
             react_code += '                      <div className="flex flex-wrap gap-4">\n'
             if opts and len(opts)>0 and opts[0]['opts']:
                 for o in opts[0]['opts']:
-                    o = str(o).replace("'", "\\'")
-                    react_code += f'                        <label className="flex flex-col items-center">\n                          <input type="radio" name="{name}" value="{o}" className="text-brand-green focus:ring-brand-green mb-1" onChange={{handleInputChange}} />\n                          <span className="text-sm">{o}</span>\n                        </label>\n'
+                    if not o: continue
+                    o_clean = str(o).replace("'", "\\'")
+                    opt_tr = get_opt_trans(str(o))
+                    react_code += f'                        <label className="flex flex-col items-center">\n                          <input type="radio" name="{name}" value="{o_clean}" className="text-brand-green focus:ring-brand-green mb-1" onChange={{handleInputChange}} />\n                          <span className="text-sm">{o_clean}{opt_tr}</span>\n                        </label>\n'
             react_code += '                      </div>\n'
         elif q_type == 7:
             react_code += '                      <div className="overflow-x-auto">\n                        <table className="w-full text-left border-collapse">\n                          <thead>\n                            <tr>\n                              <th className="p-2 border-b-2 border-gray-300"></th>\n'
             if opts and len(opts)>0 and opts[0]['opts']:
                 for o in opts[0]['opts']:
-                    o = str(o).replace("'", "\\'")
-                    react_code += f'                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">{o}</th>\n'
+                    if not o: continue
+                    o_clean = str(o).replace("'", "\\'")
+                    opt_tr = get_opt_trans(str(o))
+                    react_code += f'                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">{o_clean}{opt_tr}</th>\n'
             react_code += '                            </tr>\n                          </thead>\n                          <tbody>\n'
             for row in opts:
                 r_name = row['name'].replace("'", "\\'")
-                react_code += f'                            <tr className="border-b border-gray-200">\n                              <td className="p-2 font-medium">{r_name}</td>\n'
+                row_tr = get_opt_trans(row['name'])
+                react_code += f'                            <tr className="border-b border-gray-200">\n                              <td className="p-2 font-medium">{r_name}{row_tr}</td>\n'
                 for o in row['opts']:
-                    react_code += f'                              <td className="p-2 text-center">\n                                <input type="radio" name="{name}_{r_name}" value="{o}" className="text-brand-green" onChange={{handleInputChange}} />\n                              </td>\n'
+                    if not o: continue
+                    o_clean = str(o).replace("'", "\\'")
+                    react_code += f'                              <td className="p-2 text-center">\n                                <input type="radio" name="{name}_{r_name}" value="{o_clean}" className="text-brand-green" onChange={{handleInputChange}} />\n                              </td>\n'
                 react_code += '                            </tr>\n'
             react_code += '                          </tbody>\n                        </table>\n                      </div>\n'
         elif q_type == 'grid_to_text':
             react_code += '                      <div className="space-y-4 mt-2">\n'
             for row in opts:
                 r_name = row['name'].replace("'", "\\'")
-                react_code += f'                        <div>\n                          <label className="block text-sm text-gray-700 mb-1">{r_name}</label>\n                          <input type="text" name="{name}_{r_name}" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={{handleInputChange}} />\n                        </div>\n'
+                row_tr = get_opt_trans(row['name'])
+                react_code += f'                        <div>\n                          <label className="block text-sm text-gray-700 mb-1">{r_name}{row_tr}</label>\n                          <input type="text" name="{name}_{r_name}" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={{handleInputChange}} />\n                        </div>\n'
             react_code += '                      </div>\n'
         react_code += '                    </div>\n'
     react_code += '                  </>)}\n'

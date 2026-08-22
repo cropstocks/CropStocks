@@ -859,27 +859,27 @@ export default function FarmerSurveyForm() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_2" value="મનન પાંડે" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>મનન પાંડે</span>
+                          <span>મનન પાંડે <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Manan Pandey]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_2" value="મનસ વિનોદ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>મનસ વિનોદ</span>
+                          <span>મનસ વિનોદ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Manas Vinod]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_2" value="આરાધ્યા ગર્ગ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>આરાધ્યા ગર્ગ</span>
+                          <span>આરાધ્યા ગર્ગ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Aradhya Garg]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_2" value="શ્રેયસ દાસ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>શ્રેયસ દાસ</span>
+                          <span>શ્રેયસ દાસ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Shreyas Das]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_2" value="દેવાંશ મોરે" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>દેવાંશ મોરે</span>
+                          <span>દેવાંશ મોરે <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Devansh More]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_2" value="નમિત ભાટિયા" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>નમિત ભાટિયા</span>
+                          <span>નમિત ભાટિયા <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Namit Bhatia]</span></span>
                         </label>
                       </div>
                     </div>
@@ -906,10 +906,10 @@ export default function FarmerSurveyForm() {
                           <thead>
                             <tr>
                               <th className="p-2 border-b-2 border-gray-300"></th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">ઘણો વખત નહીં</th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">ક્યારેક-ક્યારેક</th>
+                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">ઘણો વખત નહીં <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Rarely]</span></th>
+                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">ક્યારેક-ક્યારેક <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Sometimes]</span></th>
                               <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">અકсар</th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">સંમેશા</th>
+                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">સંમેશા <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Always]</span></th>
                             </tr>
                           </thead>
                           <tbody>
@@ -944,7 +944,7 @@ export default function FarmerSurveyForm() {
                               </td>
                             </tr>
                             <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">બજારના મૂલ્યમાં ઊતાર-ચઢાવ</td>
+                              <td className="p-2 font-medium">બજારના મૂલ્યમાં ઊતાર-ચઢાવ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[No]</span></td>
                               <td className="p-2 text-center">
                                 <input type="radio" name="Gujarati_q_7_બજારના મૂલ્યમાં ઊતાર-ચઢાવ" value="ઘણો વખત નહીં" className="text-brand-green" onChange={handleInputChange} />
                               </td>
@@ -1030,7 +1030,7 @@ export default function FarmerSurveyForm() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <label className="flex items-center space-x-2">
                           <input type="checkbox" name="Gujarati_q_9_ખાડી સિંચાઈ" value="ખાડી સિંચાઈ" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>ખાડી સિંચાઈ</span>
+                          <span>ખાડી સિંચાઈ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Canal irrigation]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="checkbox" name="Gujarati_q_9_ટ્યૂબવેલ (નળકૂપ)" value="ટ્યૂબવેલ (નળકૂપ)" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
@@ -1038,11 +1038,11 @@ export default function FarmerSurveyForm() {
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="checkbox" name="Gujarati_q_9_વર્ષા આધારિત" value="વર્ષા આધારિત" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>વર્ષા આધારિત</span>
+                          <span>વર્ષા આધારિત <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Rain-fed]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="checkbox" name="Gujarati_q_9_ડ્રિપ સિંચાઈ" value="ડ્રિપ સિંચાઈ" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>ડ્રિપ સિંચાઈ</span>
+                          <span>ડ્રિપ સિંચાઈ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Drip irrigation]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="checkbox" name="Gujarati_q_9_સ્પ્રિંકલર (છાંટણી) પ્રણાળી" value="સ્પ્રિંકલર (છાંટણી) પ્રણાળી" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
@@ -1096,19 +1096,19 @@ export default function FarmerSurveyForm() {
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_14" value="ઘટ વ્યાજવાળા કૃષિ લોન" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>ઘટ વ્યાજવાળા કૃષિ લોન</span>
+                          <span>ઘટ વ્યાજવાળા કૃષિ લોન <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Low-interest agriculture loan]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_14" value="આધુનિક ખેતી પર ટેકનિકલ તાલીમ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>આધુનિક ખેતી પર ટેકનિકલ તાલીમ</span>
+                          <span>આધુનિક ખેતી પર ટેકનિકલ તાલીમ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Technical training on modern farming]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_14" value="બજાર સુધી પહોંચ અને લોજિસ્ટિક્સ સપોર્ટ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>બજાર સુધી પહોંચ અને લોજિસ્ટિક્સ સપોર્ટ</span>
+                          <span>બજાર સુધી પહોંચ અને લોજિસ્ટિક્સ સપોર્ટ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Market access and logistics support]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_14" value="હવામાન પૂર્વાનુમાન ચેતવણી" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>હવામાન પૂર્વાનુમાન ચેતવણી</span>
+                          <span>હવામાન પૂર્વાનુમાન ચેતવણી <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Weather forecast warning]</span></span>
                         </label>
                       </div>
                     </div>
@@ -1146,11 +1146,11 @@ export default function FarmerSurveyForm() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <label className="flex items-center space-x-2">
                           <input type="checkbox" name="Gujarati_q_17_ચક્રવદ્ધિ વ્યાજ" value="ચક્રવદ્ધિ વ્યાજ" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>ચક્રવદ્ધિ વ્યાજ</span>
+                          <span>ચક્રવદ્ધિ વ્યાજ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Compound interest]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="checkbox" name="Gujarati_q_17_સરળ વ્યાજ" value="સરળ વ્યાજ" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>સરળ વ્યાજ</span>
+                          <span>સરળ વ્યાજ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Simple interest]</span></span>
                         </label>
                       </div>
                     </div>
@@ -1171,27 +1171,27 @@ export default function FarmerSurveyForm() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_21" value="સ્થાનિક બજાર / APMC બજાર" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>સ્થાનિક બજાર / APMC બજાર</span>
+                          <span>સ્થાનિક બજાર / APMC બજાર <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Local Market / APMC Market]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_21" value="સિધા ખાનગી વેપારીઓ / એગ્રિગેટર્સ સુધી" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>સિધા ખાનગી વેપારીઓ / એગ્રિગેટર્સ સુધી</span>
+                          <span>સિધા ખાનગી વેપારીઓ / એગ્રિગેટર્સ સુધી <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Direct to private merchants / Aggregators]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_21" value="સંધિ કૃષિ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>સંધિ કૃષિ</span>
+                          <span>સંધિ કૃષિ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Contract farming]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_21" value="સ rightsધારણ વપરાશકર્તાઓ સુધી (કૃષક બજાર)" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>સ rightsધારણ વપરાશકર્તાઓ સુધી (કૃષક બજાર)</span>
+                          <span>સ rightsધારણ વપરાશકર્તાઓ સુધી (કૃષક બજાર) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Direct to consumers (Farmer market)]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_21" value="ઓનલાઇન પ્લેટફોર્મ / ઈ-કોમર્સ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>ઓનલાઇન પ્લેટફોર્મ / ઈ-કોમર્સ</span>
+                          <span>ઓનલાઇન પ્લેટફોર્મ / ઈ-કોમર્સ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Online platform / E-commerce]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="radio" name="Gujarati_q_21" value="સહકારી સોસાયટીઓ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>સહકારી સોસાયટીઓ</span>
+                          <span>સહકારી સોસાયટીઓ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Cooperative societies]</span></span>
                         </label>
                       </div>
                     </div>
@@ -1204,11 +1204,11 @@ export default function FarmerSurveyForm() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <label className="flex items-center space-x-2">
                           <input type="checkbox" name="Gujarati_q_23_હાં" value="હાં" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>હાં</span>
+                          <span>હાં <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Yes]</span></span>
                         </label>
                         <label className="flex items-center space-x-2">
                           <input type="checkbox" name="Gujarati_q_23_ના" value="ના" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>ના</span>
+                          <span>ના <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[No]</span></span>
                         </label>
                       </div>
                     </div>
