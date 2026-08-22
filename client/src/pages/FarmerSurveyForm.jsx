@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { api } from '../services/api';
 
 export default function FarmerSurveyForm() {
   const [formData, setFormData] = useState({});
@@ -25,16 +26,8 @@ export default function FarmerSurveyForm() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const response = await fetch('http://localhost:5000/api/survey', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      if (response.ok) {
-        setSubmitted(true);
-      } else {
-        alert('Failed to submit survey');
-      }
+      await api.post('/survey', formData);
+      setSubmitted(true);
     } catch (error) {
       console.error(error);
       alert('Error submitting survey');
