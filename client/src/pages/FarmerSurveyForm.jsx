@@ -3,15 +3,60 @@ import React, { useState } from 'react';
 export default function FarmerSurveyForm() {
   const [formData, setFormData] = useState({});
   const [language, setLanguage] = useState('English');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    if (type === 'checkbox') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: checked ? value : ''
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const response = await fetch('http://localhost:5000/api/survey', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      if (response.ok) {
+        setSubmitted(true);
+      } else {
+        alert('Failed to submit survey');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Error submitting survey');
+    }
+    setIsSubmitting(false);
   };
 
   const handlePrint = () => {
     window.print();
   };
+
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-brand-light flex items-center justify-center p-4">
+        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md text-center">
+          <h2 className="text-2xl font-bold text-brand-green mb-4">Thank You!</h2>
+          <p className="text-gray-600 mb-6">Your survey response has been recorded successfully.</p>
+          <button onClick={() => window.location.reload()} className="btn-primary px-6 py-2">Submit Another</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 print:p-0 print:m-0 print:max-w-none">
@@ -45,7 +90,8 @@ export default function FarmerSurveyForm() {
            <img src="/logo.png" alt="Watermark" className="w-1/2 md:w-[45%] print:w-[45%] object-contain mix-blend-multiply" />
         </div>
 
-        <table className="w-full relative z-10">
+        <form onSubmit={handleSubmit} className="w-full relative z-10">
+        <table className="w-full">
           <tbody className="table-row-group">
             <tr>
               <td className="p-10 md:p-16 print:p-0">
@@ -57,7 +103,7 @@ export default function FarmerSurveyForm() {
                    language === 'Hindi' ? 'किसान प्रोफाइल और कृषि सर्वेक्षण' : 'ખેડૂત પ્રોફાઇલ અને કૃષિ સર્વેક્ષણ'}
                 </h1>
                 
-                <form className="space-y-8">
+                
                   {language === 'English' && (<>
                     <div className="mb-6 text-gray-700 italic">Please fill the form correctly.</div>
                     <div className="mb-6 text-gray-700 italic">Your Data will not be shared further.</div>
@@ -1262,11 +1308,27 @@ export default function FarmerSurveyForm() {
                       </div>
                     </div>
                   </>)}
-                </form>
+
+                <div className="mt-8 flex justify-center print:hidden">
+
+
+                  <button type="submit" disabled={isSubmitting} className="btn-primary px-8 py-3 w-full md:w-auto font-bold tracking-wider">
+
+
+                    {isSubmitting ? 'Submitting...' : 'Submit Survey'}
+
+
+                  </button>
+
+
+                </div>
+
+
               </td>
             </tr>
           </tbody>
         </table>
+        </form>
       </div>
     </div>
   );
