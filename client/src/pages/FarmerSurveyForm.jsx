@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
@@ -8,6 +8,18 @@ export default function FarmerSurveyForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [offlineQueue, setOfflineQueue] = useState(JSON.parse(localStorage.getItem('offlineSurveys') || '[]'));
+
+  useEffect(() => {
+    const handleOnline = () => {
+      if (offlineQueue.length > 0) {
+        if (window.confirm("You are back online! Would you like to sync your saved surveys to the cloud now?")) {
+          syncOfflineSurveys();
+        }
+      }
+    };
+    window.addEventListener('online', handleOnline);
+    return () => window.removeEventListener('online', handleOnline);
+  }, [offlineQueue]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -91,9 +103,15 @@ export default function FarmerSurveyForm() {
     return (
       <div className="min-h-screen bg-brand-light flex flex-col items-center justify-center p-4">
         {offlineQueue.length > 0 && (
-          <div className="bg-orange-500 text-white p-4 text-center font-bold mb-6 rounded shadow max-w-md w-full animate-fade-in">
-            You have {offlineQueue.length} survey(s) saved securely on this device! 
-            <br/><span className="font-normal text-sm">Please remember to click "Submit Another" and sync them when you reconnect to the internet.</span>
+          <div className="bg-orange-500 text-white p-6 text-center font-bold mb-6 rounded-xl shadow-lg max-w-md w-full animate-fade-in border-4 border-orange-400">
+            <p className="mb-4 text-lg">⚠️ You have {offlineQueue.length} survey(s) saved offline on this device!</p>
+            <button 
+              onClick={syncOfflineSurveys} 
+              disabled={isSubmitting} 
+              className="bg-white text-orange-600 px-6 py-3 rounded-lg shadow-md hover:bg-gray-100 transition w-full font-bold text-lg"
+            >
+              {isSubmitting ? "Syncing to Cloud..." : "Sync to Cloud Now"}
+            </button>
           </div>
         )}
         <div className="bg-white p-8 rounded-xl shadow-lg max-w-md text-center w-full">
