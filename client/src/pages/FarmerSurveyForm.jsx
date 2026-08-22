@@ -156,10 +156,7 @@ export default function FarmerSurveyForm() {
         </div>
 
         <form onSubmit={handleSubmit} className="w-full relative z-10">
-        <table className="w-full">
-          <tbody className="table-row-group">
-            <tr>
-              <td className="p-4 sm:p-6 md:p-12 print:p-0 max-w-full overflow-hidden w-full">
+              <div className="p-4 sm:p-6 md:p-12 print:p-0 max-w-full overflow-hidden w-full" flex flex-col space-y-6>
                 <div className="flex justify-center mb-6 items-center">
                   <img src="/logo.png" alt="Logo" className="w-full max-w-[250px] md:max-w-[300px] object-contain mix-blend-multiply" />
                 </div>
@@ -1389,10 +1386,7 @@ export default function FarmerSurveyForm() {
                 </div>
 
 
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
         </form>
       </div>
     </div>
