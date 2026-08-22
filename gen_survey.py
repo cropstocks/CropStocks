@@ -51,6 +51,7 @@ guj_opt_translations = {
     'ક્યારેક-ક્યારેક': 'Sometimes',
     'અકસાર': 'Often',
     'અકसार': 'Often',
+    'અક\u0441\u0430\u0440': 'Often',
     'સંમેશા': 'Always',
     'ખાડી સિંચાઈ': 'Canal irrigation',
     'ટ્યુબવેલ (નળકૂપ)': 'Tube well',
@@ -71,7 +72,20 @@ guj_opt_translations = {
     'ઓનલાઇન પ્લેટફોર્મ / ઈ-કોમર્સ': 'Online platform / E-commerce',
     'સહકારી સોસાયટીઓ': 'Cooperative societies',
     'હાં': 'Yes',
-    'ના': 'No'
+    'ના': 'No',
+    # New row translations
+    'કેતાંનો પ્રકોપ': 'Pest infestation',
+    'પાણીની કમી': 'Water shortage',
+    'બજારના મૂલ્યમાં ઊતાર-ચઢાવ': 'Market price fluctuations',
+    'સભ્ય ગુણવત્તાવાળા બીજોની કમી': 'Lack of good quality seeds',
+    'વરસાદનું પાણી': 'Rainwater',
+    'મજૂરી ખર્ચ (પ્રતિ કલાક)': 'Labor cost (per hour)',
+    'બીજ (દર કિલોગ્રામ)': 'Seeds (per kg)',
+    'ખેડાણ વાળી ખાતર (દર કિલોગ્રામ)': 'Fertilizers (per kg)',
+    'પોકાટોરજ': 'Pesticides',
+    'ઉપકરણ અને ઈંધણ (પ્રતિ કલાક)': 'Equipment and fuel (per hour)',
+    'જલસંચય (દર મહિને)': 'Irrigation (per month)',
+    'જમીન ભાડું (પ્રતિ મહીનો)': 'Land rent (per month)'
 }
 
 for lang, qs in sections.items():
@@ -164,8 +178,9 @@ for lang, qs in sections.items():
                     
         def get_opt_trans(opt_text):
             if lang != 'Gujarati': return ""
+            # EXACT match for options to prevent "ના" matching inside "બજારના"
             for k, v in guj_opt_translations.items():
-                if k in opt_text:
+                if opt_text.strip() == k:
                     return f' <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[{v}]</span>'
             return ""
         

@@ -908,13 +908,13 @@ export default function FarmerSurveyForm() {
                               <th className="p-2 border-b-2 border-gray-300"></th>
                               <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">ઘણો વખત નહીં <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Rarely]</span></th>
                               <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">ક્યારેક-ક્યારેક <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Sometimes]</span></th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">અકсар</th>
+                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">અકсар <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Often]</span></th>
                               <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">સંમેશા <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Always]</span></th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">કેતાંનો પ્રકોપ</td>
+                              <td className="p-2 font-medium">કેતાંનો પ્રકોપ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Pest infestation]</span></td>
                               <td className="p-2 text-center">
                                 <input type="radio" name="Gujarati_q_7_કેતાંનો પ્રકોપ" value="ઘણો વખત નહીં" className="text-brand-green" onChange={handleInputChange} />
                               </td>
@@ -929,7 +929,7 @@ export default function FarmerSurveyForm() {
                               </td>
                             </tr>
                             <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">પાણીની કમી</td>
+                              <td className="p-2 font-medium">પાણીની કમી <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Water shortage]</span></td>
                               <td className="p-2 text-center">
                                 <input type="radio" name="Gujarati_q_7_પાણીની કમી" value="ઘણો વખત નહીં" className="text-brand-green" onChange={handleInputChange} />
                               </td>
@@ -944,7 +944,7 @@ export default function FarmerSurveyForm() {
                               </td>
                             </tr>
                             <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">બજારના મૂલ્યમાં ઊતાર-ચઢાવ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[No]</span></td>
+                              <td className="p-2 font-medium">બજારના મૂલ્યમાં ઊતાર-ચઢાવ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Market price fluctuations]</span></td>
                               <td className="p-2 text-center">
                                 <input type="radio" name="Gujarati_q_7_બજારના મૂલ્યમાં ઊતાર-ચઢાવ" value="ઘણો વખત નહીં" className="text-brand-green" onChange={handleInputChange} />
                               </td>
@@ -959,7 +959,7 @@ export default function FarmerSurveyForm() {
                               </td>
                             </tr>
                             <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">સભ્ય ગુણવત્તાવાળા બીજોની કમી</td>
+                              <td className="p-2 font-medium">સભ્ય ગુણવત્તાવાળા બીજોની કમી <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Lack of good quality seeds]</span></td>
                               <td className="p-2 text-center">
                                 <input type="radio" name="Gujarati_q_7_સભ્ય ગુણવત્તાવાળા બીજોની કમી" value="ઘણો વખત નહીં" className="text-brand-green" onChange={handleInputChange} />
                               </td>
@@ -974,7 +974,7 @@ export default function FarmerSurveyForm() {
                               </td>
                             </tr>
                             <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">વરસાદનું પાણી</td>
+                              <td className="p-2 font-medium">વરસાદનું પાણી <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Rainwater]</span></td>
                               <td className="p-2 text-center">
                                 <input type="radio" name="Gujarati_q_7_વરસાદનું પાણી" value="ઘણો વખત નહીં" className="text-brand-green" onChange={handleInputChange} />
                               </td>
@@ -996,31 +996,31 @@ export default function FarmerSurveyForm() {
                       <label className="block font-semibold text-gray-800 mb-2">7. દર મોસમમાં ઉત્પાદનનો ખર્ચ. <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Cost of Production per season]</span></label>
                       <div className="space-y-4 mt-2">
                         <div>
-                          <label className="block text-sm text-gray-700 mb-1">મજૂરી ખર્ચ (પ્રતિ કલાક)</label>
+                          <label className="block text-sm text-gray-700 mb-1">મજૂરી ખર્ચ (પ્રતિ કલાક) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Labor cost (per hour)]</span></label>
                           <input type="text" name="Gujarati_q_8_મજૂરી ખર્ચ (પ્રતિ કલાક)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
                         </div>
                         <div>
-                          <label className="block text-sm text-gray-700 mb-1">બીજ (દર કિલોગ્રામ)</label>
+                          <label className="block text-sm text-gray-700 mb-1">બીજ (દર કિલોગ્રામ) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Seeds (per kg)]</span></label>
                           <input type="text" name="Gujarati_q_8_બીજ (દર કિલોગ્રામ)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
                         </div>
                         <div>
-                          <label className="block text-sm text-gray-700 mb-1">ખેડાણ વાળી ખાતર (દર કિલોગ્રામ)</label>
+                          <label className="block text-sm text-gray-700 mb-1">ખેડાણ વાળી ખાતર (દર કિલોગ્રામ) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Fertilizers (per kg)]</span></label>
                           <input type="text" name="Gujarati_q_8_ખેડાણ વાળી ખાતર (દર કિલોગ્રામ)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
                         </div>
                         <div>
-                          <label className="block text-sm text-gray-700 mb-1">પોકાટોરજ</label>
+                          <label className="block text-sm text-gray-700 mb-1">પોકાટોરજ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Pesticides]</span></label>
                           <input type="text" name="Gujarati_q_8_પોકાટોરજ" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
                         </div>
                         <div>
-                          <label className="block text-sm text-gray-700 mb-1">ઉપકરણ અને ઈંધણ (પ્રતિ કલાક)</label>
+                          <label className="block text-sm text-gray-700 mb-1">ઉપકરણ અને ઈંધણ (પ્રતિ કલાક) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Equipment and fuel (per hour)]</span></label>
                           <input type="text" name="Gujarati_q_8_ઉપકરણ અને ઈંધણ (પ્રતિ કલાક)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
                         </div>
                         <div>
-                          <label className="block text-sm text-gray-700 mb-1">જલસંચય (દર મહિને)</label>
+                          <label className="block text-sm text-gray-700 mb-1">જલસંચય (દર મહિને) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Irrigation (per month)]</span></label>
                           <input type="text" name="Gujarati_q_8_જલસંચય (દર મહિને)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
                         </div>
                         <div>
-                          <label className="block text-sm text-gray-700 mb-1">જમીન ભાડું (પ્રતિ મહીનો)</label>
+                          <label className="block text-sm text-gray-700 mb-1">જમીન ભાડું (પ્રતિ મહીનો) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Land rent (per month)]</span></label>
                           <input type="text" name="Gujarati_q_8_જમીન ભાડું (પ્રતિ મહીનો)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
                         </div>
                       </div>
