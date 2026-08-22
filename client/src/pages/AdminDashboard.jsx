@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import StatsCard from '../components/StatsCard';
 import { api } from '../services/api';
+import { db } from '../firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 export default function AdminDashboard() {
   const [listings, setListings] = useState([]);
@@ -10,12 +12,22 @@ export default function AdminDashboard() {
 
   const fetchData = async () => {
     try {
-      const [listingsData, surveysData] = await Promise.all([
-        api.get('/admin/listings').catch(() => []),
-        api.get('/admin/surveys').catch(() => [])
+      const [listingsData] = await Promise.all([
+        api.get('/admin/listings').catch(() => [])
       ]);
+      
+      let fbSurveys = [];
+      try {
+        const querySnapshot = await getDocs(collection(db, "surveys"));
+        fbSurveys = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), createdAt: doc.data().createdAt?.toDate() || new Date() }));
+        // Sort by newest
+        fbSurveys.sort((a, b) => b.createdAt - a.createdAt);
+      } catch (err) {
+        console.error("Firebase fetch error", err);
+      }
+
       setListings(listingsData || []);
-      setSurveys(surveysData || []);
+      setSurveys(fbSurveys);
     } catch (err) {
       console.error(err);
     } finally {

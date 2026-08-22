@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { api } from '../services/api';
+import { db } from '../firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function FarmerSurveyForm() {
   const [formData, setFormData] = useState({});
@@ -26,11 +27,14 @@ export default function FarmerSurveyForm() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await api.post('/survey', formData);
+      await addDoc(collection(db, 'surveys'), {
+        data: JSON.stringify(formData),
+        createdAt: serverTimestamp()
+      });
       setSubmitted(true);
     } catch (error) {
-      console.error(error);
-      alert('Error submitting survey');
+      console.error('Firebase Error:', error);
+      alert('Error submitting survey to Firebase: ' + error.message);
     }
     setIsSubmitting(false);
   };
