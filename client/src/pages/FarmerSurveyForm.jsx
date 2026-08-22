@@ -908,7 +908,7 @@ export default function FarmerSurveyForm() {
                               <th className="p-2 border-b-2 border-gray-300"></th>
                               <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">ઘણો વખત નહીં <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Rarely]</span></th>
                               <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">ક્યારેક-ક્યારેક <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Sometimes]</span></th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">અકсар <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Often]</span></th>
+                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">અકસર <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Often]</span></th>
                               <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">સંમેશા <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Always]</span></th>
                             </tr>
                           </thead>
@@ -922,7 +922,7 @@ export default function FarmerSurveyForm() {
                                 <input type="radio" name="Gujarati_q_7_કેતાંનો પ્રકોપ" value="ક્યારેક-ક્યારેક" className="text-brand-green" onChange={handleInputChange} />
                               </td>
                               <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_કેતાંનો પ્રકોપ" value="અકсар" className="text-brand-green" onChange={handleInputChange} />
+                                <input type="radio" name="Gujarati_q_7_કેતાંનો પ્રકોપ" value="અકસર" className="text-brand-green" onChange={handleInputChange} />
                               </td>
                               <td className="p-2 text-center">
                                 <input type="radio" name="Gujarati_q_7_કેતાંનો પ્રકોપ" value="સંમેશા" className="text-brand-green" onChange={handleInputChange} />
@@ -937,7 +937,7 @@ export default function FarmerSurveyForm() {
                                 <input type="radio" name="Gujarati_q_7_પાણીની કમી" value="ક્યારેક-ક્યારેક" className="text-brand-green" onChange={handleInputChange} />
                               </td>
                               <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_પાણીની કમી" value="અકсар" className="text-brand-green" onChange={handleInputChange} />
+                                <input type="radio" name="Gujarati_q_7_પાણીની કમી" value="અકસર" className="text-brand-green" onChange={handleInputChange} />
                               </td>
                               <td className="p-2 text-center">
                                 <input type="radio" name="Gujarati_q_7_પાણીની કમી" value="સંમેશા" className="text-brand-green" onChange={handleInputChange} />
@@ -952,7 +952,7 @@ export default function FarmerSurveyForm() {
                                 <input type="radio" name="Gujarati_q_7_બજારના મૂલ્યમાં ઊતાર-ચઢાવ" value="ક્યારેક-ક્યારેક" className="text-brand-green" onChange={handleInputChange} />
                               </td>
                               <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_બજારના મૂલ્યમાં ઊતાર-ચઢાવ" value="અકсар" className="text-brand-green" onChange={handleInputChange} />
+                                <input type="radio" name="Gujarati_q_7_બજારના મૂલ્યમાં ઊતાર-ચઢાવ" value="અકસર" className="text-brand-green" onChange={handleInputChange} />
                               </td>
                               <td className="p-2 text-center">
                                 <input type="radio" name="Gujarati_q_7_બજારના મૂલ્યમાં ઊતાર-ચઢાવ" value="સંમેશા" className="text-brand-green" onChange={handleInputChange} />
@@ -967,7 +967,7 @@ export default function FarmerSurveyForm() {
                                 <input type="radio" name="Gujarati_q_7_સભ્ય ગુણવત્તાવાળા બીજોની કમી" value="ક્યારેક-ક્યારેક" className="text-brand-green" onChange={handleInputChange} />
                               </td>
                               <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_સભ્ય ગુણવત્તાવાળા બીજોની કમી" value="અકсар" className="text-brand-green" onChange={handleInputChange} />
+                                <input type="radio" name="Gujarati_q_7_સભ્ય ગુણવત્તાવાળા બીજોની કમી" value="અકસર" className="text-brand-green" onChange={handleInputChange} />
                               </td>
                               <td className="p-2 text-center">
                                 <input type="radio" name="Gujarati_q_7_સભ્ય ગુણવત્તાવાળા બીજોની કમી" value="સંમેશા" className="text-brand-green" onChange={handleInputChange} />
@@ -982,7 +982,7 @@ export default function FarmerSurveyForm() {
                                 <input type="radio" name="Gujarati_q_7_વરસાદનું પાણી" value="ક્યારેક-ક્યારેક" className="text-brand-green" onChange={handleInputChange} />
                               </td>
                               <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_વરસાદનું પાણી" value="અકсар" className="text-brand-green" onChange={handleInputChange} />
+                                <input type="radio" name="Gujarati_q_7_વરસાદનું પાણી" value="અકસર" className="text-brand-green" onChange={handleInputChange} />
                               </td>
                               <td className="p-2 text-center">
                                 <input type="radio" name="Gujarati_q_7_વરસાદનું પાણી" value="સંમેશા" className="text-brand-green" onChange={handleInputChange} />

@@ -11,6 +11,8 @@ def clean_opt(opt):
     o = str(opt).replace("'", "\\'")
     if 'સ rightsધારણ' in o:
         o = o.replace('સ rightsધારણ', 'સીધા સામાન્ય')
+    if '\u0441\u0430\u0440' in o:
+        o = o.replace('\u0441\u0430\u0440', 'સર')
     return o
 
 sections = {
@@ -60,7 +62,7 @@ guj_opt_translations = {
     'ક્યારેક-ક્યારેક': 'Sometimes',
     'અકસાર': 'Often',
     'અકसार': 'Often',
-    'અક\u0441\u0430\u0440': 'Often',
+    'અકસર': 'Often',
     'સંમેશા': 'Always',
     'ખાડી સિંચાઈ': 'Canal irrigation',
     'ટ્યૂબવેલ': 'Tube well',
