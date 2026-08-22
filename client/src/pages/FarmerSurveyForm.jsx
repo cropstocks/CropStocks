@@ -49,8 +49,8 @@ export default function FarmerSurveyForm() {
           <tbody className="table-row-group">
             <tr>
               <td className="p-10 md:p-16 print:p-0">
-                <div className="flex justify-center -mb-8 md:-mb-16 overflow-hidden max-h-48 md:max-h-64 items-center">
-                  <img src="/logo.png" alt="Logo" className="w-full max-w-[600px] object-contain mix-blend-multiply" />
+                <div className="flex justify-center mb-6 items-center">
+                  <img src="/logo.png" alt="Logo" className="w-full max-w-[500px] object-contain mix-blend-multiply" />
                 </div>
                 <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">
                   {language === 'English' ? 'Farmer Profile and Agricultural Survey' : 
