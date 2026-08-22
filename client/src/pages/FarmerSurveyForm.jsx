@@ -1196,7 +1196,7 @@ export default function FarmerSurveyForm() {
                       </div>
                     </div>
                     <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">21. જો તમે ઘણા વેચાણ ચેનલ્સ નો ઉપયોગ કરો છો, તો કૃપા કરીને ઉલ્લેખ કરો કે ઉપર જણાવેલી فصلો તેઓ દરેક ચેનલ પર કેટલી કિંમતે ખરીદે છે. <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[If you use multiple selling channels, please explain]</span></label>
+                      <label className="block font-semibold text-gray-800 mb-2">21. જો તમે બહુવિધ વેચાણ ચેનલોનો ઉપયોગ કરો છો, તો કૃપા કરીને સમજાવો <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[If you use multiple selling channels, please explain]</span></label>
                       <input type="text" name="Gujarati_q_22" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
                     </div>
                     <div className="break-inside-avoid">

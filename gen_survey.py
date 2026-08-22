@@ -34,6 +34,7 @@ guj_translations = {
     'કેટલી છે (ક્વિન્ટલમાં)': 'How much is the produce (in Quintals)?',
     'પાકો કેટલીમાં વેચો': 'For how much do you sell the above-mentioned crops?',
     'મુખ્યત્વે કેવી રીતે વેચો': 'How do you primarily sell your agricultural produce?',
+    'બહુવિધ વેચાણ ચેનલોનો ઉપયોગ': 'If you use multiple selling channels, please explain',
     'વેચાણ ચેનલ્સ': 'If you use multiple selling channels, please explain',
     'પ્લેટફોર્મ પર સૂચિબદ્ધ': 'Would you like to list your crop on our platform?',
     'ટિપ્પણીઓ કે પડકારો': 'Any additional comments or challenges you wish to report?',
@@ -98,6 +99,9 @@ for lang, qs in sections.items():
             
         if lang == 'Gujarati' and 'मुख्य खेती का स्थान (राज्य)' in q['title']:
             q['title'] = 'મુખ્ય ખેતીનું સ્થળ (રાજ્ય)'
+            
+        if lang == 'Gujarati' and 'જો તમે ઘણા વેચાણ ચેનલ્સ નો ઉપયોગ' in q['title']:
+            q['title'] = 'જો તમે બહુવિધ વેચાણ ચેનલોનો ઉપયોગ કરો છો, તો કૃપા કરીને સમજાવો'
 
 react_code = """import React, { useState } from 'react';
 
