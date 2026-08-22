@@ -892,7 +892,7 @@ export default function FarmerSurveyForm() {
                       <input type="text" name="Gujarati_q_4" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
                     </div>
                     <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">4. मुख्य खेती का स्थान (राज्य)</label>
+                      <label className="block font-semibold text-gray-800 mb-2">4. મુખ્ય ખેતીનું સ્થળ (રાજ્ય)</label>
                       <input type="text" name="Gujarati_q_5" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
                     </div>
                     <div className="break-inside-avoid">
