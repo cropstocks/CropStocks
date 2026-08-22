@@ -7,6 +7,7 @@ export default function FarmerSurveyForm() {
   const [language, setLanguage] = useState('English');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [offlineQueue, setOfflineQueue] = useState(JSON.parse(localStorage.getItem('offlineSurveys') || '[]'));
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -23,9 +24,44 @@ export default function FarmerSurveyForm() {
     }
   };
 
+  const syncOfflineSurveys = async () => {
+    if (offlineQueue.length === 0) return;
+    setIsSubmitting(true);
+    let synced = 0;
+    try {
+      for (const survey of offlineQueue) {
+        await addDoc(collection(db, 'surveys'), {
+          data: JSON.stringify(survey.data),
+          createdAt: new Date(survey.timestamp) // Keep original timestamp
+        });
+        synced++;
+      }
+      localStorage.removeItem('offlineSurveys');
+      setOfflineQueue([]);
+      alert(`Successfully synced ${synced} surveys to the cloud!`);
+    } catch (err) {
+      alert(`Sync failed after ${synced} surveys. Please check your internet connection.`);
+      const remaining = offlineQueue.slice(synced);
+      localStorage.setItem('offlineSurveys', JSON.stringify(remaining));
+      setOfflineQueue(remaining);
+    }
+    setIsSubmitting(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    
+    if (!navigator.onLine) {
+      // Save locally if offline
+      const newQueue = [...offlineQueue, { data: formData, timestamp: new Date().toISOString() }];
+      localStorage.setItem('offlineSurveys', JSON.stringify(newQueue));
+      setOfflineQueue(newQueue);
+      setSubmitted(true);
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       await addDoc(collection(db, 'surveys'), {
         data: JSON.stringify(formData),
@@ -34,7 +70,11 @@ export default function FarmerSurveyForm() {
       setSubmitted(true);
     } catch (error) {
       console.error('Firebase Error:', error);
-      alert('Error submitting survey to Firebase: ' + error.message);
+      // Fallback to offline queue if firebase fails
+      const newQueue = [...offlineQueue, { data: formData, timestamp: new Date().toISOString() }];
+      localStorage.setItem('offlineSurveys', JSON.stringify(newQueue));
+      setOfflineQueue(newQueue);
+      setSubmitted(true);
     }
     setIsSubmitting(false);
   };
