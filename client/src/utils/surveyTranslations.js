@@ -732,9 +732,9 @@ export const surveyConfig = [
 
 export const staticText = {
   "title": {
-    "en": "FARMER COST & MONEY-FLOW QUESTIONNAIRE (SHORT FORM)",
-    "hi": "किसान लागत और धन-प्रवाह प्रश्नावली (लघु रूप)",
-    "gu": "ખેડૂત ખર્ચ અને નાણાં-પ્રવાહ પ્રશ્નાવલી (ટૂંકું સ્વરૂપ)"
+    "en": "FARMER COST & MONEY-FLOW QUESTIONNAIRE",
+    "hi": "किसान लागत और धन-प्रवाह प्रश्नावली",
+    "gu": "ખેડૂત ખર્ચ અને નાણાં-પ્રવાહ પ્રશ્નાવલી"
   },
   "instruction1": {
     "en": "Ask about the real crop just grown. Skip any branch that doesn't apply. Record ₹, quantity and timing. Family labour counts even if unpaid.",

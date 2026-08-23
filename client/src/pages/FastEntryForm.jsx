@@ -6,6 +6,16 @@ import { surveyConfig, staticText } from '../utils/surveyTranslations';
 const getLabel = (obj, lang) => {
   const code = lang === 'English' ? 'en' : lang === 'Hindi' ? 'hi' : lang === 'Gujarati' ? 'gu' : lang;
   if (code === 'en') return obj.en;
+  return (
+    <>
+      {obj[code]} <span className="text-sm font-normal italic text-gray-500">[{obj.en}]</span>
+    </>
+  );
+};
+
+const getLabelString = (obj, lang) => {
+  const code = lang === 'English' ? 'en' : lang === 'Hindi' ? 'hi' : lang === 'Gujarati' ? 'gu' : lang;
+  if (code === 'en') return obj.en;
   return `${obj[code]} [${obj.en}]`;
 };
 
@@ -68,6 +78,24 @@ export default function FastEntryForm() {
       }
     }
   }, []);
+
+  const handleSpeak = (q) => {
+    let textToSpeak = q.label.gu;
+    if (q.options) {
+      textToSpeak += ". " + q.options.map(o => o.gu).join(". ");
+    } else if (q.subfields) {
+      textToSpeak += ". " + q.subfields.map(s => s.gu).join(". ");
+    }
+    
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.lang = 'gu-IN';
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert("Text-to-speech is not supported in this browser.");
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -199,7 +227,14 @@ export default function FastEntryForm() {
     if (q.type === 'text' || q.type === 'number') {
       return (
         <div key={q.id} className="flex flex-col mb-4">
-          <label className="text-sm font-semibold text-gray-800 mb-1">{labelText}</label>
+          <label className="text-sm font-semibold text-gray-800 mb-1">
+            {labelText}
+            {language === 'Gujarati' && (
+              <button type="button" onClick={() => handleSpeak(q)} className="ml-2 text-xl hover:scale-110 transition-transform" title="Play Audio (Gujarati)">
+                🔊
+              </button>
+            )}
+          </label>
           <input 
             type={q.type} 
             name={q.key} 
@@ -215,7 +250,14 @@ export default function FastEntryForm() {
     if (q.type === 'single_select') {
       return (
         <div key={q.id} className="flex flex-col mb-4">
-          <label className="text-sm font-semibold text-gray-800 mb-1">{labelText}</label>
+          <label className="text-sm font-semibold text-gray-800 mb-1">
+            {labelText}
+            {language === 'Gujarati' && (
+              <button type="button" onClick={() => handleSpeak(q)} className="ml-2 text-xl hover:scale-110 transition-transform" title="Play Audio (Gujarati)">
+                🔊
+              </button>
+            )}
+          </label>
           <select 
             name={q.key} 
             value={formData[q.key] || ''}
@@ -225,7 +267,7 @@ export default function FastEntryForm() {
           >
             <option value="">-- Select --</option>
             {q.options.map((opt, i) => (
-              <option key={i} value={opt.en}>{getLabel(opt, language)}</option>
+              <option key={i} value={opt.en}>{getLabelString(opt, language)}</option>
             ))}
           </select>
         </div>
@@ -235,7 +277,14 @@ export default function FastEntryForm() {
     if (q.type === 'matrix') {
       return (
         <div key={q.id} className="mb-4 bg-gray-50 p-3 rounded border border-gray-200">
-          <label className="text-sm font-semibold text-gray-800 mb-2 block">{labelText}</label>
+          <label className="text-sm font-semibold text-gray-800 mb-2 block">
+            {labelText}
+            {language === 'Gujarati' && (
+              <button type="button" onClick={() => handleSpeak(q)} className="ml-2 text-xl hover:scale-110 transition-transform" title="Play Audio (Gujarati)">
+                🔊
+              </button>
+            )}
+          </label>
           {q.rows.map((row, i) => (
             <div key={i} className="flex flex-col sm:flex-row sm:items-center mb-2">
               <span className="text-sm w-1/3 mb-1 sm:mb-0">{getLabel(row, language)}</span>
@@ -264,7 +313,14 @@ export default function FastEntryForm() {
     if (q.type === 'group') {
       return (
         <div key={q.id} className="mb-4 p-3 bg-gray-50 rounded border border-gray-200">
-          <label className="text-sm font-semibold text-gray-800 mb-2 block">{labelText}</label>
+          <label className="text-sm font-semibold text-gray-800 mb-2 block">
+            {labelText}
+            {language === 'Gujarati' && (
+              <button type="button" onClick={() => handleSpeak(q)} className="ml-2 text-xl hover:scale-110 transition-transform" title="Play Audio (Gujarati)">
+                🔊
+              </button>
+            )}
+          </label>
           <div className="grid grid-cols-2 gap-3">
             {q.subfields.map((sub, i) => (
               <div key={i} className="flex flex-col">
@@ -286,7 +342,14 @@ export default function FastEntryForm() {
     if (q.type === 'multi_select_group') {
       return (
         <div key={q.id} className="mb-4">
-          <label className="text-sm font-semibold text-gray-800 mb-1 block">{labelText}</label>
+          <label className="text-sm font-semibold text-gray-800 mb-1 block">
+            {labelText}
+            {language === 'Gujarati' && (
+              <button type="button" onClick={() => handleSpeak(q)} className="ml-2 text-xl hover:scale-110 transition-transform" title="Play Audio (Gujarati)">
+                🔊
+              </button>
+            )}
+          </label>
           <div className="flex space-x-4">
             {q.options.map((opt, i) => (
               <label key={i} className="flex items-center space-x-1 cursor-pointer">
@@ -312,7 +375,14 @@ export default function FastEntryForm() {
     if (q.type === 'rating') {
       return (
         <div key={q.id} className="mb-4">
-          <label className="text-sm font-semibold text-gray-800 mb-1 block">{labelText}</label>
+          <label className="text-sm font-semibold text-gray-800 mb-1 block">
+            {labelText}
+            {language === 'Gujarati' && (
+              <button type="button" onClick={() => handleSpeak(q)} className="ml-2 text-xl hover:scale-110 transition-transform" title="Play Audio (Gujarati)">
+                🔊
+              </button>
+            )}
+          </label>
           <div className="flex space-x-1 overflow-x-auto pb-2">
             {Array.from({length: q.max}, (_, i) => i + 1).map(val => (
               <label key={val} className="cursor-pointer border border-gray-300 rounded w-8 h-8 flex items-center justify-center bg-white hover:bg-gray-100">

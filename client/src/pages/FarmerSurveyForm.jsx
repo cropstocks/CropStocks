@@ -6,7 +6,11 @@ import { surveyConfig, staticText } from '../utils/surveyTranslations';
 const getLabel = (obj, lang) => {
   const code = lang === 'English' ? 'en' : lang === 'Hindi' ? 'hi' : 'gu';
   if (code === 'en') return obj.en;
-  return `${obj[code]} [${obj.en}]`;
+  return (
+    <>
+      {obj[code]} <span className="text-sm font-normal italic text-gray-500">[{obj.en}]</span>
+    </>
+  );
 };
 
 export default function FarmerSurveyForm() {
@@ -48,6 +52,27 @@ export default function FarmerSurveyForm() {
         ...prev,
         [name]: value
       }));
+    }
+  };
+
+  const handleSpeak = (q) => {
+    let textToSpeak = q.label.gu;
+    if (q.options) {
+      textToSpeak += ". " + q.options.map(o => o.gu).join(". ");
+    } else if (q.subfields) {
+      textToSpeak += ". " + q.subfields.map(s => s.gu).join(". ");
+    } else if (q.columns && q.rows) {
+      // For matrix (though we don't have matrix anymore, good to be safe)
+      textToSpeak += ". " + q.rows.map(r => r.gu).join(". ");
+    }
+    
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.lang = 'gu-IN';
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert("Text-to-speech is not supported in this browser.");
     }
   };
 
@@ -153,7 +178,14 @@ export default function FarmerSurveyForm() {
     if (q.type === 'text' || q.type === 'number') {
       return (
         <div key={q.id} className="break-inside-avoid mb-6">
-          <label className="block font-semibold text-gray-800 mb-2">{labelText}</label>
+          <label className="block font-semibold text-gray-800 mb-2">
+            {labelText}
+            {language === 'Gujarati' && (
+              <button type="button" onClick={() => handleSpeak(q)} className="ml-2 text-xl hover:scale-110 transition-transform" title="Play Audio (Gujarati)">
+                🔊
+              </button>
+            )}
+          </label>
           <input 
             type={q.type} 
             name={q.key} 
@@ -168,7 +200,14 @@ export default function FarmerSurveyForm() {
     if (q.type === 'single_select') {
       return (
         <div key={q.id} className="break-inside-avoid mb-6">
-          <label className="block font-semibold text-gray-800 mb-2">{labelText}</label>
+          <label className="block font-semibold text-gray-800 mb-2">
+            {labelText}
+            {language === 'Gujarati' && (
+              <button type="button" onClick={() => handleSpeak(q)} className="ml-2 text-xl hover:scale-110 transition-transform" title="Play Audio (Gujarati)">
+                🔊
+              </button>
+            )}
+          </label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {q.options.map((opt, i) => (
               <label key={i} className="flex items-center space-x-2">
@@ -191,7 +230,14 @@ export default function FarmerSurveyForm() {
     if (q.type === 'matrix') {
       return (
         <div key={q.id} className="break-inside-avoid mb-6">
-          <label className="block font-semibold text-gray-800 mb-2">{labelText}</label>
+          <label className="block font-semibold text-gray-800 mb-2">
+            {labelText}
+            {language === 'Gujarati' && (
+              <button type="button" onClick={() => handleSpeak(q)} className="ml-2 text-xl hover:scale-110 transition-transform" title="Play Audio (Gujarati)">
+                🔊
+              </button>
+            )}
+          </label>
           <div className="overflow-x-auto w-full max-w-[90vw] md:max-w-full">
             <table className="w-full text-left border-collapse min-w-[500px]">
               <thead>
@@ -230,7 +276,14 @@ export default function FarmerSurveyForm() {
     if (q.type === 'group') {
       return (
         <div key={q.id} className="break-inside-avoid mb-6">
-          <label className="block font-semibold text-gray-800 mb-2">{labelText}</label>
+          <label className="block font-semibold text-gray-800 mb-2">
+            {labelText}
+            {language === 'Gujarati' && (
+              <button type="button" onClick={() => handleSpeak(q)} className="ml-2 text-xl hover:scale-110 transition-transform" title="Play Audio (Gujarati)">
+                🔊
+              </button>
+            )}
+          </label>
           <div className="space-y-4 ml-0 md:ml-4">
             {q.subfields.map((sub, i) => (
               <div key={i} className="flex flex-col md:flex-row md:items-center space-y-1 md:space-y-0 md:space-x-4">
@@ -252,7 +305,14 @@ export default function FarmerSurveyForm() {
     if (q.type === 'multi_select_group') {
       return (
         <div key={q.id} className="break-inside-avoid mb-6">
-          <label className="block font-semibold text-gray-800 mb-2">{labelText}</label>
+          <label className="block font-semibold text-gray-800 mb-2">
+            {labelText}
+            {language === 'Gujarati' && (
+              <button type="button" onClick={() => handleSpeak(q)} className="ml-2 text-xl hover:scale-110 transition-transform" title="Play Audio (Gujarati)">
+                🔊
+              </button>
+            )}
+          </label>
           <div className="flex flex-col space-y-2">
             {q.options.map((opt, i) => (
               <label key={i} className="flex items-center space-x-2">
@@ -278,7 +338,14 @@ export default function FarmerSurveyForm() {
     if (q.type === 'rating') {
       return (
         <div key={q.id} className="break-inside-avoid mb-6">
-          <label className="block font-semibold text-gray-800 mb-2">{labelText}</label>
+          <label className="block font-semibold text-gray-800 mb-2">
+            {labelText}
+            {language === 'Gujarati' && (
+              <button type="button" onClick={() => handleSpeak(q)} className="ml-2 text-xl hover:scale-110 transition-transform" title="Play Audio (Gujarati)">
+                🔊
+              </button>
+            )}
+          </label>
           <div className="flex flex-wrap gap-4">
             {Array.from({length: q.max}, (_, i) => i + 1).map(val => (
               <label key={val} className="flex flex-col items-center cursor-pointer">
