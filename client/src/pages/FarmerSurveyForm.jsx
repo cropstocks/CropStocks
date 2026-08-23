@@ -36,6 +36,13 @@ export default function FarmerSurveyForm() {
     return () => window.removeEventListener('online', handleOnline);
   }, [offlineQueue]);
 
+  useEffect(() => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    }
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === 'checkbox') {
@@ -56,24 +63,18 @@ export default function FarmerSurveyForm() {
   };
 
   const handleSpeak = (q) => {
-    let textToSpeak = q.label.gu;
-    if (q.options) {
-      textToSpeak += ". " + q.options.map(o => o.gu).join(". ");
-    } else if (q.subfields) {
-      textToSpeak += ". " + q.subfields.map(s => s.gu).join(". ");
-    } else if (q.columns && q.rows) {
-      // For matrix (though we don't have matrix anymore, good to be safe)
-      textToSpeak += ". " + q.rows.map(r => r.gu).join(". ");
+    if (window.currentAudio) {
+      window.currentAudio.pause();
     }
     
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(textToSpeak);
-      utterance.lang = 'gu-IN';
-      window.speechSynthesis.speak(utterance);
-    } else {
-      alert("Text-to-speech is not supported in this browser.");
-    }
+    // We now use the bundled local MP3 files for 100% offline reliability
+    const url = `/audio/${q.id}.mp3`;
+    
+    window.currentAudio = new Audio(url);
+    window.currentAudio.play().catch(e => {
+      console.error("Audio playback error:", e);
+      alert("Failed to play audio. Audio file might be missing.");
+    });
   };
 
   const syncOfflineSurveys = async () => {
