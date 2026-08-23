@@ -19,6 +19,7 @@ import ListingWizard from './pages/ListingWizard';
 import GuidanceFeed from './pages/GuidanceFeed';
 import DocumentGenerator from './pages/DocumentGenerator';
 import FarmerSurveyForm from './pages/FarmerSurveyForm';
+import FastEntryForm from './pages/FastEntryForm';
 
 export default function App() {
   return (
@@ -58,6 +59,9 @@ export default function App() {
                 } />
                 <Route path="/survey" element={
                   <FarmerSurveyForm />
+                } />
+                <Route path="/survey/fast-entry" element={
+                  <FastEntryForm />
                 } />
               </Routes>
             </main>

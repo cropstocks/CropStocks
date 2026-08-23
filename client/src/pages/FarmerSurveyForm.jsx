@@ -1,13 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { surveyConfig, staticText } from '../utils/surveyTranslations';
+
+const getLabel = (obj, lang) => {
+  const code = lang === 'English' ? 'en' : lang === 'Hindi' ? 'hi' : 'gu';
+  if (code === 'en') return obj.en;
+  return `${obj[code]} [${obj.en}]`;
+};
 
 export default function FarmerSurveyForm() {
   const [formData, setFormData] = useState({});
-  const [language, setLanguage] = useState('English');
+  const [language, setLanguage] = useState(localStorage.getItem('surveyLanguage') || 'English');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [offlineQueue, setOfflineQueue] = useState(JSON.parse(localStorage.getItem('offlineSurveys') || '[]'));
+
+  useEffect(() => {
+    localStorage.setItem('surveyLanguage', language);
+  }, [language]);
 
   useEffect(() => {
     const handleOnline = () => {
@@ -24,10 +35,14 @@ export default function FarmerSurveyForm() {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === 'checkbox') {
-      setFormData(prev => ({
-        ...prev,
-        [name]: checked ? value : ''
-      }));
+      setFormData(prev => {
+        const currentVals = prev[name] ? prev[name].split(',') : [];
+        if (checked) {
+          return { ...prev, [name]: [...currentVals, value].join(',') };
+        } else {
+          return { ...prev, [name]: currentVals.filter(v => v !== value).join(',') };
+        }
+      });
     } else {
       setFormData(prev => ({
         ...prev,
@@ -48,7 +63,7 @@ export default function FarmerSurveyForm() {
       for (const survey of offlineQueue) {
         await addDoc(collection(db, 'surveys'), {
           data: JSON.stringify(survey.data),
-          createdAt: new Date(survey.timestamp) // Keep original timestamp
+          createdAt: new Date(survey.timestamp)
         });
         synced++;
       }
@@ -69,7 +84,6 @@ export default function FarmerSurveyForm() {
     setIsSubmitting(true);
     
     if (!navigator.onLine) {
-      // Save locally if offline
       const newQueue = [...offlineQueue, { data: formData, timestamp: new Date().toISOString() }];
       localStorage.setItem('offlineSurveys', JSON.stringify(newQueue));
       setOfflineQueue(newQueue);
@@ -86,7 +100,6 @@ export default function FarmerSurveyForm() {
       setSubmitted(true);
     } catch (error) {
       console.error('Firebase Error:', error);
-      // Fallback to offline queue if firebase fails
       const newQueue = [...offlineQueue, { data: formData, timestamp: new Date().toISOString() }];
       localStorage.setItem('offlineSurveys', JSON.stringify(newQueue));
       setOfflineQueue(newQueue);
@@ -117,11 +130,178 @@ export default function FarmerSurveyForm() {
         <div className="bg-white p-8 rounded-xl shadow-lg max-w-md text-center w-full">
           <h2 className="text-2xl font-bold text-brand-green mb-4">Thank You!</h2>
           <p className="text-gray-600 mb-6">Your survey response has been recorded successfully.</p>
-          <button onClick={() => window.location.reload()} className="btn-primary px-6 py-2">Submit Another</button>
+          <button onClick={() => {
+            setSubmitted(false);
+            setFormData({});
+            window.scrollTo(0,0);
+          }} className="btn-primary px-6 py-2">Submit Another</button>
         </div>
       </div>
     );
   }
+
+  const renderField = (q) => {
+    if (q.dependsOn) {
+      const { key, values } = q.dependsOn;
+      const currentVal = formData[key];
+      if (!values.includes(currentVal)) {
+        return null;
+      }
+    }
+    const labelText = getLabel(q.label, language);
+    
+    if (q.type === 'text' || q.type === 'number') {
+      return (
+        <div key={q.id} className="break-inside-avoid mb-6">
+          <label className="block font-semibold text-gray-800 mb-2">{labelText}</label>
+          <input 
+            type={q.type} 
+            name={q.key} 
+            value={formData[q.key] || ''}
+            onChange={handleInputChange}
+            className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" 
+          />
+        </div>
+      );
+    }
+    
+    if (q.type === 'single_select') {
+      return (
+        <div key={q.id} className="break-inside-avoid mb-6">
+          <label className="block font-semibold text-gray-800 mb-2">{labelText}</label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {q.options.map((opt, i) => (
+              <label key={i} className="flex items-center space-x-2">
+                <input 
+                  type="radio" 
+                  name={q.key} 
+                  value={opt.en} 
+                  checked={formData[q.key] === opt.en}
+                  onChange={handleInputChange}
+                  className="text-brand-green focus:ring-brand-green" 
+                />
+                <span>{getLabel(opt, language)}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    
+    if (q.type === 'matrix') {
+      return (
+        <div key={q.id} className="break-inside-avoid mb-6">
+          <label className="block font-semibold text-gray-800 mb-2">{labelText}</label>
+          <div className="overflow-x-auto w-full max-w-[90vw] md:max-w-full">
+            <table className="w-full text-left border-collapse min-w-[500px]">
+              <thead>
+                <tr>
+                  <th className="p-2 border-b-2 border-gray-300"></th>
+                  {q.columns.map((col, i) => (
+                    <th key={i} className="p-2 border-b-2 border-gray-300 text-sm font-medium">{getLabel(col, language)}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {q.rows.map((row, i) => (
+                  <tr key={i} className="border-b border-gray-200">
+                    <td className="p-2 font-medium">{getLabel(row, language)}</td>
+                    {q.columns.map((col, j) => (
+                      <td key={j} className="p-2 text-center">
+                        <input 
+                          type="radio" 
+                          name={row.key} 
+                          value={col.en} 
+                          checked={formData[row.key] === col.en}
+                          onChange={handleInputChange}
+                          className="text-brand-green" 
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+    
+    if (q.type === 'group') {
+      return (
+        <div key={q.id} className="break-inside-avoid mb-6">
+          <label className="block font-semibold text-gray-800 mb-2">{labelText}</label>
+          <div className="space-y-4 ml-0 md:ml-4">
+            {q.subfields.map((sub, i) => (
+              <div key={i} className="flex flex-col md:flex-row md:items-center space-y-1 md:space-y-0 md:space-x-4">
+                <span className="w-full md:w-1/3 text-gray-700">{getLabel(sub, language)}</span>
+                <input 
+                  type="text" 
+                  name={sub.key} 
+                  value={formData[sub.key] || ''}
+                  onChange={handleInputChange}
+                  className="w-full md:w-2/3 border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" 
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    
+    if (q.type === 'multi_select_group') {
+      return (
+        <div key={q.id} className="break-inside-avoid mb-6">
+          <label className="block font-semibold text-gray-800 mb-2">{labelText}</label>
+          <div className="flex flex-col space-y-2">
+            {q.options.map((opt, i) => (
+              <label key={i} className="flex items-center space-x-2">
+                <input 
+                  type="checkbox" 
+                  name={opt.key} 
+                  value={opt.en} 
+                  checked={formData[opt.key] === opt.en}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setFormData(prev => ({...prev, [opt.key]: checked ? opt.en : ''}));
+                  }}
+                  className="text-brand-green focus:ring-brand-green rounded" 
+                />
+                <span>{getLabel(opt, language)}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    
+    if (q.type === 'rating') {
+      return (
+        <div key={q.id} className="break-inside-avoid mb-6">
+          <label className="block font-semibold text-gray-800 mb-2">{labelText}</label>
+          <div className="flex flex-wrap gap-4">
+            {Array.from({length: q.max}, (_, i) => i + 1).map(val => (
+              <label key={val} className="flex flex-col items-center cursor-pointer">
+                <input 
+                  type="radio" 
+                  name={q.key} 
+                  value={val.toString()} 
+                  checked={formData[q.key] === val.toString()}
+                  onChange={handleInputChange}
+                  className="text-brand-green focus:ring-brand-green mb-1" 
+                />
+                <span>{val}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  const code = language === 'English' ? 'en' : language === 'Hindi' ? 'hi' : 'gu';
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 print:p-0 print:m-0 print:max-w-none overflow-x-hidden w-full">
@@ -156,1237 +336,29 @@ export default function FarmerSurveyForm() {
         </div>
 
         <form onSubmit={handleSubmit} className="w-full relative z-10">
-              <div className="p-4 sm:p-6 md:p-12 print:p-0 max-w-full overflow-hidden w-full" flex flex-col space-y-6>
-                <div className="flex justify-center mb-6 items-center">
-                  <img src="/logo.png" alt="Logo" className="w-full max-w-[250px] md:max-w-[300px] object-contain mix-blend-multiply" />
-                </div>
-                <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">
-                  {language === 'English' ? 'Farmer Profile and Agricultural Survey' : 
-                   language === 'Hindi' ? 'किसान प्रोफाइल और कृषि सर्वेक्षण' : 'ખેડૂત પ્રોફાઇલ અને કૃષિ સર્વેક્ષણ'}
-                </h1>
-                
-                
-                  {language === 'English' && (<>
-                    <div className="mb-6 text-gray-700 italic">Please fill the form correctly.</div>
-                    <div className="mb-6 text-gray-700 italic">Your Data will not be shared further.</div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">1. Name of Data collector (Only for employees)</label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_2" value="Manan Pandey" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Manan Pandey</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_2" value="Manas Vinod" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Manas Vinod</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_2" value="Aradhya Garg" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Aradhya Garg</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_2" value="Shreyas Das" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Shreyas Das</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_2" value="Devansh More" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Devansh More</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_2" value="Namit Bhatia" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Namit Bhatia</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">2. Full Name of Farmer</label>
-                      <input type="text" name="English_q_3" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">3. Primary Farming Location (State)</label>
-                      <input type="text" name="English_q_4" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">4. Which of the crops are currently under cultivation?</label>
-                      <input type="text" name="English_q_5" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">5. What is the primary method of irrigation used on your farm?</label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_6" value="Canal Irrigation" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Canal Irrigation</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_6" value="Tube Well" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Tube Well</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_6" value="Rain-fed" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Rain-fed</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_6" value="Drip Irrigation" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Drip Irrigation</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_6" value="Sprinkler System" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Sprinkler System</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">6. Indicate the frequency of the following farming challenges encountered this season:</label>
-                      <div className="overflow-x-auto w-full max-w-[90vw] md:max-w-full">
-                        <table className="w-full text-left border-collapse min-w-[500px]">
-                          <thead>
-                            <tr>
-                              <th className="p-2 border-b-2 border-gray-300"></th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">Rarely</th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">Sometimes</th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">Often</th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">Always</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">Pest Infestation</td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Pest Infestation" value="Rarely" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Pest Infestation" value="Sometimes" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Pest Infestation" value="Often" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Pest Infestation" value="Always" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                            </tr>
-                            <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">Water Scarcity</td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Water Scarcity" value="Rarely" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Water Scarcity" value="Sometimes" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Water Scarcity" value="Often" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Water Scarcity" value="Always" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                            </tr>
-                            <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">Market Price Fluctuation</td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Market Price Fluctuation" value="Rarely" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Market Price Fluctuation" value="Sometimes" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Market Price Fluctuation" value="Often" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Market Price Fluctuation" value="Always" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                            </tr>
-                            <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">Lack of Quality Seeds</td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Lack of Quality Seeds" value="Rarely" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Lack of Quality Seeds" value="Sometimes" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Lack of Quality Seeds" value="Often" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Lack of Quality Seeds" value="Always" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                            </tr>
-                            <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">Flood</td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Flood" value="Rarely" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Flood" value="Sometimes" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Flood" value="Often" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="English_q_7_Flood" value="Always" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">7. Cost of Production per season.</label>
-                      <div className="space-y-4 mt-2">
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">Labor Costs (per hour)</label>
-                          <input type="text" name="English_q_8_Labor Costs (per hour)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">Seeds (per Kg)</label>
-                          <input type="text" name="English_q_8_Seeds (per Kg)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">Fertilisers (per Kg)</label>
-                          <input type="text" name="English_q_8_Fertilisers (per Kg)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">Pesticides</label>
-                          <input type="text" name="English_q_8_Pesticides" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">Equipment and Fuel (per Hour)</label>
-                          <input type="text" name="English_q_8_Equipment and Fuel (per Hour)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">Irrigation (per Month)</label>
-                          <input type="text" name="English_q_8_Irrigation (per Month)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">Land rent (per month)</label>
-                          <input type="text" name="English_q_8_Land rent (per month)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">8. Total estimated Cost of Production per season.</label>
-                      <input type="text" name="English_q_9" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">9. Total estimated Selling Price</label>
-                      <input type="text" name="English_q_10" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">10. How much land (in Hectares) do you own</label>
-                      <input type="text" name="English_q_11" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">11. Which of these agricultural support services would be most beneficial to you?</label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_12" value="Subsidized fertilizers" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Subsidized fertilizers</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_12" value="Low-interest agricultural loans" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Low-interest agricultural loans</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_12" value="Technical training on modern farming" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Technical training on modern farming</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_12" value="Market access and logistics support" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Market access and logistics support</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_12" value="Weather forecasting alerts" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Weather forecasting alerts</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">12. How would you rate your level of access to government agricultural schemes?</label>
-                      <div className="flex flex-wrap gap-4">
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="English_q_13" value="1" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">1</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="English_q_13" value="2" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">2</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="English_q_13" value="3" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">3</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="English_q_13" value="4" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">4</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="English_q_13" value="5" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">5</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">13. At what rate of interest do you take loan normally?</label>
-                      <input type="text" name="English_q_14" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">14. Type of Interest</label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="English_q_15_Compound Interest" value="Compound Interest" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>Compound Interest</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="English_q_15_Simple Interest" value="Simple Interest" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>Simple Interest</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">15. From whom do you take loan?</label>
-                      <input type="text" name="English_q_16" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">16. How much is the produce (in Quintals)?</label>
-                      <input type="text" name="English_q_17" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">17. For how much do you sell the above-mentioned crops?</label>
-                      <input type="text" name="English_q_18" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">18. How do you primarily sell your agricultural produce?</label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_19" value="Local Mandis / APMC Markets" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Local Mandis / APMC Markets</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_19" value="Direct to Private Traders / Aggregators" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Direct to Private Traders / Aggregators</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_19" value="Contract Farming" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Contract Farming</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_19" value="Direct to Consumers (Farmers Markets)" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Direct to Consumers (Farmers Markets)</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_19" value="Online Platforms / E-commerce" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Online Platforms / E-commerce</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_19" value="Cooperative Societies" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Cooperative Societies</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">19. If you use multiple selling channels, please mention at what rate each of them buys the above-mentioned crops.</label>
-                      <input type="text" name="English_q_20" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">20. Would you like to list your crop to our platform? (Only if you are explained)</label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_21" value="Yes" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>Yes</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="English_q_21" value="No" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>No</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">21. Any additional comments or challenges you wish to report?</label>
-                      <input type="text" name="English_q_22" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">22. What will you rate us? (Only if you are explained already)</label>
-                      <div className="flex flex-wrap gap-4">
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="English_q_23" value="1" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">1</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="English_q_23" value="2" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">2</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="English_q_23" value="3" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">3</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="English_q_23" value="4" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">4</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="English_q_23" value="5" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">5</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="English_q_23" value="6" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">6</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="English_q_23" value="7" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">7</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="English_q_23" value="8" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">8</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="English_q_23" value="9" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">9</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="English_q_23" value="10" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">10</span>
-                        </label>
-                      </div>
-                    </div>
-                  </>)}
-                  {language === 'Hindi' && (<>
-                    <div className="mb-6 text-gray-700 italic">कृपया फॉर्म सही से भरें।</div>
-                    <div className="mb-6 text-gray-700 italic">आपका डाटा आगे साझा नहीं किया जाएगा।</div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">1. डेटा कलेक्टर का नाम (सिर्फ कर्मचारियों के लिए)</label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_2" value="मनन पांडे" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>मनन पांडे</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_2" value="मनस विनोद" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>मनस विनोद</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_2" value="आराध्या गर्ग" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>आराध्या गर्ग</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_2" value="श्रेयस दास" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>श्रेयस दास</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_2" value="देवांश मोरे" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>देवांश मोरे</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_2" value="नमित भाटिया" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>नमित भाटिया</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">2. किसान का पूरा नाम</label>
-                      <input type="text" name="Hindi_q_3" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">3. संपर्क नंबर</label>
-                      <input type="text" name="Hindi_q_4" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">4. मुख्य खेती का स्थान (राज्य)</label>
-                      <input type="text" name="Hindi_q_5" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">5. कौन सी फसलें अभी खेतों में उगाई जा रही हैं?</label>
-                      <input type="text" name="Hindi_q_6" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">6. इस मौसम में सामना की गई निम्नलिखित खेती की चुनौतियों की आवृत्ति बताएं:</label>
-                      <div className="overflow-x-auto w-full max-w-[90vw] md:max-w-full">
-                        <table className="w-full text-left border-collapse min-w-[500px]">
-                          <thead>
-                            <tr>
-                              <th className="p-2 border-b-2 border-gray-300"></th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">शायद ही कभी</th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">कभी-कभी</th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">अक्सर</th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">हमेशा</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">कीटों का प्रकोप</td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_कीटों का प्रकोप" value="शायद ही कभी" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_कीटों का प्रकोप" value="कभी-कभी" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_कीटों का प्रकोप" value="अक्सर" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_कीटों का प्रकोप" value="हमेशा" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                            </tr>
-                            <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">पानी की कमी</td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_पानी की कमी" value="शायद ही कभी" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_पानी की कमी" value="कभी-कभी" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_पानी की कमी" value="अक्सर" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_पानी की कमी" value="हमेशा" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                            </tr>
-                            <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">बाजार मूल्य में उतार-चढ़ाव</td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_बाजार मूल्य में उतार-चढ़ाव" value="शायद ही कभी" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_बाजार मूल्य में उतार-चढ़ाव" value="कभी-कभी" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_बाजार मूल्य में उतार-चढ़ाव" value="अक्सर" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_बाजार मूल्य में उतार-चढ़ाव" value="हमेशा" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                            </tr>
-                            <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">अच्छी गुणवत्ता वाले बीजों की कमी</td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_अच्छी गुणवत्ता वाले बीजों की कमी" value="शायद ही कभी" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_अच्छी गुणवत्ता वाले बीजों की कमी" value="कभी-कभी" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_अच्छी गुणवत्ता वाले बीजों की कमी" value="अक्सर" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_अच्छी गुणवत्ता वाले बीजों की कमी" value="हमेशा" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                            </tr>
-                            <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">बाढ़</td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_बाढ़" value="शायद ही कभी" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_बाढ़" value="कभी-कभी" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_बाढ़" value="अक्सर" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Hindi_q_7_बाढ़" value="हमेशा" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">7. प्रत्येक मौसम में उत्पादन की लागत।</label>
-                      <div className="space-y-4 mt-2">
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">मजदूरी लागत (प्रति घंटा)</label>
-                          <input type="text" name="Hindi_q_8_मजदूरी लागत (प्रति घंटा)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">बीज (प्रति किलोग्राम)</label>
-                          <input type="text" name="Hindi_q_8_बीज (प्रति किलोग्राम)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">उर्वरक (प्रति किलोग्राम)</label>
-                          <input type="text" name="Hindi_q_8_उर्वरक (प्रति किलोग्राम)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">कीटनाशक</label>
-                          <input type="text" name="Hindi_q_8_कीटनाशक" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">उपकरण और ईंधन (प्रति घंटा)</label>
-                          <input type="text" name="Hindi_q_8_उपकरण और ईंधन (प्रति घंटा)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">सिंचाई (प्रति माह)</label>
-                          <input type="text" name="Hindi_q_8_सिंचाई (प्रति माह)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">भूमि किराया (प्रति माह)</label>
-                          <input type="text" name="Hindi_q_8_भूमि किराया (प्रति माह)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">8. आपके खेत में सिचाई का मुख्य तरीका कौन सा है?</label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Hindi_q_9_नहर सिंचाई" value="नहर सिंचाई" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>नहर सिंचाई</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Hindi_q_9_ट्यूबवेल (नलकूप)" value="ट्यूबवेल (नलकूप)" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>ट्यूबवेल (नलकूप)</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Hindi_q_9_वर्षा आधारित" value="वर्षा आधारित" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>वर्षा आधारित</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Hindi_q_9_ड्रिप सिंचाई" value="ड्रिप सिंचाई" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>ड्रिप सिंचाई</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Hindi_q_9_स्प्रिंकलर (छिड़काव) प्रणाली" value="स्प्रिंकलर (छिड़काव) प्रणाली" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>स्प्रिंकलर (छिड़काव) प्रणाली</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">9. आप अपनी ज़मीन की मिट्टी की गुणवत्ता को कैसे दर्ज़ करेंगे?</label>
-                      <div className="flex flex-wrap gap-4">
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_10" value="1" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">1</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_10" value="2" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">2</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_10" value="3" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">3</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_10" value="4" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">4</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_10" value="5" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">5</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">10. प्रति सीजन अनुमानित कुल उत्पादन लागत।</label>
-                      <input type="text" name="Hindi_q_11" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">11. कुल अनुमानित बिक्री मूल्य</label>
-                      <input type="text" name="Hindi_q_12" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">12. आपके पास कितनी जमीन (हेक्टेयर में) है</label>
-                      <input type="text" name="Hindi_q_13" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">13. इनमें से कौन सी कृषि सहायता सेवाएँ आपके लिए सबसे फायदेमंद होंगी?</label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_14" value="रियायती उर्वरक (सब्सिडी वाले खाद)" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>रियायती उर्वरक (सब्सिडी वाले खाद)</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_14" value="कम ब्याज वाले कृषि ऋण" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>कम ब्याज वाले कृषि ऋण</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_14" value="आधुनिक खेती पर तकनीकी प्रशिक्षण" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>आधुनिक खेती पर तकनीकी प्रशिक्षण</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_14" value="बाजार तक पहुंच और लॉजिस्टिक्स सहायता" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>बाजार तक पहुंच और लॉजिस्टिक्स सहायता</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_14" value="मौसम पूर्वानुमान अलर्ट" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>मौसम पूर्वानुमान अलर्ट</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">14. आप सरकारी कृषि योजनाओं तक अपनी पहुँच का स्तर कैसे आंकते हैं?</label>
-                      <div className="flex flex-wrap gap-4">
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_15" value="1" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">1</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_15" value="2" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">2</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_15" value="3" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">3</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_15" value="4" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">4</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_15" value="5" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">5</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">15. आप सामान्य तौर पर लोन किस दर से लेते हैं?</label>
-                      <input type="text" name="Hindi_q_16" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">16. ब्याज का प्रकार</label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Hindi_q_17_चक्रवृद्धि ब्याज" value="चक्रवृद्धि ब्याज" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>चक्रवृद्धि ब्याज</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Hindi_q_17_साधारण ब्याज" value="साधारण ब्याज" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>साधारण ब्याज</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">17. आप किससे ऋण लेते हैं?</label>
-                      <input type="text" name="Hindi_q_18" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">18. उत्पाद कितना है (क्विंटल में)?</label>
-                      <input type="text" name="Hindi_q_19" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">19. आप ऊपर बताए गए फसलों को कितने में बेचते हैं?</label>
-                      <input type="text" name="Hindi_q_20" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">20. आप अपनी कृषि उपज मुख्य रूप से कैसे बेचते हैं?</label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_21" value="स्थानीय मंडी / एपीएमसी बाजार" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>स्थानीय मंडी / एपीएमसी बाजार</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_21" value="प्रत्यक्ष निजी व्यापारी / एग्रीगेटर्स तक" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>प्रत्यक्ष निजी व्यापारी / एग्रीगेटर्स तक</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_21" value="अनुबंध कृषि" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>अनुबंध कृषि</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_21" value="प्रत्यक्ष उपभोक्ताओं तक (किसान बाजार)" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>प्रत्यक्ष उपभोक्ताओं तक (किसान बाजार)</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_21" value="ऑनलाइन प्लेटफ़ॉर्म / ई-कॉमर्स" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>ऑनलाइन प्लेटफ़ॉर्म / ई-कॉमर्स</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Hindi_q_21" value="सहकारी समितियाँ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>सहकारी समितियाँ</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">21. यदि आप कई बिक्री चैनलों का उपयोग करते हैं, तो कृपया समझाएं।</label>
-                      <input type="text" name="Hindi_q_22" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">22. क्या आप अपनी फसल को हमारे प्लेटफ़ॉर्म पर सूचीबद्ध करना चाहेंगे?(केवल अगर आपको समझाया गया हो)</label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Hindi_q_23_हाँ" value="हाँ" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>हाँ</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Hindi_q_23_नहीं" value="नहीं" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>नहीं</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">23. क्या आप कोई अतिरिक्त टिप्पणियाँ या चुनौतियाँ रिपोर्ट करना चाहेंगे?</label>
-                      <input type="text" name="Hindi_q_24" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">24. आप हमें कितने अंक देंगे? (केवल यदि आपको पहले समझाया गया है)</label>
-                      <div className="flex flex-wrap gap-4">
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_25" value="1" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">1</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_25" value="2" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">2</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_25" value="3" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">3</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_25" value="4" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">4</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_25" value="5" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">5</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_25" value="6" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">6</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_25" value="7" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">7</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_25" value="8" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">8</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_25" value="9" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">9</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Hindi_q_25" value="10" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">10</span>
-                        </label>
-                      </div>
-                    </div>
-                  </>)}
-                  {language === 'Gujarati' && (<>
-                    <div className="mb-6 text-gray-700 italic">કૃપા કરીને ફોર્મ યોગ્ય રીતે ભરો. <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Please fill the form correctly]</span></div>
-                    <div className="mb-6 text-gray-700 italic">તમારા ડેટા આગળ શેર નહીં કરવામાં આવશે. <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Your Data will not be shared further]</span></div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">1. ડેટા કલેક્શન કરનારનું નામ (કેવળ કર્મચારીઓ માટે) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Name of Data collector (Only for employees)]</span></label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_2" value="મનન પાંડે" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>મનન પાંડે <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Manan Pandey]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_2" value="મનસ વિનોદ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>મનસ વિનોદ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Manas Vinod]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_2" value="આરાધ્યા ગર્ગ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>આરાધ્યા ગર્ગ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Aradhya Garg]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_2" value="શ્રેયસ દાસ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>શ્રેયસ દાસ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Shreyas Das]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_2" value="દેવાંશ મોરે" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>દેવાંશ મોરે <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Devansh More]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_2" value="નમિત ભાટિયા" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>નમિત ભાટિયા <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Namit Bhatia]</span></span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">2. કિસાનનું પૂરું નામ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Full Name of Farmer]</span></label>
-                      <input type="text" name="Gujarati_q_3" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">3. સંપર્ક નંબર <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Contact Number]</span></label>
-                      <input type="text" name="Gujarati_q_4" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">4. મુખ્ય ખેતીનું સ્થળ (રાજ્ય) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Primary Farming Location (State)]</span></label>
-                      <input type="text" name="Gujarati_q_5" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">5. હાલે કઈ ફસલો ખેતરોમાં ઉગાડી રહી છે? <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Which of the crops are currently under cultivation?]</span></label>
-                      <input type="text" name="Gujarati_q_6" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">6. આ મોસમમાં સામનો કરેલી નીચે દર્શાવેલી ખેતીની ચેલેન્જોનું આવર્તન જણાવો</label>
-                      <div className="overflow-x-auto w-full max-w-[90vw] md:max-w-full">
-                        <table className="w-full text-left border-collapse min-w-[500px]">
-                          <thead>
-                            <tr>
-                              <th className="p-2 border-b-2 border-gray-300"></th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">ઘણો વખત નહીં <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Rarely]</span></th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">ક્યારેક-ક્યારેક <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Sometimes]</span></th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">અકસર <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Often]</span></th>
-                              <th className="p-2 border-b-2 border-gray-300 text-sm font-medium">સંમેશા <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Always]</span></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">કેતાંનો પ્રકોપ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Pest infestation]</span></td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_કેતાંનો પ્રકોપ" value="ઘણો વખત નહીં" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_કેતાંનો પ્રકોપ" value="ક્યારેક-ક્યારેક" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_કેતાંનો પ્રકોપ" value="અકસર" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_કેતાંનો પ્રકોપ" value="સંમેશા" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                            </tr>
-                            <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">પાણીની કમી <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Water shortage]</span></td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_પાણીની કમી" value="ઘણો વખત નહીં" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_પાણીની કમી" value="ક્યારેક-ક્યારેક" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_પાણીની કમી" value="અકસર" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_પાણીની કમી" value="સંમેશા" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                            </tr>
-                            <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">બજારના મૂલ્યમાં ઊતાર-ચઢાવ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Market price fluctuations]</span></td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_બજારના મૂલ્યમાં ઊતાર-ચઢાવ" value="ઘણો વખત નહીં" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_બજારના મૂલ્યમાં ઊતાર-ચઢાવ" value="ક્યારેક-ક્યારેક" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_બજારના મૂલ્યમાં ઊતાર-ચઢાવ" value="અકસર" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_બજારના મૂલ્યમાં ઊતાર-ચઢાવ" value="સંમેશા" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                            </tr>
-                            <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">સભ્ય ગુણવત્તાવાળા બીજોની કમી <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Lack of good quality seeds]</span></td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_સભ્ય ગુણવત્તાવાળા બીજોની કમી" value="ઘણો વખત નહીં" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_સભ્ય ગુણવત્તાવાળા બીજોની કમી" value="ક્યારેક-ક્યારેક" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_સભ્ય ગુણવત્તાવાળા બીજોની કમી" value="અકસર" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_સભ્ય ગુણવત્તાવાળા બીજોની કમી" value="સંમેશા" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                            </tr>
-                            <tr className="border-b border-gray-200">
-                              <td className="p-2 font-medium">વરસાદનું પાણી <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Rainwater]</span></td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_વરસાદનું પાણી" value="ઘણો વખત નહીં" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_વરસાદનું પાણી" value="ક્યારેક-ક્યારેક" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_વરસાદનું પાણી" value="અકસર" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                              <td className="p-2 text-center">
-                                <input type="radio" name="Gujarati_q_7_વરસાદનું પાણી" value="સંમેશા" className="text-brand-green" onChange={handleInputChange} />
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">7. દર મોસમમાં ઉત્પાદનનો ખર્ચ. <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Cost of Production per season]</span></label>
-                      <div className="space-y-4 mt-2">
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">મજૂરી ખર્ચ (પ્રતિ કલાક) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Labor cost (per hour)]</span></label>
-                          <input type="text" name="Gujarati_q_8_મજૂરી ખર્ચ (પ્રતિ કલાક)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">બીજ (દર કિલોગ્રામ) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Seeds (per kg)]</span></label>
-                          <input type="text" name="Gujarati_q_8_બીજ (દર કિલોગ્રામ)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">ખેડાણ વાળી ખાતર (દર કિલોગ્રામ) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Fertilizers (per kg)]</span></label>
-                          <input type="text" name="Gujarati_q_8_ખેડાણ વાળી ખાતર (દર કિલોગ્રામ)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">પોકાટોરજ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Pesticides]</span></label>
-                          <input type="text" name="Gujarati_q_8_પોકાટોરજ" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">ઉપકરણ અને ઈંધણ (પ્રતિ કલાક) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Equipment and fuel (per hour)]</span></label>
-                          <input type="text" name="Gujarati_q_8_ઉપકરણ અને ઈંધણ (પ્રતિ કલાક)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">જલસંચય (દર મહિને) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Irrigation (per month)]</span></label>
-                          <input type="text" name="Gujarati_q_8_જલસંચય (દર મહિને)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">જમીન ભાડું (પ્રતિ મહીનો) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Land rent (per month)]</span></label>
-                          <input type="text" name="Gujarati_q_8_જમીન ભાડું (પ્રતિ મહીનો)" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">8. તમારા ખેતરમાં સિંચાઇનો મુખ્ય રીત કયો છે? <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[What is the primary method of irrigation used on your farm?]</span></label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Gujarati_q_9_ખાડી સિંચાઈ" value="ખાડી સિંચાઈ" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>ખાડી સિંચાઈ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Canal irrigation]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Gujarati_q_9_ટ્યૂબવેલ (નળકૂપ)" value="ટ્યૂબવેલ (નળકૂપ)" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>ટ્યૂબવેલ (નળકૂપ) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Tube well]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Gujarati_q_9_વર્ષા આધારિત" value="વર્ષા આધારિત" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>વર્ષા આધારિત <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Rain-fed]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Gujarati_q_9_ડ્રિપ સિંચાઈ" value="ડ્રિપ સિંચાઈ" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>ડ્રિપ સિંચાઈ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Drip irrigation]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Gujarati_q_9_સ્પ્રિંકલર (છાંટણી) પ્રણાળી" value="સ્પ્રિંકલર (છાંટણી) પ્રણાળી" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>સ્પ્રિંકલર (છાંટણી) પ્રણાળી <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Sprinkler system]</span></span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">9. તમે તમારી જમીનની માટીની ગુણવત્તા કેવી રીતે નોંધશો? <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[How would you rate your soil quality?]</span></label>
-                      <div className="flex flex-wrap gap-4">
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_10" value="1" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">1</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_10" value="2" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">2</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_10" value="3" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">3</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_10" value="4" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">4</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_10" value="5" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">5</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">10. પ્રત્યેક સિઝનમાં અંદાજિત કુલ ઉત્પાદન ખર્ચ. <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Total estimated Cost of Production per season]</span></label>
-                      <input type="text" name="Gujarati_q_11" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">11. કુલ અનુમાનિત વેચાણ કિંમત <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Total estimated Selling Price]</span></label>
-                      <input type="text" name="Gujarati_q_12" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">12. તમારે પાસે કેટલા હેક્ટર જમીન છે <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[How much land (in Hectares) do you own/rent?]</span></label>
-                      <input type="text" name="Gujarati_q_13" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">13. આમાંથી કેદી કૃષિ સહાયતા સેવાઓ તમારા માટે સૌથી વધુ લાભદાયક હશે? <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Which of these agricultural support services would be most beneficial to you?]</span></label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_14" value="રિયાયતી ખાતર (સબસિડીવાળો ખાતર)" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>રિયાયતી ખાતર (સબસિડીવાળો ખાતર) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Subsidized Fertilizer]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_14" value="ઘટ વ્યાજવાળા કૃષિ લોન" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>ઘટ વ્યાજવાળા કૃષિ લોન <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Low-interest agriculture loan]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_14" value="આધુનિક ખેતી પર ટેકનિકલ તાલીમ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>આધુનિક ખેતી પર ટેકનિકલ તાલીમ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Technical training on modern farming]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_14" value="બજાર સુધી પહોંચ અને લોજિસ્ટિક્સ સપોર્ટ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>બજાર સુધી પહોંચ અને લોજિસ્ટિક્સ સપોર્ટ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Market access and logistics support]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_14" value="હવામાન પૂર્વાનુમાન ચેતવણી" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>હવામાન પૂર્વાનુમાન ચેતવણી <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Weather forecast warning]</span></span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">14. તમે સરકારની કૃષિ યોજનાઓ સુધી પહોંચવાનો તમારો સ્તર કેવી રીતે માપો છો? <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[How would you rate your level of access to government agricultural schemes?]</span></label>
-                      <div className="flex flex-wrap gap-4">
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_15" value="1" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">1</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_15" value="2" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">2</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_15" value="3" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">3</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_15" value="4" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">4</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_15" value="5" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">5</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">15. તમે સામાન્ય રીતે લોન કેટલી દરે લેતા છો? <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[At what rate of interest do you take loan normally?]</span></label>
-                      <input type="text" name="Gujarati_q_16" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">16. બ્યાજનો પ્રકાર <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Type of Interest]</span></label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Gujarati_q_17_ચક્રવદ્ધિ વ્યાજ" value="ચક્રવદ્ધિ વ્યાજ" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>ચક્રવદ્ધિ વ્યાજ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Compound interest]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Gujarati_q_17_સરળ વ્યાજ" value="સરળ વ્યાજ" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>સરળ વ્યાજ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Simple interest]</span></span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">17. તમે ક્યાથી કાળા લેવો છો? <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[From whom do you take loan?]</span></label>
-                      <input type="text" name="Gujarati_q_18" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">18. ઉત્પાદન કેટલી છે (ક્વિન્ટલમાં)? <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[How much is the produce (in Quintals)?]</span></label>
-                      <input type="text" name="Gujarati_q_19" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">19. તમે ઉપર જણાવેલ પાકો કેટલીમાં વેચો છો? <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[For how much do you sell the above-mentioned crops?]</span></label>
-                      <input type="text" name="Gujarati_q_20" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">20. તમે તમારી ખેતીનું ઉત્પાદન મુખ્યત્વે કેવી રીતે વેચો છો? <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[How do you primarily sell your agricultural produce?]</span></label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_21" value="સ્થાનિક બજાર / APMC બજાર" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>સ્થાનિક બજાર / APMC બજાર <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Local Market / APMC Market]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_21" value="સિધા ખાનગી વેપારીઓ / એગ્રિગેટર્સ સુધી" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>સિધા ખાનગી વેપારીઓ / એગ્રિગેટર્સ સુધી <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Direct to private merchants / Aggregators]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_21" value="સંધિ કૃષિ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>સંધિ કૃષિ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Contract farming]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_21" value="સીધા સામાન્ય વપરાશકર્તાઓ સુધી (કૃષક બજાર)" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>સીધા સામાન્ય વપરાશકર્તાઓ સુધી (કૃષક બજાર) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Direct to consumers (Farmer market)]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_21" value="ઓનલાઇન પ્લેટફોર્મ / ઈ-કોમર્સ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>ઓનલાઇન પ્લેટફોર્મ / ઈ-કોમર્સ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Online platform / E-commerce]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="radio" name="Gujarati_q_21" value="સહકારી સોસાયટીઓ" className="text-brand-green focus:ring-brand-green" onChange={handleInputChange} />
-                          <span>સહકારી સોસાયટીઓ <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Cooperative societies]</span></span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">21. જો તમે બહુવિધ વેચાણ ચેનલોનો ઉપયોગ કરો છો, તો કૃપા કરીને સમજાવો <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[If you use multiple selling channels, please explain]</span></label>
-                      <input type="text" name="Gujarati_q_22" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">22. શું તમે તમારી પાકને અમારા પ્લેટફોર્મ પર સૂચિબદ્ધ કરવા માંગો છો?(ફક્ત જો તમને સમજાવવામાં આવ્યું હોય) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Would you like to list your crop on our platform?]</span></label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Gujarati_q_23_હાં" value="હાં" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>હાં <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Yes]</span></span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" name="Gujarati_q_23_ના" value="ના" className="text-brand-green focus:ring-brand-green rounded" onChange={handleInputChange} />
-                          <span>ના <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[No]</span></span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">23. શું તમે કોઈ વધારાની ટિપ્પણીઓ કે પડકારો જણાવવા ઈચ્છો છો? <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[Any additional comments or challenges you wish to report?]</span></label>
-                      <input type="text" name="Gujarati_q_24" className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" onChange={handleInputChange} />
-                    </div>
-                    <div className="break-inside-avoid">
-                      <label className="block font-semibold text-gray-800 mb-2">24. તમે અમને કેટલા નંબર આપશો? (ફક્ત જો તમને પહેલા સમજાવવામાં આવી હોય તો) <span className="text-xs text-gray-500 font-normal ml-1 print:text-[10px]">[What will you rate us? (Only if you are explained before)]</span></label>
-                      <div className="flex flex-wrap gap-4">
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_25" value="1" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">1</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_25" value="2" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">2</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_25" value="3" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">3</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_25" value="4" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">4</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_25" value="5" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">5</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_25" value="6" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">6</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_25" value="7" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">7</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_25" value="8" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">8</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_25" value="9" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">9</span>
-                        </label>
-                        <label className="flex flex-col items-center">
-                          <input type="radio" name="Gujarati_q_25" value="10" className="text-brand-green focus:ring-brand-green mb-1" onChange={handleInputChange} />
-                          <span className="text-sm">10</span>
-                        </label>
-                      </div>
-                    </div>
-                  </>)}
+          <div className="p-4 sm:p-6 md:p-12 print:p-0 max-w-full overflow-hidden w-full flex flex-col space-y-6">
+            <div className="flex justify-center mb-6 items-center">
+              <img src="/logo.png" alt="Logo" className="w-full max-w-[250px] md:max-w-[300px] object-contain mix-blend-multiply" />
+            </div>
+            <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">
+              {staticText.title[code]}
+            </h1>
+            
+            <div className="mb-6 text-gray-700 italic">{staticText.instruction1[code]}</div>
+            <div className="mb-6 text-gray-700 italic">{staticText.instruction2[code]}</div>
+            
+            {surveyConfig.map(renderField)}
 
-                <div className="mt-8 flex justify-center print:hidden">
-
-
-                  <button type="submit" disabled={isSubmitting} className="btn-primary px-8 py-3 w-full md:w-auto font-bold tracking-wider">
-
-
-                    {isSubmitting ? 'Submitting...' : 'Submit Survey'}
-
-
-                  </button>
-
-
-                </div>
-
-
-              </div>
+            <div className="mt-12 text-center print:hidden">
+              <button 
+                type="submit" 
+                disabled={isSubmitting}
+                className="btn-primary w-full md:w-auto px-12 py-3 text-lg relative"
+              >
+                {isSubmitting ? "Submitting..." : (language === 'English' ? 'Submit Survey' : language === 'Hindi' ? 'सर्वेक्षण सबमिट करें' : 'સર્વેક્ષણ સબમિટ કરો')}
+              </button>
+            </div>
+          </div>
         </form>
       </div>
     </div>
