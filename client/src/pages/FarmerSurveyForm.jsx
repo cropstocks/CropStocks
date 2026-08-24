@@ -91,7 +91,7 @@ export default function FarmerSurveyForm() {
     
     // We now use the bundled local MP3 files for 100% offline reliability
     // If it fails, fallback to SpeechSynthesis API
-    const url = `/audio/${q.id}.mp3`;
+    const url = `${import.meta.env.BASE_URL}audio/${q.id}.mp3`;
     
     window.currentAudio = new Audio(url);
     window.currentAudio.play().catch(e => {
@@ -101,8 +101,6 @@ export default function FarmerSurveyForm() {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'gu-IN';
         window.speechSynthesis.speak(utterance);
-      } else {
-        alert("Failed to play audio. Audio file might be missing.");
       }
     });
   };
