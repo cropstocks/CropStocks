@@ -200,31 +200,60 @@ export const surveyConfig = [
     ]
   },
   {
-    "id": "q_5_details",
+    "id": "q_5_labour",
     "type": "group",
     "label": {
-      "en": "5b. Labour/Machine details (person-days, wage/rate, total cost)",
-      "hi": "5b. श्रम/मशीन का विवरण (व्यक्ति-दिन, मजदूरी/दर, कुल लागत)",
-      "gu": "5b. મજૂરી/મશીનની વિગતો (વ્યક્તિ-દિવસો, વેતન/દર, કુલ ખર્ચ)"
+      "en": "5b. Labour details (person-days, wage/rate, total cost)",
+      "hi": "5b. श्रम का विवरण (व्यक्ति-दिन, मजदूरी/दर, कुल लागत)",
+      "gu": "5b. મજૂરીની વિગતો (વ્યક્તિ-દિવસો, વેતન/દર, કુલ ખર્ચ)"
     },
     "subfields": [
       {
-        "key": "new_q_5_days",
+        "key": "new_q_5_labour_days",
         "en": "Person-days (Family/Hired)",
-        "hi": "व्यक्ति-दिन",
-        "gu": "વ્યક્તિ-દિવસો"
+        "hi": "व्यक्ति-दिन (परिवार/किराए के)",
+        "gu": "વ્યક્તિ-દિવસો (પરિવાર/ભાડે)"
       },
       {
-        "key": "new_q_5_wage",
+        "key": "new_q_5_labour_wage",
         "en": "Wage/Rate per day",
-        "hi": "मजदूरी/दर",
-        "gu": "વેતન/દર"
+        "hi": "मजदूरी/दर प्रतिदिन",
+        "gu": "વેતન/દર પ્રતિ દિવસ"
       },
       {
-        "key": "new_q_5_total",
-        "en": "Total Cost",
-        "hi": "कुल लागत",
-        "gu": "કુલ ખર્ચ"
+        "key": "new_q_5_labour_total",
+        "en": "Total Labour Cost",
+        "hi": "कुल श्रम लागत",
+        "gu": "કુલ મજૂરી ખર્ચ"
+      }
+    ]
+  },
+  {
+    "id": "q_5_machine",
+    "type": "group",
+    "label": {
+      "en": "5c. Machine details (hours/days, rate, total cost)",
+      "hi": "5c. मशीन का विवरण (घंटे/दिन, दर, कुल लागत)",
+      "gu": "5c. મશીનની વિગતો (કલાકો/દિવસો, દર, કુલ ખર્ચ)"
+    },
+    "subfields": [
+      {
+        "key": "new_q_5_machine_used",
+        "en": "Machine Usage (Hours/Days)",
+        "hi": "मशीन का उपयोग (घंटे/दिन)",
+        "gu": "મશીનનો ઉપયોગ (કલાકો/દિવસો)"
+      },
+      {
+        "key": "new_q_5_machine_rate",
+        "en": "Rate per hour/day",
+        "hi": "दर प्रति घंटे/दिन",
+        "gu": "દર પ્રતિ કલાક/દિવસ"
+      },
+      {
+        "key": "new_q_5_machine_total",
+        "en": "Total Machine Cost",
+        "hi": "कुल मशीन लागत",
+        "gu": "કુલ મશીન ખર્ચ"
       }
     ]
   },
