@@ -181,7 +181,7 @@ export default function DocumentGenerator() {
               <td className="p-10 md:p-16 print:p-0">
           {docType === 'nda' && (
             <div>
-              <div className="flex justify-center -mb-8 md:-mb-16 overflow-hidden max-h-48 md:max-h-64 items-center">
+              <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
                 <img src="/logo.png" alt="Logo" className="w-full max-w-[250px] md:max-w-[300px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Non-Disclosure and Confidentiality Agreement</h1>
@@ -225,7 +225,7 @@ export default function DocumentGenerator() {
 
           {docType === 'partnership' && (
             <div>
-              <div className="flex justify-center -mb-8 md:-mb-16 overflow-hidden max-h-48 md:max-h-64 items-center">
+              <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
                 <img src="/logo.png" alt="Logo" className="w-full max-w-[250px] md:max-w-[300px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">General Partnership Agreement</h1>
@@ -261,7 +261,7 @@ export default function DocumentGenerator() {
 
           {docType === 'hiring' && (
             <div>
-              <div className="flex justify-center -mb-8 md:-mb-16 overflow-hidden max-h-48 md:max-h-64 items-center">
+              <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
                 <img src="/logo.png" alt="Logo" className="w-full max-w-[250px] md:max-w-[300px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Employment Contract</h1>
@@ -293,7 +293,7 @@ export default function DocumentGenerator() {
 
           {docType === 'founders6' && (
             <div>
-              <div className="flex justify-center -mb-8 md:-mb-16 overflow-hidden max-h-48 md:max-h-64 items-center">
+              <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
                 <img src="/logo.png" alt="Logo" className="w-full max-w-[250px] md:max-w-[300px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Founders Agreement (6 Co-Founders)</h1>
@@ -307,7 +307,7 @@ export default function DocumentGenerator() {
 
           {docType === 'exit' && (
             <div>
-              <div className="flex justify-center -mb-8 md:-mb-16 overflow-hidden max-h-48 md:max-h-64 items-center">
+              <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
                 <img src="/logo.png" alt="Logo" className="w-full max-w-[250px] md:max-w-[300px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Co-Founder Exit Clause</h1>
@@ -319,7 +319,7 @@ export default function DocumentGenerator() {
 
           {docType === 'shareholder' && (
             <div>
-              <div className="flex justify-center -mb-8 md:-mb-16 overflow-hidden max-h-48 md:max-h-64 items-center">
+              <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
                 <img src="/logo.png" alt="Logo" className="w-full max-w-[250px] md:max-w-[300px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Shareholder Agreement</h1>
@@ -331,7 +331,7 @@ export default function DocumentGenerator() {
 
           {docType === 'cap' && (
             <div>
-              <div className="flex justify-center -mb-8 md:-mb-16 overflow-hidden max-h-48 md:max-h-64 items-center">
+              <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
                 <img src="/logo.png" alt="Logo" className="w-full max-w-[250px] md:max-w-[300px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Capitalization Table (CAP Table)</h1>
@@ -354,7 +354,7 @@ export default function DocumentGenerator() {
 
           {docType === 'eso' && (
             <div>
-              <div className="flex justify-center -mb-8 md:-mb-16 overflow-hidden max-h-48 md:max-h-64 items-center">
+              <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
                 <img src="/logo.png" alt="Logo" className="w-full max-w-[250px] md:max-w-[300px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Employee Stock Option (ESO) Agreement</h1>
@@ -366,7 +366,7 @@ export default function DocumentGenerator() {
 
           {docType === 'ip' && (
             <div>
-              <div className="flex justify-center -mb-8 md:-mb-16 overflow-hidden max-h-48 md:max-h-64 items-center">
+              <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
                 <img src="/logo.png" alt="Logo" className="w-full max-w-[250px] md:max-w-[300px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Intellectual Property (IP) Assignment Agreement</h1>
