@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { surveyConfig, staticText } from '../utils/surveyTranslations';
@@ -20,6 +21,7 @@ const getLabelString = (obj, lang) => {
 };
 
 export default function FastEntryForm() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({});
   const [language, setLanguage] = useState(localStorage.getItem('surveyLanguage') || 'English');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -463,7 +465,16 @@ export default function FastEntryForm() {
       )}
       
       <div className="flex justify-between items-center mb-6 border-b pb-4">
-        <h1 className="text-2xl font-bold">Fast Entry Mode</h1>
+        <div className="flex items-center space-x-4">
+          <button 
+            onClick={() => navigate('/survey')}
+            className="text-gray-600 hover:text-brand-green transition"
+            title="Return to Standard Form"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          </button>
+          <h1 className="text-2xl font-bold">Fast Entry Mode</h1>
+        </div>
         <div className="flex space-x-2">
           {['English', 'Hindi', 'Gujarati'].map(l => (
             <button 
