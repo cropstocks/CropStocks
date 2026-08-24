@@ -172,9 +172,9 @@ export const surveyConfig = [
     "key": "new_q_5",
     "type": "single_select",
     "label": {
-      "en": "5. Is the work done by FAMILY, HIRED labour, MACHINE, or a mix?",
-      "hi": "5. क्या काम परिवार (FAMILY), किराए के मजदूरों (HIRED), मशीन (MACHINE), या मिश्रित (Mix) रूप से किया जाता है?",
-      "gu": "5. શું કામ પરિવાર (FAMILY), ભાડે રાખેલા મજૂરો (HIRED), મશીન (MACHINE), કે મિશ્ર (Mix) દ્વારા કરવામાં આવે છે?"
+      "en": "5a. Is the work done by FAMILY, HIRED labour, MACHINE, or a mix?",
+      "hi": "5a. क्या काम परिवार (FAMILY), किराए के मजदूरों (HIRED), मशीन (MACHINE), या मिश्रित (Mix) रूप से किया जाता है?",
+      "gu": "5a. શું કામ પરિવાર (FAMILY), ભાડે રાખેલા મજૂરો (HIRED), મશીન (MACHINE), કે મિશ્ર (Mix) દ્વારા કરવામાં આવે છે?"
     },
     "options": [
       {
@@ -203,9 +203,9 @@ export const surveyConfig = [
     "id": "q_5_details",
     "type": "group",
     "label": {
-      "en": "→ Labour/Machine details (person-days, wage/rate, total cost)",
-      "hi": "→ श्रम/मशीन का विवरण (व्यक्ति-दिन, मजदूरी/दर, कुल लागत)",
-      "gu": "→ મજૂરી/મશીનની વિગતો (વ્યક્તિ-દિવસો, વેતન/દર, કુલ ખર્ચ)"
+      "en": "5b. Labour/Machine details (person-days, wage/rate, total cost)",
+      "hi": "5b. श्रम/मशीन का विवरण (व्यक्ति-दिन, मजदूरी/दर, कुल लागत)",
+      "gu": "5b. મજૂરી/મશીનની વિગતો (વ્યક્તિ-દિવસો, વેતન/દર, કુલ ખર્ચ)"
     },
     "subfields": [
       {
@@ -232,9 +232,9 @@ export const surveyConfig = [
     "id": "q_6",
     "type": "group",
     "label": {
-      "en": "6. What are the major inputs used besides seed (fertilizer, pesticide, etc.) and their total cost?",
-      "hi": "6. बीज के अलावा प्रमुख इनपुट (उर्वरक, कीटनाशक आदि) क्या हैं और उनकी कुल लागत क्या है?",
-      "gu": "6. બિયારણ સિવાય વપરાતા મુખ્ય ઇનપુટ્સ (ખાતર, જંતુનાશક વગેરે) કયા છે અને તેમનો કુલ ખર્ચ કેટલો છે?"
+      "en": "6. What are the major inputs used besides seed (fertilizer, pesticide, etc.) and their respective costs?",
+      "hi": "6. बीज के अलावा प्रमुख इनपुट (उर्वरक, कीटनाशक आदि) क्या हैं और उनकी संबंधित लागत क्या है?",
+      "gu": "6. બિયારણ સિવાય વપરાતા મુખ્ય ઇનપુટ્સ (ખાતર, જંતુનાશક વગેરે) કયા છે અને તેમના સંબંધિત ખર્ચ કેટલા છે?"
     },
     "subfields": [
       {
@@ -245,9 +245,9 @@ export const surveyConfig = [
       },
       {
         "key": "new_q_6_cost",
-        "en": "Total Cost",
-        "hi": "कुल लागत",
-        "gu": "કુલ ખર્ચ"
+        "en": "Respective Costs",
+        "hi": "संबंधित लागत",
+        "gu": "સંબંધિત ખર્ચ"
       }
     ]
   },
@@ -692,40 +692,13 @@ export const surveyConfig = [
     }
   },
   {
-    "id": "q_21",
-    "key": "new_q_21",
-    "type": "single_select",
+    "id": "q_notes",
+    "key": "new_q_notes",
+    "type": "textarea",
     "label": {
-      "en": "21. Would you prefer CASH, direct purchase of INPUTS, or a MIX?",
-      "hi": "21. क्या आप नकद (CASH), इनपुट की सीधी खरीद (INPUTS), या मिश्रण (MIX) पसंद करेंगे?",
-      "gu": "21. શું તમે રોકડ (CASH), ઇનપુટ્સની સીધી ખરીદી (INPUTS), કે મિશ્રણ (MIX) પસંદ કરશો?"
-    },
-    "options": [
-      {
-        "en": "Cash",
-        "hi": "नकद (Cash)",
-        "gu": "રોકડ (Cash)"
-      },
-      {
-        "en": "Inputs",
-        "hi": "इनपुट (Inputs)",
-        "gu": "ઇનપુટ્સ (Inputs)"
-      },
-      {
-        "en": "Mix",
-        "hi": "मिश्रण (Mix)",
-        "gu": "મિશ્રણ (Mix)"
-      }
-    ]
-  },
-  {
-    "id": "q_22",
-    "key": "new_q_22",
-    "type": "text",
-    "label": {
-      "en": "22. What would make you trust — or NOT trust — a platform like this?",
-      "hi": "22. ऐसी किस चीज़ से आप इस तरह के प्लेटफॉर्म पर भरोसा करेंगे — या भरोसा नहीं करेंगे?",
-      "gu": "22. એવી કઈ બાબત તમને આવા પ્લેટફોર્મ પર વિશ્વાસ કરવા — અથવા વિશ્વાસ ન કરવા — માટે પ્રેરશે?"
+      "en": "Notes",
+      "hi": "टिप्पणियाँ (Notes)",
+      "gu": "નોંધો (Notes)"
     }
   }
 ];

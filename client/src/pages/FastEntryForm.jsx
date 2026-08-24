@@ -251,6 +251,28 @@ export default function FastEntryForm() {
       );
     }
     
+    if (q.type === 'textarea') {
+      return (
+        <div key={q.id} className="flex flex-col mb-4">
+          <label className="text-sm font-semibold text-gray-800 mb-1">
+            {labelText}
+            {language === 'Gujarati' && (
+              <button type="button" onClick={() => handleSpeak(q)} className="ml-2 text-xl hover:scale-110 transition-transform" title="Play Audio (Gujarati)">
+                🔊
+              </button>
+            )}
+          </label>
+          <textarea 
+            name={q.key} 
+            value={formData[q.key] || ''}
+            onChange={handleInputChange}
+            rows="4"
+            className="border border-gray-300 rounded px-3 py-1.5 focus:border-brand-green outline-none w-full"
+          />
+        </div>
+      );
+    }
+    
     if (q.type === 'single_select') {
       return (
         <div key={q.id} className="flex flex-col mb-4">

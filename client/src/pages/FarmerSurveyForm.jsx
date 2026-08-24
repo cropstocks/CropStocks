@@ -197,6 +197,28 @@ export default function FarmerSurveyForm() {
         </div>
       );
     }
+
+    if (q.type === 'textarea') {
+      return (
+        <div key={q.id} className="break-inside-avoid mb-6">
+          <label className="block font-semibold text-gray-800 mb-2">
+            {labelText}
+            {language === 'Gujarati' && (
+              <button type="button" onClick={() => handleSpeak(q)} className="ml-2 text-xl hover:scale-110 transition-transform" title="Play Audio (Gujarati)">
+                🔊
+              </button>
+            )}
+          </label>
+          <textarea 
+            name={q.key} 
+            value={formData[q.key] || ''}
+            onChange={handleInputChange}
+            rows="4"
+            className="w-full border border-gray-300 rounded-md focus:border-brand-green outline-none py-2 px-3 bg-transparent" 
+          />
+        </div>
+      );
+    }
     
     if (q.type === 'single_select') {
       return (
