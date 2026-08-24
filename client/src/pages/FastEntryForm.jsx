@@ -231,6 +231,193 @@ export default function FastEntryForm() {
     localStorage.removeItem('surveyAutoSave');
   };
 
+  const renderPrintField = (q) => {
+    if (q.dependsOn) {
+      const { key, values } = q.dependsOn;
+      const currentVal = formData[key];
+      if (!values.includes(currentVal)) {
+        return null;
+      }
+    }
+    const labelText = getLabel(q.label, language);
+    
+    if (q.type === 'text' || q.type === 'number') {
+      return (
+        <div key={q.id} className="break-inside-avoid mb-6">
+          <label className="block font-semibold text-gray-800 mb-2">
+            {labelText}
+          </label>
+          <input 
+            type={q.type} 
+            name={q.key} 
+            value={formData[q.key] || ''}
+            readOnly
+            className="w-full border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" 
+          />
+        </div>
+      );
+    }
+
+    if (q.type === 'textarea') {
+      return (
+        <div key={q.id} className="break-inside-avoid mb-6">
+          <label className="block font-semibold text-gray-800 mb-2">
+            {labelText}
+          </label>
+          <textarea 
+            name={q.key} 
+            value={formData[q.key] || ''}
+            readOnly
+            rows="4"
+            className="w-full border border-gray-300 rounded-md focus:border-brand-green outline-none py-2 px-3 bg-transparent" 
+          />
+        </div>
+      );
+    }
+    
+    if (q.type === 'single_select') {
+      return (
+        <div key={q.id} className="break-inside-avoid mb-6">
+          <label className="block font-semibold text-gray-800 mb-2">
+            {labelText}
+          </label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {q.options.map((opt, i) => (
+              <label key={i} className="flex items-center space-x-2">
+                <input 
+                  type="radio" 
+                  name={q.key} 
+                  value={opt.en} 
+                  checked={formData[q.key] === opt.en}
+                  readOnly
+                  className="text-brand-green focus:ring-brand-green" 
+                />
+                <span>{getLabel(opt, language)}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    
+    if (q.type === 'matrix') {
+      return (
+        <div key={q.id} className="break-inside-avoid mb-6">
+          <label className="block font-semibold text-gray-800 mb-2">
+            {labelText}
+          </label>
+          <div className="overflow-x-auto w-full max-w-[90vw] md:max-w-full">
+            <table className="w-full text-left border-collapse min-w-[500px]">
+              <thead>
+                <tr>
+                  <th className="p-2 border-b-2 border-gray-300"></th>
+                  {q.columns.map((col, i) => (
+                    <th key={i} className="p-2 border-b-2 border-gray-300 text-sm font-medium">{getLabel(col, language)}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {q.rows.map((row, i) => (
+                  <tr key={i} className="border-b border-gray-200">
+                    <td className="p-2 font-medium">{getLabel(row, language)}</td>
+                    {q.columns.map((col, j) => (
+                      <td key={j} className="p-2 text-center">
+                        <input 
+                          type="radio" 
+                          name={row.key} 
+                          value={col.en} 
+                          checked={formData[row.key] === col.en}
+                          readOnly
+                          className="text-brand-green" 
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+    
+    if (q.type === 'group') {
+      return (
+        <div key={q.id} className="break-inside-avoid mb-6">
+          <label className="block font-semibold text-gray-800 mb-2">
+            {labelText}
+          </label>
+          <div className="space-y-4 ml-0 md:ml-4">
+            {q.subfields.map((sub, i) => (
+              <div key={i} className="flex flex-col md:flex-row md:items-center space-y-1 md:space-y-0 md:space-x-4">
+                <span className="w-full md:w-1/3 text-gray-700">{getLabel(sub, language)}</span>
+                <input 
+                  type="text" 
+                  name={sub.key} 
+                  value={formData[sub.key] || ''}
+                  readOnly
+                  className="w-full md:w-2/3 border-b border-gray-300 focus:border-brand-green outline-none py-1 bg-transparent" 
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    
+    if (q.type === 'multi_select_group') {
+      return (
+        <div key={q.id} className="break-inside-avoid mb-6">
+          <label className="block font-semibold text-gray-800 mb-2">
+            {labelText}
+          </label>
+          <div className="flex flex-col space-y-2">
+            {q.options.map((opt, i) => (
+              <label key={i} className="flex items-center space-x-2">
+                <input 
+                  type="checkbox" 
+                  name={opt.key} 
+                  value={opt.en} 
+                  checked={formData[opt.key] === opt.en}
+                  readOnly
+                  className="text-brand-green focus:ring-brand-green rounded" 
+                />
+                <span>{getLabel(opt, language)}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    
+    if (q.type === 'rating') {
+      return (
+        <div key={q.id} className="break-inside-avoid mb-6">
+          <label className="block font-semibold text-gray-800 mb-2">
+            {labelText}
+          </label>
+          <div className="flex flex-wrap gap-4">
+            {Array.from({length: q.max}, (_, i) => i + 1).map(val => (
+              <label key={val} className="flex flex-col items-center cursor-pointer">
+                <input 
+                  type="radio" 
+                  name={q.key} 
+                  value={val.toString()} 
+                  checked={formData[q.key] === val.toString()}
+                  readOnly
+                  className="text-brand-green focus:ring-brand-green mb-1" 
+                />
+                <span>{val}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   const renderField = (q) => {
     if (q.dependsOn) {
       const { key, values } = q.dependsOn;
@@ -481,6 +668,27 @@ export default function FastEntryForm() {
   return (
     <div className="max-w-3xl mx-auto p-4 md:p-6 w-full print:max-w-none print:p-0">
       
+      {/* Print-only layout */}
+      <div className="hidden print:block relative bg-white max-w-4xl mx-auto border-none font-sans text-black text-[15px] leading-[1.8] min-h-screen p-0">
+        <div className="fixed inset-0 flex justify-center items-center pointer-events-none opacity-20 z-0 overflow-hidden">
+           <img src="/logo.png" alt="Watermark" className="w-[45%] object-contain mix-blend-multiply" />
+        </div>
+
+        <div className="w-full relative z-10 max-w-full overflow-hidden flex flex-col space-y-6">
+          <div className="flex justify-center mb-6 items-center">
+            <img src="/logo.png" alt="Logo" className="w-full max-w-[250px] object-contain mix-blend-multiply" />
+          </div>
+          <h1 className="text-xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">
+            {staticText.title[language === 'English' ? 'en' : language === 'Hindi' ? 'hi' : 'gu']}
+          </h1>
+          
+          <div className="mb-6 text-gray-700 italic">{staticText.instruction1[language === 'English' ? 'en' : language === 'Hindi' ? 'hi' : 'gu']}</div>
+          <div className="mb-6 text-gray-700 italic">{staticText.instruction2[language === 'English' ? 'en' : language === 'Hindi' ? 'hi' : 'gu']}</div>
+          
+          {surveyConfig.map(renderPrintField)}
+        </div>
+      </div>
+      
       <div className="flex justify-between items-center mb-6 border-b pb-4 print:hidden">
         <div className="flex items-center space-x-4">
           <button 
@@ -526,7 +734,7 @@ export default function FastEntryForm() {
         </button>
       </div>
       
-      <form onSubmit={handleSubmit} className="bg-white p-4 sm:p-6 shadow print:shadow-none rounded-lg print:p-0">
+      <form onSubmit={handleSubmit} className="bg-white p-4 sm:p-6 shadow print:shadow-none rounded-lg print:hidden">
         {surveyConfig.map(renderField)}
         
         <div className="mt-8 pt-4 border-t flex flex-col md:flex-row justify-between items-center gap-4 print:hidden">
