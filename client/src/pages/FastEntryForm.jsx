@@ -93,9 +93,14 @@ export default function FastEntryForm() {
       window.currentAudio.pause();
     }
     
+    let audioId = q.id;
+    if (audioId === 'q_5_labour' || audioId === 'q_5_machine') {
+      audioId = 'q_5_details';
+    }
+    
     // We now use the bundled local MP3 files for 100% offline reliability
     // If it fails, fallback to SpeechSynthesis API
-    const url = `${import.meta.env.BASE_URL}audio/${q.id}.mp3`;
+    const url = `${import.meta.env.BASE_URL}audio/${audioId}.mp3`;
     
     window.currentAudio = new Audio(url);
     window.currentAudio.play().catch(e => {
