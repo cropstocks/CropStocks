@@ -227,32 +227,40 @@ export default function AdminDashboard() {
         )}
       </div>
 
-      <div className="hidden print:block w-full bg-white absolute top-0 left-0">
+      <div className="hidden print:flex flex-col w-full bg-white min-h-screen absolute top-0 left-0 overflow-hidden">
         {[1, 2].map((slip) => (
-          <div key={slip} className={`w-full h-[50vh] p-8 flex flex-col justify-between ${slip === 1 ? 'border-b-2 border-dashed border-gray-400' : ''}`}>
-            <div className="text-center flex flex-col items-center">
-              <div className="flex justify-center mb-2 items-center">
-                <img src="/logo.png" alt="CropStocks Logo" className="w-full max-w-[200px] object-contain mix-blend-multiply" />
-              </div>
-              <h1 className="text-2xl font-bold mb-2">NO OBJECTION CERTIFICATE (NOC)</h1>
-              <h2 className="text-lg font-semibold text-gray-600 mb-4">CropStocks Agricultural Survey Consent</h2>
-            </div>
+          <div key={slip} className={`relative flex-1 p-8 flex flex-col justify-center ${slip === 1 ? 'border-b-2 border-dashed border-gray-400' : ''} box-border`}>
             
-            <div className="flex-grow flex flex-col justify-center space-y-8">
-              <p className="text-lg leading-[2.5]">
-                I, <span className="inline-block border-b border-black w-72"></span>, resident of <span className="inline-block border-b border-black w-72"></span>, 
-                hereby give my full consent and have no objection to participating in the CropStocks Agricultural Survey and providing my agricultural data. I understand that this information will be used for agricultural analysis and platform listings.
-              </p>
+            {/* Watermark Logo */}
+            <div className="absolute inset-0 flex justify-center items-center pointer-events-none opacity-[0.08] z-0 overflow-hidden">
+               <img src="/logo.png" alt="Watermark" className="w-[40%] object-contain mix-blend-multiply" />
             </div>
-            
-            <div className="flex justify-between mt-4">
-              <div className="text-lg flex items-end">
-                <span className="mr-2">Date:</span>
-                <span className="inline-block border-b border-black w-48"></span>
+
+            <div className="relative z-10 flex flex-col h-full justify-between">
+              <div className="text-center flex flex-col items-center mt-2">
+                <div className="flex justify-center mb-2 items-center">
+                  <img src="/logo.png" alt="CropStocks Logo" className="w-full max-w-[180px] object-contain mix-blend-multiply" />
+                </div>
+                <h1 className="text-2xl font-bold mb-1">NO OBJECTION CERTIFICATE (NOC)</h1>
+                <h2 className="text-lg font-semibold text-gray-600">CropStocks Agricultural Survey Consent</h2>
               </div>
-              <div className="text-lg flex flex-col items-center">
-                <div className="w-64 h-24 border-2 border-dashed border-gray-300 mb-2 flex items-center justify-center text-gray-400 text-sm">
-                  Signature / Thumb Impression
+              
+              <div className="flex-grow flex flex-col justify-center my-4">
+                <p className="text-lg leading-[2.5] text-justify">
+                  I, <span className="inline-block border-b border-black w-72"></span>, resident of <span className="inline-block border-b border-black w-72"></span>, 
+                  hereby give my full consent and have no objection to participating in the CropStocks Agricultural Survey and providing my agricultural data. I understand that this information will be used for agricultural analysis and platform listings.
+                </p>
+              </div>
+              
+              <div className="flex justify-between items-end mb-2">
+                <div className="text-lg flex items-end">
+                  <span className="mr-2 mb-2">Date:</span>
+                  <span className="inline-block border-b border-black w-48"></span>
+                </div>
+                <div className="text-lg flex flex-col items-center">
+                  <div className="w-64 h-24 border-2 border-dashed border-gray-400 flex items-center justify-center text-gray-500 text-sm">
+                    Signature / Thumb Impression
+                  </div>
                 </div>
               </div>
             </div>
