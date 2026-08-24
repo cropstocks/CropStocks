@@ -229,15 +229,6 @@ export default function FastEntryForm() {
     setIsSubmitting(false);
     setSubmitted(true);
     localStorage.removeItem('surveyAutoSave');
-    setTimeout(() => {
-      // Fast entry should clear and be ready for the next one instantly
-      setSubmitted(false);
-      setFormData({
-        new_q_collector: localStorage.getItem('lastCollector') || '',
-        new_q_location: localStorage.getItem('lastState') || ''
-      });
-      window.scrollTo(0, 0);
-    }, 1500);
   };
 
   const renderField = (q) => {
@@ -456,15 +447,41 @@ export default function FastEntryForm() {
     return null;
   };
 
-  return (
-    <div className="max-w-3xl mx-auto p-4 md:p-6 w-full">
-      {submitted && (
-        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50">
-          Saved! Ready for next.
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-brand-light flex flex-col items-center justify-center p-4">
+        {offlineQueue.length > 0 && (
+          <div className="bg-orange-500 text-white p-6 text-center font-bold mb-6 rounded-xl shadow-lg max-w-md w-full animate-fade-in border-4 border-orange-400">
+            <p className="mb-4 text-lg">⚠️ You have {offlineQueue.length} survey(s) saved offline on this device!</p>
+            <button 
+              onClick={syncOfflineSurveys} 
+              disabled={isSubmitting} 
+              className="bg-white text-orange-600 px-6 py-3 rounded-lg shadow-md hover:bg-gray-100 transition w-full font-bold text-lg"
+            >
+              {isSubmitting ? "Syncing to Cloud..." : "Sync to Cloud Now"}
+            </button>
+          </div>
+        )}
+        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md text-center w-full">
+          <h2 className="text-2xl font-bold text-brand-green mb-4">Thank You!</h2>
+          <p className="text-gray-600 mb-6">Your survey response has been recorded successfully.</p>
+          <button onClick={() => {
+            setSubmitted(false);
+            setFormData({
+              new_q_collector: localStorage.getItem('lastCollector') || '',
+              new_q_location: localStorage.getItem('lastState') || ''
+            });
+            window.scrollTo(0,0);
+          }} className="btn-primary px-6 py-2">Submit Another</button>
         </div>
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-3xl mx-auto p-4 md:p-6 w-full print:max-w-none print:p-0">
       
-      <div className="flex justify-between items-center mb-6 border-b pb-4">
+      <div className="flex justify-between items-center mb-6 border-b pb-4 print:hidden">
         <div className="flex items-center space-x-4">
           <button 
             onClick={() => navigate('/survey')}
@@ -475,7 +492,15 @@ export default function FastEntryForm() {
           </button>
           <h1 className="text-2xl font-bold">Fast Entry Mode</h1>
         </div>
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 items-center">
+          <button 
+            onClick={() => window.print()}
+            className="flex items-center px-3 py-1 rounded text-sm bg-blue-600 text-white hover:bg-blue-700 transition"
+            title="Print Form"
+          >
+            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+            Print
+          </button>
           {['English', 'Hindi', 'Gujarati'].map(l => (
             <button 
               key={l} 
@@ -488,11 +513,11 @@ export default function FastEntryForm() {
         </div>
       </div>
       
-      <div className="mb-6 bg-yellow-50 p-3 rounded border border-yellow-200">
+      <div className="mb-6 bg-yellow-50 p-3 rounded border border-yellow-200 print:hidden">
         <label className="text-sm font-semibold mb-1 block">Paste Notes (Auto-fill)</label>
         <textarea 
           className="w-full text-sm border p-2 rounded h-20 outline-none focus:border-brand-green"
-          placeholder="e.g. collector: Manan Pandey\nfarmer: Ram Singh\nstate: Madhya Pradesh"
+          placeholder={`e.g. collector: Manan Pandey\nfarmer: Ram Singh\nstate: Madhya Pradesh`}
           value={pasteText}
           onChange={(e) => setPasteText(e.target.value)}
         />
@@ -501,10 +526,14 @@ export default function FastEntryForm() {
         </button>
       </div>
       
-      <form onSubmit={handleSubmit} className="bg-white p-4 sm:p-6 shadow rounded-lg">
+      <form onSubmit={handleSubmit} className="bg-white p-4 sm:p-6 shadow print:shadow-none rounded-lg print:p-0">
         {surveyConfig.map(renderField)}
         
-        <div className="mt-8 pt-4 border-t flex justify-end">
+        <div className="mt-8 pt-4 border-t flex flex-col md:flex-row justify-between items-center gap-4 print:hidden">
+          <button type="button" onClick={() => window.print()} className="w-full md:w-auto px-8 py-3 text-lg flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100 transition">
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+            Print / Save as PDF
+          </button>
           <button type="submit" disabled={isSubmitting} className="btn-primary w-full md:w-auto px-8 py-3 text-lg">
             {isSubmitting ? 'Saving...' : 'Submit Data'}
           </button>
