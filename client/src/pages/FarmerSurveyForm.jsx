@@ -468,7 +468,18 @@ export default function FarmerSurveyForm() {
             
             {surveyConfig.map(renderField)}
 
-            <div className="mt-12 text-center print:hidden">
+            <div className="mt-12 flex flex-col md:flex-row gap-4 justify-center items-center print:hidden">
+              <button 
+                type="button" 
+                onClick={() => {
+                  if(window.confirm('Are you sure you want to clear all fields?')) {
+                    setFormData({});
+                  }
+                }}
+                className="bg-red-500 hover:bg-red-600 text-white font-bold w-full md:w-auto px-12 py-3 text-lg rounded shadow-md transition"
+              >
+                Clear All
+              </button>
               <button 
                 type="submit" 
                 disabled={isSubmitting}

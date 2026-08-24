@@ -1,0 +1,113 @@
+English_q_2
+English_q_3
+English_q_4
+English_q_5
+English_q_6
+English_q_7_Pest Infestation
+English_q_7_Water Scarcity
+English_q_7_Market Price Fluctuation
+English_q_7_Lack of Quality Seeds
+English_q_7_Flood
+English_q_8_Labor Costs (per hour)
+English_q_8_Seeds (per Kg)
+English_q_8_Fertilisers (per Kg)
+English_q_8_Pesticides
+English_q_8_Equipment and Fuel (per Hour)
+English_q_8_Irrigation (per Month)
+English_q_8_Land rent (per month)
+English_q_9
+English_q_10
+English_q_11
+English_q_12
+English_q_13
+English_q_14
+English_q_15_Compound Interest
+English_q_15_Simple Interest
+English_q_16
+English_q_17
+English_q_18
+English_q_19
+English_q_20
+English_q_21
+English_q_22
+English_q_23
+Hindi_q_2
+Hindi_q_3
+Hindi_q_4
+Hindi_q_5
+Hindi_q_6
+Hindi_q_7_कीटों का प्रकोप
+Hindi_q_7_पानी की कमी
+Hindi_q_7_बाजार मूल्य में उतार-चढ़ाव
+Hindi_q_7_अच्छी गुणवत्ता वाले बीजों की कमी
+Hindi_q_7_बाढ़
+Hindi_q_8_मजदूरी लागत (प्रति घंटा)
+Hindi_q_8_बीज (प्रति किलोग्राम)
+Hindi_q_8_उर्वरक (प्रति किलोग्राम)
+Hindi_q_8_कीटनाशक
+Hindi_q_8_उपकरण और ईंधन (प्रति घंटा)
+Hindi_q_8_सिंचाई (प्रति माह)
+Hindi_q_8_भूमि किराया (प्रति माह)
+Hindi_q_9_नहर सिंचाई
+Hindi_q_9_ट्यूबवेल (नलकूप)
+Hindi_q_9_वर्षा आधारित
+Hindi_q_9_ड्रिप सिंचाई
+Hindi_q_9_स्प्रिंकलर (छिड़काव) प्रणाली
+Hindi_q_10
+Hindi_q_11
+Hindi_q_12
+Hindi_q_13
+Hindi_q_14
+Hindi_q_15
+Hindi_q_16
+Hindi_q_17_चक्रवृद्धि ब्याज
+Hindi_q_17_साधारण ब्याज
+Hindi_q_18
+Hindi_q_19
+Hindi_q_20
+Hindi_q_21
+Hindi_q_22
+Hindi_q_23_हाँ
+Hindi_q_23_नहीं
+Hindi_q_24
+Hindi_q_25
+Gujarati_q_2
+Gujarati_q_3
+Gujarati_q_4
+Gujarati_q_5
+Gujarati_q_6
+Gujarati_q_7_કેતાંનો પ્રકોપ
+Gujarati_q_7_પાણીની કમી
+Gujarati_q_7_બજારના મૂલ્યમાં ઊતાર-ચઢાવ
+Gujarati_q_7_સભ્ય ગુણવત્તાવાળા બીજોની કમી
+Gujarati_q_7_વરસાદનું પાણી
+Gujarati_q_8_મજૂરી ખર્ચ (પ્રતિ કલાક)
+Gujarati_q_8_બીજ (દર કિલોગ્રામ)
+Gujarati_q_8_ખેડાણ વાળી ખાતર (દર કિલોગ્રામ)
+Gujarati_q_8_પોકાટોરજ
+Gujarati_q_8_ઉપકરણ અને ઈંધણ (પ્રતિ કલાક)
+Gujarati_q_8_જલસંચય (દર મહિને)
+Gujarati_q_8_જમીન ભાડું (પ્રતિ મહીનો)
+Gujarati_q_9_ખાડી સિંચાઈ
+Gujarati_q_9_ટ્યૂબવેલ (નળકૂપ)
+Gujarati_q_9_વર્ષા આધારિત
+Gujarati_q_9_ડ્રિપ સિંચાઈ
+Gujarati_q_9_સ્પ્રિંકલર (છાંટણી) પ્રણાળી
+Gujarati_q_10
+Gujarati_q_11
+Gujarati_q_12
+Gujarati_q_13
+Gujarati_q_14
+Gujarati_q_15
+Gujarati_q_16
+Gujarati_q_17_ચક્રવદ્ધિ વ્યાજ
+Gujarati_q_17_સરળ વ્યાજ
+Gujarati_q_18
+Gujarati_q_19
+Gujarati_q_20
+Gujarati_q_21
+Gujarati_q_22
+Gujarati_q_23_હાં
+Gujarati_q_23_ના
+Gujarati_q_24
+Gujarati_q_25

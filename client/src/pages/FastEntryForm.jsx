@@ -742,9 +742,22 @@ export default function FastEntryForm() {
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
             Print / Save as PDF
           </button>
-          <button type="submit" disabled={isSubmitting} className="btn-primary w-full md:w-auto px-8 py-3 text-lg">
-            {isSubmitting ? 'Saving...' : 'Submit Data'}
-          </button>
+          <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+            <button 
+              type="button" 
+              onClick={() => {
+                if(window.confirm('Are you sure you want to clear all fields?')) {
+                  setFormData({});
+                }
+              }} 
+              className="bg-red-500 hover:bg-red-600 text-white font-bold w-full md:w-auto px-8 py-3 text-lg rounded shadow-md transition"
+            >
+              Clear All
+            </button>
+            <button type="submit" disabled={isSubmitting} className="btn-primary w-full md:w-auto px-8 py-3 text-lg">
+              {isSubmitting ? 'Saving...' : 'Submit Data'}
+            </button>
+          </div>
         </div>
       </form>
     </div>
