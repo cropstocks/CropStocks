@@ -241,25 +241,32 @@ export default function AdminDashboard() {
                 <div className="flex justify-center mb-1 items-center">
                   <img src="/logo.png" alt="CropStocks Logo" className="w-full max-w-[150px] object-contain mix-blend-multiply" />
                 </div>
-                <h1 className="text-xl font-bold mb-1">NO OBJECTION CERTIFICATE (NOC)</h1>
-                <h2 className="text-base font-semibold text-gray-600">CropStocks Agricultural Survey Consent</h2>
+                <h1 className="text-lg font-bold mb-1">NO OBJECTION CERTIFICATE (NOC) / વાંધા પ્રમાણપત્ર (NOC)</h1>
+                <h2 className="text-sm font-semibold text-gray-600">CropStocks Agricultural Survey Consent / ક્રોપસ્ટોક્સ કૃષિ સર્વેક્ષણ સંમતિ</h2>
               </div>
               
-              <div className="flex-grow flex flex-col justify-center my-2">
-                <p className="text-base leading-[2.2] text-justify">
-                  I, <span className="inline-block border-b border-black w-72"></span>, resident of <span className="inline-block border-b border-black w-72"></span>, 
+              <div className="flex-grow flex flex-col justify-center my-2 space-y-3">
+                <p className="text-sm leading-[2] text-justify">
+                  I, <span className="inline-block border-b border-black w-64"></span>, resident of <span className="inline-block border-b border-black w-64"></span>, 
                   hereby give my full consent and have no objection to participating in the CropStocks Agricultural Survey and providing my agricultural data. I understand that this information will be used for agricultural analysis and platform listings.
+                </p>
+                <p className="text-sm leading-[2] text-justify font-medium">
+                  હું, <span className="inline-block border-b border-black w-64"></span>, રહેવાસી <span className="inline-block border-b border-black w-64"></span>, 
+                  આથી મારી સંપૂર્ણ સંમતિ આપું છું અને ક્રોપસ્ટોક્સ કૃષિ સર્વેક્ષણમાં ભાગ લેવા અને મારો કૃષિ ડેટા પ્રદાન કરવામાં મને કોઈ વાંધો નથી. હું સમજું છું કે આ માહિતીનો ઉપયોગ કૃષિ વિશ્લેષણ અને પ્લેટફોર્મ લિસ્ટિંગ માટે કરવામાં આવશે.
                 </p>
               </div>
               
               <div className="flex justify-between items-end">
-                <div className="text-base flex items-end">
-                  <span className="mr-2 mb-1">Date:</span>
-                  <span className="inline-block border-b border-black w-48"></span>
+                <div className="text-sm flex flex-col">
+                  <div className="flex items-end mb-1">
+                    <span className="mr-2">Date / તારીખ:</span>
+                    <span className="inline-block border-b border-black w-48"></span>
+                  </div>
                 </div>
-                <div className="text-base flex flex-col items-center">
-                  <div className="w-56 h-20 border-2 border-dashed border-gray-400 flex items-center justify-center text-gray-500 text-sm">
-                    Signature / Thumb Impression
+                <div className="text-sm flex flex-col items-center">
+                  <div className="w-56 h-16 border-2 border-dashed border-gray-400 flex flex-col items-center justify-center text-gray-500 text-xs text-center">
+                    <span>Signature / Thumb Impression</span>
+                    <span>સહી / અંગૂઠાનું નિશાન</span>
                   </div>
                 </div>
               </div>
