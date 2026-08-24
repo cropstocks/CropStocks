@@ -230,9 +230,12 @@ export default function AdminDashboard() {
       <div className="hidden print:block w-full bg-white absolute top-0 left-0">
         {[1, 2].map((slip) => (
           <div key={slip} className={`w-full h-[50vh] p-8 flex flex-col justify-between ${slip === 1 ? 'border-b-2 border-dashed border-gray-400' : ''}`}>
-            <div className="text-center">
+            <div className="text-center flex flex-col items-center">
+              <div className="flex justify-center mb-2 items-center">
+                <img src="/logo.png" alt="CropStocks Logo" className="w-full max-w-[200px] object-contain mix-blend-multiply" />
+              </div>
               <h1 className="text-2xl font-bold mb-2">NO OBJECTION CERTIFICATE (NOC)</h1>
-              <h2 className="text-lg font-semibold text-gray-600 mb-8">CropStocks Agricultural Survey Consent</h2>
+              <h2 className="text-lg font-semibold text-gray-600 mb-4">CropStocks Agricultural Survey Consent</h2>
             </div>
             
             <div className="flex-grow flex flex-col justify-center space-y-8">
@@ -242,7 +245,7 @@ export default function AdminDashboard() {
               </p>
             </div>
             
-            <div className="flex justify-between mt-8">
+            <div className="flex justify-between mt-4">
               <div className="text-lg flex items-end">
                 <span className="mr-2">Date:</span>
                 <span className="inline-block border-b border-black w-48"></span>
