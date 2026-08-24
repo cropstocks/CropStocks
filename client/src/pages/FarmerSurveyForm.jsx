@@ -434,14 +434,27 @@ export default function FarmerSurveyForm() {
             </select>
           </div>
         </div>
-        <div className="mt-4 flex justify-between items-center w-full">
-          <button 
-            type="button"
-            onClick={() => navigate('/survey/fast-entry')} 
-            className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded shadow-md flex items-center transition"
-          >
-            ⚡ Fast Entry Mode
-          </button>
+        <div className="mt-4 flex justify-between items-center w-full gap-4">
+          <div className="flex gap-4 items-center">
+            <button 
+              type="button"
+              onClick={() => navigate('/survey/fast-entry')} 
+              className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded shadow-md flex items-center transition"
+            >
+              ⚡ Fast Entry Mode
+            </button>
+            <button 
+              type="button" 
+              onClick={() => {
+                if(window.confirm('Are you sure you want to clear all fields?')) {
+                  setFormData({});
+                }
+              }}
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded shadow-md flex items-center transition"
+            >
+              Clear All
+            </button>
+          </div>
           <button onClick={handlePrint} className="btn-primary flex items-center">
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
             Print / Save as PDF
@@ -468,18 +481,7 @@ export default function FarmerSurveyForm() {
             
             {surveyConfig.map(renderField)}
 
-            <div className="mt-12 flex flex-col md:flex-row gap-4 justify-center items-center print:hidden">
-              <button 
-                type="button" 
-                onClick={() => {
-                  if(window.confirm('Are you sure you want to clear all fields?')) {
-                    setFormData({});
-                  }
-                }}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold w-full md:w-auto px-12 py-3 text-lg rounded shadow-md transition"
-              >
-                Clear All
-              </button>
+            <div className="mt-12 text-center print:hidden">
               <button 
                 type="submit" 
                 disabled={isSubmitting}
