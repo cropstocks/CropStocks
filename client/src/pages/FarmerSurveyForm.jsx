@@ -60,6 +60,26 @@ export default function FarmerSurveyForm() {
         [name]: value
       }));
     }
+
+    // Auto-advance for radio buttons
+    if (type === 'radio') {
+      setTimeout(() => {
+        const form = e.target.form;
+        if (!form) return;
+        const elements = Array.from(form.elements).filter(
+          el => (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') && !el.disabled && el.type !== 'hidden'
+        );
+        const currentIndex = elements.indexOf(e.target);
+        if (currentIndex !== -1) {
+          for (let i = currentIndex + 1; i < elements.length; i++) {
+            if (elements[i].name !== name) {
+              elements[i].focus();
+              break;
+            }
+          }
+        }
+      }, 50);
+    }
   };
 
   const handleSpeak = (q) => {
