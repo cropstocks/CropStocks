@@ -1,8 +1,10 @@
-# 🌾 CropStocks
+<h1 align="center">
+  <img src="assets/logo.svg" width="36" valign="middle"/> CropStocks™
+</h1>
 
 > A "stock market for agricultural produce" — connecting farmers who need upfront capital with investors who fund crop/animal husbandry cycles in exchange for profit-sharing at harvest/sale.
 
-![CropStocks Logo](client/src/assets/logo.png)
+![CropStocks Logo](assets/logo.png)
 
 ---
 
@@ -183,7 +185,16 @@ The app supports **English** and **Hindi** with a toggle in the navbar. Farmer-f
 
 ## 📝 License
 
-MIT
+MIT License. Copyright (c) 2026 CropStocks. All rights reserved.
+
+See the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🛡️ Branding & Logo Usage
+
+The project logo, brand name, icon, and related assets are proprietary works under copyright. 
+While the codebase may be open-source, the logo, icon, and branding cannot be used to represent unauthorized forks, derivative projects, or related services without explicit written permission.
 
 ---
 

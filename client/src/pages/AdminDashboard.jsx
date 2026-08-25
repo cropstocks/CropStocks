@@ -280,8 +280,8 @@ export default function AdminDashboard() {
                     <span className="inline-block border-b border-black w-48"></span>
                   </div>
                 </div>
-                <div className="text-sm flex flex-col items-center">
-                  <div className="w-56 h-16 border-2 border-dashed border-gray-400 flex flex-col items-center justify-center text-gray-500 text-xs text-center">
+                <div className="text-sm flex flex-col items-center mt-8">
+                  <div className="w-56 flex flex-col items-center justify-center text-black text-xs text-center border-t border-black pt-2">
                     {slip === 1 ? (
                       <>
                         <span>Signature / Thumb Impression</span>
