@@ -475,13 +475,13 @@ export default function FarmerSurveyForm() {
 
       <div className="relative bg-white shadow-lg print:shadow-none max-w-4xl mx-auto border border-gray-200 print:border-none font-sans text-black text-[15px] leading-[1.8] min-h-screen">
         <div className="absolute print:fixed inset-0 flex justify-center items-center pointer-events-none opacity-20 z-0 overflow-hidden">
-           <img src="/logo.png" alt="Watermark" className="w-1/2 md:w-[45%] print:w-[45%] object-contain mix-blend-multiply" />
+           <img src="/logo.png" alt="Watermark" className="w-1/3 md:w-[30%] print:w-[30%] object-contain mix-blend-multiply" />
         </div>
 
         <form onSubmit={handleSubmit} className="w-full relative z-10">
           <div className="p-4 sm:p-6 md:p-12 print:p-0 max-w-full overflow-hidden w-full flex flex-col space-y-6">
             <div className="flex justify-center mb-6 items-center">
-              <img src="/logo.png" alt="Logo" className="w-full max-w-[250px] md:max-w-[300px] object-contain mix-blend-multiply" />
+              <img src="/logo.png" alt="Logo" className="w-full max-w-[160px] md:max-w-[200px] object-contain mix-blend-multiply" />
             </div>
             <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">
               {staticText.title[code]}

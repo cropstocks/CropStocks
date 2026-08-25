@@ -233,13 +233,13 @@ export default function AdminDashboard() {
             
             {/* Watermark Logo */}
             <div className="absolute inset-0 flex justify-center items-center pointer-events-none opacity-[0.08] z-0 overflow-hidden">
-               <img src="/logo.png" alt="Watermark" className="w-[35%] object-contain mix-blend-multiply" />
+               <img src="/logo.png" alt="Watermark" className="w-[25%] object-contain mix-blend-multiply" />
             </div>
 
             <div className="relative z-10 flex flex-col h-full justify-between">
               <div className="text-center flex flex-col items-center">
                 <div className="flex justify-center mb-1 items-center">
-                  <img src="/logo.png" alt="CropStocks Logo" className="w-full max-w-[150px] object-contain mix-blend-multiply" />
+                  <img src="/logo.png" alt="CropStocks Logo" className="w-full max-w-[120px] object-contain mix-blend-multiply" />
                 </div>
                 <h1 className="text-lg font-bold mb-1">
                   {slip === 1 ? 'NO OBJECTION CERTIFICATE (NOC) / વાંધા પ્રમાણપત્ર (NOC)' : 'DATA PRIVACY GUARANTEE / ડેટા ગોપનીયતાની બાંયધરી'}
