@@ -11,10 +11,10 @@ export default function Navbar() {
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50 print:hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
+        <div className="flex justify-between h-20 md:h-24 items-center">
           <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0 flex items-center h-16 overflow-hidden w-48">
-              <img src="/logo.png" alt="CropStocks Logo" className="h-14 md:h-16 w-auto object-contain" />
+            <Link to="/" className="flex-shrink-0 flex items-center h-auto w-56">
+              <img src="/logo.png" alt="CropStocks Logo" className="h-16 md:h-20 w-auto object-contain" />
             </Link>
             <span className="hidden sm:inline-block ml-2 text-xs font-semibold text-brand-green bg-green-50 px-2 py-1 rounded-full border border-green-200 whitespace-nowrap">
               in Development

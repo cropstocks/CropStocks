@@ -682,12 +682,12 @@ export default function FastEntryForm() {
       {/* Print-only layout */}
       <div className="hidden print:block relative bg-white max-w-4xl mx-auto border-none font-sans text-black text-[15px] leading-[1.8] min-h-screen p-0">
         <div className="fixed inset-0 flex justify-center items-center pointer-events-none opacity-20 z-0 overflow-hidden">
-           <img src="/logo.png" alt="Watermark" className="w-[45%] object-contain mix-blend-multiply" />
+           <img src="/logo.png" alt="Watermark" className="w-[60%] object-contain mix-blend-multiply" />
         </div>
 
         <div className="w-full relative z-10 max-w-full overflow-hidden flex flex-col space-y-6">
           <div className="flex justify-center mb-6 items-center">
-            <img src="/logo.png" alt="Logo" className="w-full max-w-[220px] object-contain mix-blend-multiply" />
+            <img src="/logo.png" alt="Logo" className="w-full max-w-[280px] object-contain mix-blend-multiply" />
           </div>
           <h1 className="text-xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">
             {staticText.title[language === 'English' ? 'en' : language === 'Hindi' ? 'hi' : 'gu']}

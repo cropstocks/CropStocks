@@ -171,7 +171,7 @@ export default function DocumentGenerator() {
         
         {/* Watermark Logo */}
         <div className="absolute print:fixed inset-0 flex justify-center items-center pointer-events-none opacity-20 z-0 overflow-hidden">
-           <img src="/logo.png" alt="Watermark" className="w-1/2 md:w-[45%] print:w-[45%] object-contain mix-blend-multiply" />
+           <img src="/logo.png" alt="Watermark" className="w-[65%] md:w-[60%] print:w-[60%] object-contain mix-blend-multiply" />
         </div>
 
         {/* Content Container (placed above watermark) */}
@@ -182,7 +182,7 @@ export default function DocumentGenerator() {
           {docType === 'nda' && (
             <div>
               <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
-                <img src="/logo.png" alt="Logo" className="w-full max-w-[200px] md:max-w-[250px] object-contain mix-blend-multiply" />
+                <img src="/logo.png" alt="Logo" className="w-full max-w-[260px] md:max-w-[320px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Non-Disclosure and Confidentiality Agreement</h1>
               
@@ -226,7 +226,7 @@ export default function DocumentGenerator() {
           {docType === 'partnership' && (
             <div>
               <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
-                <img src="/logo.png" alt="Logo" className="w-full max-w-[200px] md:max-w-[250px] object-contain mix-blend-multiply" />
+                <img src="/logo.png" alt="Logo" className="w-full max-w-[260px] md:max-w-[320px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">General Partnership Agreement</h1>
               
@@ -262,7 +262,7 @@ export default function DocumentGenerator() {
           {docType === 'hiring' && (
             <div>
               <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
-                <img src="/logo.png" alt="Logo" className="w-full max-w-[200px] md:max-w-[250px] object-contain mix-blend-multiply" />
+                <img src="/logo.png" alt="Logo" className="w-full max-w-[260px] md:max-w-[320px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Employment Contract</h1>
               
@@ -294,7 +294,7 @@ export default function DocumentGenerator() {
           {docType === 'founders6' && (
             <div>
               <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
-                <img src="/logo.png" alt="Logo" className="w-full max-w-[200px] md:max-w-[250px] object-contain mix-blend-multiply" />
+                <img src="/logo.png" alt="Logo" className="w-full max-w-[260px] md:max-w-[320px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Founders Agreement (6 Co-Founders)</h1>
               <p className="mb-6">This Founders Agreement is entered into as of <strong>{formData.date}</strong> by and between the six founding members of the Company.</p>
@@ -308,7 +308,7 @@ export default function DocumentGenerator() {
           {docType === 'exit' && (
             <div>
               <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
-                <img src="/logo.png" alt="Logo" className="w-full max-w-[200px] md:max-w-[250px] object-contain mix-blend-multiply" />
+                <img src="/logo.png" alt="Logo" className="w-full max-w-[260px] md:max-w-[320px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Co-Founder Exit Clause</h1>
               <p className="mb-6">This Exit Clause is effective as of <strong>{formData.date}</strong> and governs the terms under which a Co-Founder may exit the Company or be terminated.</p>
@@ -320,7 +320,7 @@ export default function DocumentGenerator() {
           {docType === 'shareholder' && (
             <div>
               <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
-                <img src="/logo.png" alt="Logo" className="w-full max-w-[200px] md:max-w-[250px] object-contain mix-blend-multiply" />
+                <img src="/logo.png" alt="Logo" className="w-full max-w-[260px] md:max-w-[320px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Shareholder Agreement</h1>
               <p className="mb-6">This Shareholder Agreement is entered into on <strong>{formData.date}</strong>.</p>
@@ -332,7 +332,7 @@ export default function DocumentGenerator() {
           {docType === 'cap' && (
             <div>
               <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
-                <img src="/logo.png" alt="Logo" className="w-full max-w-[200px] md:max-w-[250px] object-contain mix-blend-multiply" />
+                <img src="/logo.png" alt="Logo" className="w-full max-w-[260px] md:max-w-[320px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Capitalization Table (CAP Table)</h1>
               <p className="mb-6">As of <strong>{formData.date}</strong>, the following represents the capitalization structure of the Company.</p>
@@ -355,7 +355,7 @@ export default function DocumentGenerator() {
           {docType === 'eso' && (
             <div>
               <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
-                <img src="/logo.png" alt="Logo" className="w-full max-w-[200px] md:max-w-[250px] object-contain mix-blend-multiply" />
+                <img src="/logo.png" alt="Logo" className="w-full max-w-[260px] md:max-w-[320px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Employee Stock Option (ESO) Agreement</h1>
               <p className="mb-6">This ESO Agreement is granted on <strong>{formData.date}</strong> to {formData.partyB}.</p>
@@ -367,7 +367,7 @@ export default function DocumentGenerator() {
           {docType === 'ip' && (
             <div>
               <div className="flex justify-center mb-4 md:mb-8 overflow-hidden max-h-48 md:max-h-64 items-center">
-                <img src="/logo.png" alt="Logo" className="w-full max-w-[200px] md:max-w-[250px] object-contain mix-blend-multiply" />
+                <img src="/logo.png" alt="Logo" className="w-full max-w-[260px] md:max-w-[320px] object-contain mix-blend-multiply" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-center mb-10 uppercase tracking-widest border-b-[3px] border-black pb-4 mt-4">Intellectual Property (IP) Assignment Agreement</h1>
               <p className="mb-6\">This IP Assignment Agreement is entered into on <strong>{formData.date}</strong>.</p>
