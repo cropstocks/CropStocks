@@ -440,7 +440,7 @@ export default function FarmerSurveyForm() {
               className="border-gray-300 rounded-md py-1 px-3 focus:ring-brand-green focus:border-brand-green"
             >
               <option value="English">English</option>
-              <option value="Hindi">हिंदी</option>
+              <option value="Hindi">Hinglish</option>
               <option value="Gujarati">ગુજરાતી</option>
             </select>
           </div>
@@ -498,7 +498,7 @@ export default function FarmerSurveyForm() {
                 disabled={isSubmitting}
                 className="btn-primary w-full md:w-auto px-12 py-3 text-lg relative"
               >
-                {isSubmitting ? "Submitting..." : (language === 'English' ? 'Submit Survey' : language === 'Hindi' ? 'सर्वेक्षण सबमिट करें' : 'સર્વેક્ષણ સબમિટ કરો')}
+                {isSubmitting ? "Submitting..." : (language === 'English' ? 'Submit Survey' : language === 'Hindi' ? 'Survey Submit karein' : 'સર્વેક્ષણ સબમિટ કરો')}
               </button>
             </div>
           </div>

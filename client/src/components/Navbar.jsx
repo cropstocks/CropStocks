@@ -30,7 +30,7 @@ export default function Navbar() {
               className="text-gray-700 bg-transparent hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium cursor-pointer outline-none"
             >
               <option value="en">English</option>
-              <option value="hi">हिन्दी</option>
+              <option value="hi">Hinglish</option>
               <option value="gu">ગુજરાતી</option>
             </select>
 
@@ -92,7 +92,7 @@ export default function Navbar() {
               className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50 outline-none bg-transparent"
             >
               <option value="en">English</option>
-              <option value="hi">हिन्दी</option>
+              <option value="hi">Hinglish</option>
               <option value="gu">ગુજરાતી</option>
             </select>
 

@@ -737,7 +737,7 @@ export default function FastEntryForm() {
               onClick={() => setLanguage(l)}
               className={`px-3 py-1 rounded text-sm ${language === l ? 'bg-brand-green text-white' : 'bg-gray-200 text-gray-700'}`}
             >
-              {l}
+              {l === 'Hindi' ? 'Hinglish' : l}
             </button>
           ))}
         </div>
