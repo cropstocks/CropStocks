@@ -113,7 +113,8 @@ export default function FarmMonitor() {
     }
   };
 
-  const SATELLITE_API_URL = import.meta.env.VITE_SATELLITE_API_URL || 'http://localhost:8000';
+  const API_URL = import.meta.env.VITE_SATELLITE_API_URL || 'http://localhost:8000/api';
+  const SATELLITE_API_URL = API_URL.replace(/\/api$/, '');
 
   if (!statusData || statusData.satellite_status === 'not_found' || error.includes('not found')) {
     return (
