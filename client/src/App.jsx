@@ -17,6 +17,7 @@ import InvestorDashboard from './pages/InvestorDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import ListingWizard from './pages/ListingWizard';
 import GuidanceFeed from './pages/GuidanceFeed';
+import FarmMonitor from './pages/FarmMonitor';
 import DocumentGenerator from './pages/DocumentGenerator';
 import FarmerSurveyForm from './pages/FarmerSurveyForm';
 import FastEntryForm from './pages/FastEntryForm';
@@ -42,6 +43,9 @@ export default function App() {
                 } />
                 <Route path="/farmer/new-listing" element={
                   <ProtectedRoute allowedRoles={['FARMER']}><ListingWizard /></ProtectedRoute>
+                } />
+                <Route path="/farmer/satellite" element={
+                  <ProtectedRoute allowedRoles={['FARMER']}><FarmMonitor /></ProtectedRoute>
                 } />
                 <Route path="/farmer/guidance" element={
                   <ProtectedRoute allowedRoles={['FARMER']}><GuidanceFeed /></ProtectedRoute>

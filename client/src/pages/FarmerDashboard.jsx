@@ -36,9 +36,14 @@ export default function FarmerDashboard() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold font-heading text-brand-dark">Farmer Dashboard</h1>
-        <Link to="/farmer/new-listing" className="btn-primary">
-          + Create New Listing
-        </Link>
+        <div className="flex gap-4">
+          <Link to="/farmer/satellite" className="px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded shadow transition-colors">
+            🛰️ Satellite Monitoring
+          </Link>
+          <Link to="/farmer/new-listing" className="btn-primary">
+            + Create New Listing
+          </Link>
+        </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">

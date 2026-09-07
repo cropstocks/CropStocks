@@ -20,23 +20,10 @@ export default function FarmerSurveyForm() {
   const [language, setLanguage] = useState(localStorage.getItem('surveyLanguage') || 'English');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [offlineQueue, setOfflineQueue] = useState(JSON.parse(localStorage.getItem('offlineSurveys') || '[]'));
 
   useEffect(() => {
     localStorage.setItem('surveyLanguage', language);
   }, [language]);
-
-  useEffect(() => {
-    const handleOnline = () => {
-      if (offlineQueue.length > 0) {
-        if (window.confirm("You are back online! Would you like to sync your saved surveys to the cloud now?")) {
-          syncOfflineSurveys();
-        }
-      }
-    };
-    window.addEventListener('online', handleOnline);
-    return () => window.removeEventListener('online', handleOnline);
-  }, [offlineQueue]);
 
   useEffect(() => {
     if ('speechSynthesis' in window) {
@@ -94,8 +81,7 @@ export default function FarmerSurveyForm() {
       audioId = 'q_5_details';
     }
     
-    // We now use the bundled local MP3 files for 100% offline reliability
-    // If it fails, fallback to SpeechSynthesis API
+    // Play bundled local MP3 file with fallback to SpeechSynthesis
     const url = `${import.meta.env.BASE_URL}audio/${audioId}.mp3`;
     
     window.currentAudio = new Audio(url);
@@ -110,46 +96,9 @@ export default function FarmerSurveyForm() {
     });
   };
 
-  const syncOfflineSurveys = async () => {
-    if (!navigator.onLine) {
-      alert("You are still offline! Please connect to Wi-Fi or Cellular Data before syncing.");
-      return;
-    }
-    if (offlineQueue.length === 0) return;
-    setIsSubmitting(true);
-    let synced = 0;
-    try {
-      for (const survey of offlineQueue) {
-        await addDoc(collection(db, 'surveys'), {
-          data: JSON.stringify(survey.data),
-          createdAt: new Date(survey.timestamp)
-        });
-        synced++;
-      }
-      localStorage.removeItem('offlineSurveys');
-      setOfflineQueue([]);
-      alert(`Successfully synced ${synced} surveys to the cloud!`);
-    } catch (err) {
-      alert(`Sync failed after ${synced} surveys. Please check your internet connection.`);
-      const remaining = offlineQueue.slice(synced);
-      localStorage.setItem('offlineSurveys', JSON.stringify(remaining));
-      setOfflineQueue(remaining);
-    }
-    setIsSubmitting(false);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    if (!navigator.onLine) {
-      const newQueue = [...offlineQueue, { data: formData, timestamp: new Date().toISOString() }];
-      localStorage.setItem('offlineSurveys', JSON.stringify(newQueue));
-      setOfflineQueue(newQueue);
-      setSubmitted(true);
-      setIsSubmitting(false);
-      return;
-    }
 
     try {
       await addDoc(collection(db, 'surveys'), {
@@ -159,12 +108,10 @@ export default function FarmerSurveyForm() {
       setSubmitted(true);
     } catch (error) {
       console.error('Firebase Error:', error);
-      const newQueue = [...offlineQueue, { data: formData, timestamp: new Date().toISOString() }];
-      localStorage.setItem('offlineSurveys', JSON.stringify(newQueue));
-      setOfflineQueue(newQueue);
-      setSubmitted(true);
+      alert('Error submitting survey to Firebase: ' + (error.message || error));
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
   };
 
   const handlePrint = () => {
@@ -174,18 +121,6 @@ export default function FarmerSurveyForm() {
   if (submitted) {
     return (
       <div className="min-h-screen bg-brand-light flex flex-col items-center justify-center p-4">
-        {offlineQueue.length > 0 && (
-          <div className="bg-orange-500 text-white p-6 text-center font-bold mb-6 rounded-xl shadow-lg max-w-md w-full animate-fade-in border-4 border-orange-400">
-            <p className="mb-4 text-lg">⚠️ You have {offlineQueue.length} survey(s) saved offline on this device!</p>
-            <button 
-              onClick={syncOfflineSurveys} 
-              disabled={isSubmitting} 
-              className="bg-white text-orange-600 px-6 py-3 rounded-lg shadow-md hover:bg-gray-100 transition w-full font-bold text-lg"
-            >
-              {isSubmitting ? "Syncing to Cloud..." : "Sync to Cloud Now"}
-            </button>
-          </div>
-        )}
         <div className="bg-white p-8 rounded-xl shadow-lg max-w-md text-center w-full">
           <h2 className="text-2xl font-bold text-brand-green mb-4">Thank You!</h2>
           <p className="text-gray-600 mb-6">Your survey response has been recorded successfully.</p>
