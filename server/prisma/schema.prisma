@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -57,6 +57,11 @@ model FarmerProfile {
   verificationStatus String   @default("PENDING") // PENDING, VERIFIED, REJECTED
   verificationNotes  String?
   documents          String?  // JSON array of file paths
+  polygonId          String?
+  satelliteStatus    String?  // pending, ready, unavailable, not_found
+  latestAcquisitionDate String?
+  truecolorUrl       String?
+  ndviUrl            String?
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }
