@@ -24,10 +24,12 @@ router.post('/register', async (req, res) => {
       await prisma.farmerProfile.create({ 
         data: { 
           userId: user.id,
-          aadhaarNo: profile?.aadhaarNo,
-          panNo: profile?.panNo,
-          farmSize: profile?.farmSize,
-          farmAddress: profile?.state,
+          aadhaarNo: profile?.aadhaarNo || null,
+          panNo: profile?.panNo || null,
+          farmSize: profile?.farmSize || null,
+          farmAddress: profile?.state || null,
+          latitude: profile?.latitude ? parseFloat(profile.latitude) : null,
+          longitude: profile?.longitude ? parseFloat(profile.longitude) : null,
           landDetails: profile?.crops ? JSON.stringify({ crops: profile.crops }) : null
         } 
       });

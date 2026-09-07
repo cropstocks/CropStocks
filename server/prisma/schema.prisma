@@ -6,9 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 // ─── Enums (SQLite doesn't support enums natively, using String) ───
@@ -53,6 +52,8 @@ model FarmerProfile {
   landDetails        String?  // JSON string
   farmAddress        String?
   farmSize           String?  // e.g., "5 acres"
+  latitude           Float?
+  longitude          Float?
   verificationStatus String   @default("PENDING") // PENDING, VERIFIED, REJECTED
   verificationNotes  String?
   documents          String?  // JSON array of file paths
@@ -93,6 +94,9 @@ model Listing {
   expectedYield      String?
   expectedPrice      Float?
   expectedReturn     Float?   // percentage return for investors
+  ndviScore          Float?   // 0.0 to 1.0 — vegetation health from satellite
+  stockPrice         Float?   // computed stock price per share unit
+  vegetationStatus   String?  // Excellent, Good, Fair, Poor, Critical
   milestones         String?  // JSON: [{name, date, status}]
   harvestQuantity    String?
   harvestRevenue     Float?

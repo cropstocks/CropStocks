@@ -1,27 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import ListingCard from '../components/ListingCard';
+import { Link } from 'react-router-dom';
 import { api } from '../services/api';
-
-const PRODUCE_IMAGES = {
-  wheat: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=800&auto=format&fit=crop',
-  rice: 'https://images.unsplash.com/photo-1586201375761-83865001e8ac?w=800&auto=format&fit=crop',
-  soybean: 'https://images.unsplash.com/photo-1599725050689-45e83cdef100?w=800&auto=format&fit=crop',
-  poultry: 'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=800&auto=format&fit=crop',
-  dairy: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=800&auto=format&fit=crop',
-  mango: 'https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=800&auto=format&fit=crop',
-  default: 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=800&auto=format&fit=crop',
-};
-
-function getImage(produceName) {
-  const key = produceName?.toLowerCase() || '';
-  return PRODUCE_IMAGES[key] || PRODUCE_IMAGES.default;
-}
 
 export default function Marketplace() {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('All');
-  const [typeFilter, setTypeFilter] = useState('All');
   const [search, setSearch] = useState('');
 
   useEffect(() => {
@@ -29,22 +13,7 @@ export default function Marketplace() {
       try {
         const data = await api.get('/listings');
         const items = Array.isArray(data) ? data : (data.listings || []);
-        const mapped = items.map(l => ({
-          id: l.id,
-          title: `${l.produceName} — ${l.region}`,
-          description: `${l.type === 'CROP' ? '🌾 Crop' : '🐄 Animal Husbandry'} cycle in ${l.region}. Duration: ${l.cycleDuration} days.`,
-          expectedReturn: l.expectedReturn || 12,
-          durationMonths: Math.round((l.cycleDuration || 180) / 30),
-          raisedAmount: l.capitalRaised || 0,
-          targetAmount: l.capitalRequired || 100000,
-          riskLevel: l.riskTier || 'MEDIUM',
-          isInsured: l.insuranceFlag ?? true,
-          image: getImage(l.produceName),
-          status: l.status,
-          type: l.type,
-          produceName: l.produceName,
-        }));
-        setListings(mapped);
+        setListings(items);
       } catch (err) {
         console.error('Failed to fetch listings:', err);
       } finally {
@@ -55,24 +24,34 @@ export default function Marketplace() {
   }, []);
 
   const filteredListings = listings.filter(l => {
-    const matchRisk = filter === 'All' || l.riskLevel === filter.toUpperCase();
-    const matchType = typeFilter === 'All' || l.type === typeFilter;
-    const matchSearch = !search || l.title.toLowerCase().includes(search.toLowerCase());
-    return matchRisk && matchType && matchSearch;
+    const matchRisk = filter === 'All' || l.riskTier === filter.toUpperCase();
+    const matchSearch = !search || l.produceName?.toLowerCase().includes(search.toLowerCase()) || l.region?.toLowerCase().includes(search.toLowerCase());
+    return matchRisk && matchSearch;
   });
 
+  const getVegBadge = (status) => {
+    const styles = {
+      'Excellent': 'bg-green-100 text-green-800 border-green-200',
+      'Good': 'bg-lime-100 text-lime-800 border-lime-200',
+      'Fair': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      'Poor': 'bg-orange-100 text-orange-800 border-orange-200',
+      'Critical': 'bg-red-100 text-red-800 border-red-200',
+    };
+    return styles[status] || 'bg-gray-100 text-gray-600 border-gray-200';
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold font-heading text-brand-dark">🏪 Marketplace</h1>
-        <p className="text-gray-600 mt-2">Invest in vetted agricultural projects across India</p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold font-heading text-brand-dark">📈 CropStocks Marketplace</h1>
+        <p className="text-gray-500 mt-1">Invest in satellite-verified agricultural projects across India</p>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col md:flex-row gap-4 mb-8">
+      <div className="flex flex-col md:flex-row gap-3 mb-6">
         <input
           type="text"
-          placeholder="🔍 Search listings..."
+          placeholder="🔍 Search by crop or region..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green focus:border-brand-green"
@@ -86,20 +65,7 @@ export default function Marketplace() {
                 filter === risk ? 'bg-brand-green text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              {risk === 'All' ? 'All Risks' : `${risk.charAt(0) + risk.slice(1).toLowerCase()} Risk`}
-            </button>
-          ))}
-        </div>
-        <div className="flex space-x-2">
-          {['All', 'CROP', 'ANIMAL'].map(type => (
-            <button
-              key={type}
-              onClick={() => setTypeFilter(type)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                typeFilter === type ? 'bg-brand-gold text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              {type === 'All' ? 'All Types' : type === 'CROP' ? '🌾 Crops' : '🐄 Animals'}
+              {risk === 'All' ? 'All' : `${risk.charAt(0) + risk.slice(1).toLowerCase()}`}
             </button>
           ))}
         </div>
@@ -111,17 +77,87 @@ export default function Marketplace() {
         </div>
       ) : filteredListings.length === 0 ? (
         <div className="text-center py-16 text-gray-500">
-          <p className="text-xl">No listings found matching your filters.</p>
-          <p className="mt-2 text-sm">Try adjusting your search or filters.</p>
+          <p className="text-xl">No listings found.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredListings.map(listing => (
-            <ListingCard key={listing.id} listing={listing} />
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredListings.map(l => {
+            const changePercent = l.ndviScore ? ((l.ndviScore - 0.5) * 20).toFixed(1) : '0.0';
+            const isPositive = parseFloat(changePercent) >= 0;
+            const fundingPercent = l.capitalRequired > 0 ? Math.round((l.capitalRaised / l.capitalRequired) * 100) : 0;
+
+            return (
+              <Link key={l.id} to={`/listing/${l.id}`} className="glass-card hover:shadow-xl transition-all hover:scale-[1.02] overflow-hidden">
+                {/* Stock Header */}
+                <div className="bg-gray-900 text-white p-4 flex justify-between items-center">
+                  <div>
+                    <p className="font-bold text-lg">{l.produceName?.toUpperCase()}</p>
+                    <p className="text-gray-400 text-xs">{l.region} • {l.farmer?.name || 'Farmer'}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xl font-bold">₹{l.stockPrice?.toLocaleString() || '—'}</p>
+                    <span className={`text-xs font-bold ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                      {isPositive ? '▲' : '▼'} {Math.abs(changePercent)}%
+                    </span>
+                  </div>
+                </div>
+
+                {/* Body */}
+                <div className="p-5 space-y-4">
+                  {/* Vegetation Health */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500 font-medium">Vegetation Health</span>
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${getVegBadge(l.vegetationStatus)}`}>
+                      {l.ndviScore ? `${l.vegetationStatus} (${(l.ndviScore * 100).toFixed(0)}%)` : 'Awaiting Data'}
+                    </span>
+                  </div>
+
+                  {/* Stats Row */}
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div className="bg-gray-50 rounded-lg p-2">
+                      <p className="text-xs text-gray-500">Return</p>
+                      <p className="font-bold text-brand-green text-sm">{l.expectedReturn || 0}%</p>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-2">
+                      <p className="text-xs text-gray-500">Duration</p>
+                      <p className="font-bold text-gray-800 text-sm">{Math.round((l.cycleDuration || 180) / 30)}mo</p>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-2">
+                      <p className="text-xs text-gray-500">Risk</p>
+                      <p className={`font-bold text-sm ${
+                        l.riskTier === 'LOW' ? 'text-green-600' : l.riskTier === 'HIGH' ? 'text-red-600' : 'text-yellow-600'
+                      }`}>{l.riskTier}</p>
+                    </div>
+                  </div>
+
+                  {/* Funding Progress */}
+                  <div>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-gray-500">₹{(l.capitalRaised || 0).toLocaleString()} raised</span>
+                      <span className="font-bold text-gray-700">{fundingPercent}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="bg-brand-green h-2 rounded-full transition-all" style={{ width: `${Math.min(fundingPercent, 100)}%` }}></div>
+                    </div>
+                  </div>
+
+                  {/* Status & Insurance */}
+                  <div className="flex justify-between items-center pt-2 border-t">
+                    <span className={`text-xs font-bold px-2 py-1 rounded-full ${
+                      l.status === 'ACTIVE' ? 'bg-green-100 text-green-800' :
+                      l.status === 'FUNDING' ? 'bg-blue-100 text-blue-800' :
+                      'bg-gray-100 text-gray-600'
+                    }`}>{l.status}</span>
+                    {l.insuranceFlag && (
+                      <span className="text-xs text-blue-600 font-medium">🛡️ Insured</span>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>
   );
 }
-
