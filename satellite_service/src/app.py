@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, BackgroundTasks, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
 from .farmer_service import FarmerRegistration, coords_to_bbox
@@ -17,8 +18,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     if not os.getenv("AGRO_API_KEY") and not os.getenv("SENTINEL_CLIENT_ID"):
-        logger.error("No satellite provider credentials found in environment. Exiting.")
-        raise RuntimeError("Satellite provider credentials are required.")
+        logger.warning("No satellite provider credentials found. Using Mock Provider.")
     init_db()
     
     # Ensure imagery dir exists
@@ -27,6 +27,14 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(title="CropStocks Satellite Microservice", lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 imagery_dir = os.getenv("IMAGERY_DIR", "./data/satellite_imagery")
 os.makedirs(imagery_dir, exist_ok=True)

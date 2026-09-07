@@ -140,6 +140,47 @@ class SentinelHubProvider(SatelliteProvider):
         # Stub: Not fully implemented
         return "", ""
 
+class MockSatelliteProvider(SatelliteProvider):
+    def register_polygon(self, geojson: dict, name: str) -> str:
+        return "mock_poly_123"
+
+    def search_latest(self, polygon_id: str, max_age_days: int = 30, max_cloud_pct: float = 20.0) -> Optional[dict]:
+        return {
+            "acquisition_date": datetime.datetime.now().isoformat(),
+            "cloud_cover_pct": 5.0,
+            "satellite_source": "MockSat-1",
+            "truecolor_url": "https://via.placeholder.com/400x300.png?text=Mock+True+Color",
+            "ndvi_url": "https://via.placeholder.com/400x300.png?text=Mock+NDVI",
+            "ndvi_mean": 0.75,
+            "ndvi_min": 0.2,
+            "ndvi_max": 0.95
+        }
+
+    def fetch_images(self, acquisition: dict, farmer_id: str) -> Tuple[str, str]:
+        farmer_dir = os.path.join(os.getenv("IMAGERY_DIR", "./data/satellite_imagery"), farmer_id)
+        os.makedirs(farmer_dir, exist_ok=True)
+        
+        truecolor_path = os.path.join(farmer_dir, "latest_truecolor.png")
+        ndvi_path = os.path.join(farmer_dir, "latest_ndvi.png")
+        
+        # Download the mock images to disk so they can be served as static files
+        if acquisition.get("truecolor_url"):
+            resp = requests.get(acquisition["truecolor_url"])
+            with open(truecolor_path, "wb") as f:
+                f.write(resp.content)
+                
+        if acquisition.get("ndvi_url"):
+            resp = requests.get(acquisition["ndvi_url"])
+            with open(ndvi_path, "wb") as f:
+                f.write(resp.content)
+                
+        return truecolor_path, ndvi_path
+
+
 def get_satellite_provider() -> SatelliteProvider:
     # Factory to switch providers
-    return AgromonitoringProvider()
+    if os.getenv("AGRO_API_KEY"):
+        return AgromonitoringProvider()
+    else:
+        logger.warning("No AGRO_API_KEY found, using MockSatelliteProvider")
+        return MockSatelliteProvider()

@@ -16,6 +16,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.send('CropStocks API is running! Please access the application through the frontend client.');
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/listings', listingRoutes);
 app.use('/api/investments', investmentRoutes);
