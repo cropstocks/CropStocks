@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.env
+data/*.db
+data/satellite_imagery/
+data/test_satellite_imagery/
+data/training_raw/
+data/training_processed/

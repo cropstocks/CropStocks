@@ -107,7 +107,47 @@ CropStocks/
 │   │   ├── services/          # Business logic engines
 │   │   └── utils/             # Helpers
 │   └── prisma/                # Database schema & migrations
+├── satellite_service/         # Standalone Python Microservice for Satellite Data
+│   ├── src/                   # FastAPI endpoints, DB helpers, and satellite provider clients
+│   ├── tests/                 # Mocked pytest suite
+│   ├── data/                  # SQLite db, training datasets, and downloaded satellite imagery
+│   └── requirements.txt
 └── package.json               # Root orchestration
+```
+
+---
+
+## 🛰️ Satellite Monitoring Microservice
+
+CropStocks includes a standalone Python microservice that handles farmer geolocation onboarding and automated satellite/NDVI monitoring. It runs independently from the main React/Node stack.
+
+### Features
+- Validates farmer GPS coordinates and converts them to square GeoJSON polygons.
+- Registers polygons with satellite imagery providers.
+- Fetches true-color and NDVI imagery using a background task.
+- Computes ML features like `ndvi_mean` and `vegetative_health_index` to feed CropStocks' yield/forecasting models.
+- Generates historical training datasets from public data sources (e.g. Kaggle, IMD).
+
+### Setup & Run
+```bash
+cd satellite_service
+pip install -r requirements.txt
+cp .env.example .env
+```
+
+### Environment Variables
+Configure these in `satellite_service/.env`:
+- `AGRO_API_KEY`: API Key for Agromonitoring (Primary Provider). Required.
+- `SENTINEL_CLIENT_ID` / `SENTINEL_CLIENT_SECRET`: Credentials for Sentinel Hub (Fallback Provider).
+- `DB_PATH`: Path to the SQLite database. Defaults to `./data/cropstock.db`.
+- `IMAGERY_DIR`: Directory to cache satellite PNGs. Defaults to `./data/satellite_imagery`.
+
+### Provider Abstraction & Swapping
+The service uses an abstract `SatelliteProvider` class (`src/satellite_monitor.py`). The primary implementation is `AgromonitoringProvider`. When you outgrow the Agromonitoring free-tier quota, you can implement the `SentinelHubProvider` stub and simply update the `get_satellite_provider()` factory function to return the new provider. No changes to the endpoints or business logic are required.
+
+To run tests:
+```bash
+python -m pytest tests/ -v
 ```
 
 ---
