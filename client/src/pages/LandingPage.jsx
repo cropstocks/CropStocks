@@ -19,13 +19,16 @@ export default function LandingPage() {
           <p className="mt-6 text-lg leading-8 text-gray-300">
             {t('hero_subtitle')}
           </p>
-          <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Link to="/survey" className="btn-primary text-lg px-8 py-3">
-              Fill Survey
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-x-6">
+            <Link to="/register/investor" className="btn-primary text-lg px-8 py-3 w-full sm:w-auto">
+              Start Investing
             </Link>
-            <button onClick={() => alert('In Production')} className="text-sm font-semibold leading-6 text-white hover:text-brand-green transition-colors">
+            <Link to="/register/farmer" className="bg-white text-brand-green font-bold text-lg px-8 py-3 rounded-md border-2 border-brand-green hover:bg-green-50 transition-colors w-full sm:w-auto shadow">
+              Raise Capital
+            </Link>
+            <Link to="/marketplace" className="text-sm font-semibold leading-6 text-white hover:text-brand-green transition-colors mt-4 sm:mt-0">
               {t('explore_market')} <span aria-hidden="true">→</span>
-            </button>
+            </Link>
           </div>
         </div>
       </div>

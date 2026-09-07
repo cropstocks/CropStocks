@@ -16,14 +16,11 @@ export default function Navbar() {
             <Link to="/" className="flex-shrink-0 flex items-center h-auto w-56">
               <img src="/logo.png" alt="CropStocks Logo" className="h-16 md:h-20 w-auto object-contain" />
             </Link>
-            <span className="hidden sm:inline-block ml-2 text-xs font-semibold text-brand-green bg-green-50 px-2 py-1 rounded-full border border-green-200 whitespace-nowrap">
-              in Development
-            </span>
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            <button onClick={() => alert('In Production')} className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium text-left">
+            <Link to="/marketplace" className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium text-left">
               {t('marketplace')}
-            </button>
+            </Link>
             <select
               value={locale}
               onChange={(e) => changeLocale(e.target.value)}
@@ -45,9 +42,6 @@ export default function Navbar() {
                 <Link to="/documents" className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium">
                   Legal Docs
                 </Link>
-                <Link to="/survey" className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium">
-                  Survey
-                </Link>
                 <button onClick={logout} className="btn-outline text-sm">
                   {t('logout')}
                 </button>
@@ -57,8 +51,8 @@ export default function Navbar() {
                 <Link to="/login" className="text-gray-700 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium text-left">
                   {t('login')}
                 </Link>
-                <Link to="/survey" className="btn-primary text-sm">
-                  Fill Survey
+                <Link to="/register/investor" className="btn-primary text-sm">
+                  Start Investing
                 </Link>
               </>
             )}
@@ -83,9 +77,9 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <button onClick={() => alert('In Production')} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
+            <Link to="/marketplace" className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
               {t('marketplace')}
-            </button>
+            </Link>
             <select
               value={locale}
               onChange={(e) => changeLocale(e.target.value)}
@@ -104,9 +98,6 @@ export default function Navbar() {
                 <Link to="/documents" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
                   Legal Docs
                 </Link>
-                <Link to="/survey" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
-                  Survey
-                </Link>
                 <button onClick={logout} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-brand-green font-bold hover:bg-gray-50">
                   {t('logout')}
                 </button>
@@ -116,8 +107,8 @@ export default function Navbar() {
                 <Link to="/login" className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">
                   {t('login')}
                 </Link>
-                <Link to="/survey" className="block px-3 py-2 rounded-md text-base font-medium text-brand-green font-bold hover:bg-gray-50">
-                  Fill Survey
+                <Link to="/register/investor" className="block px-3 py-2 rounded-md text-base font-medium text-brand-green font-bold hover:bg-gray-50">
+                  Start Investing
                 </Link>
               </>
             )}
