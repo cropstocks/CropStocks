@@ -9,7 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'secret123';
 
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, phone, profile } = req.body;
     
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) return res.status(400).json({ error: 'Email already exists' });
@@ -17,11 +17,20 @@ router.post('/register', async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
     
     const user = await prisma.user.create({
-      data: { name, email, passwordHash, role: role || 'FARMER' }
+      data: { name, email, passwordHash, role: role || 'FARMER', phone }
     });
     
     if (user.role === 'FARMER') {
-      await prisma.farmerProfile.create({ data: { userId: user.id } });
+      await prisma.farmerProfile.create({ 
+        data: { 
+          userId: user.id,
+          aadhaarNo: profile?.aadhaarNo,
+          panNo: profile?.panNo,
+          farmSize: profile?.farmSize,
+          farmAddress: profile?.state,
+          landDetails: profile?.crops ? JSON.stringify({ crops: profile.crops }) : null
+        } 
+      });
     } else if (user.role === 'INVESTOR') {
       await prisma.investorProfile.create({ data: { userId: user.id, walletBalance: 100000 } });
     }

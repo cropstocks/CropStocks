@@ -29,7 +29,15 @@ export default function FarmerRegister() {
         name: form.name,
         email: form.email,
         password: form.password,
-        role: 'FARMER'
+        phone: form.phone,
+        role: 'FARMER',
+        profile: {
+          aadhaarNo: form.aadhaar,
+          panNo: form.pan,
+          farmSize: form.farmSize,
+          state: form.state,
+          crops: form.crops
+        }
       });
       login(data.user, data.token);
       navigate('/farmer/dashboard');
