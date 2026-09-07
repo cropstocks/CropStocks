@@ -4,10 +4,10 @@
   "private": true,
   "description": "CropStocks — A stock market for agricultural produce",
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\" \"cd satellite_service && uvicorn src.app:app --reload --port 8001\"",
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\" \"cd satellite_service && uvicorn src.app:app --host 0.0.0.0 --reload --port 8001\"",
     "dev:client": "npm run dev --prefix client",
     "dev:server": "npm run dev --prefix server",
-    "dev:satellite": "cd satellite_service && uvicorn src.app:app --reload --port 8001",
+    "dev:satellite": "cd satellite_service && uvicorn src.app:app --host 0.0.0.0 --reload --port 8001",
     "postinstall": "npm install --prefix client",
     "build": "npm run build --prefix client"
   },

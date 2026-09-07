@@ -1,4 +1,4 @@
-const SATELLITE_API_URL = import.meta.env.VITE_SATELLITE_API_URL || 'http://localhost:8001/api';
+const SATELLITE_API_URL = import.meta.env.VITE_SATELLITE_API_URL || `http://${window.location.hostname}:8001/api`;
 
 const handleResponse = async (response) => {
   const data = await response.json();
@@ -10,14 +10,22 @@ const handleResponse = async (response) => {
 
 export const satelliteApi = {
   registerFarm: async (data) => {
-    const response = await fetch(`${SATELLITE_API_URL}/farmers/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
-    return handleResponse(response);
+    const url = `${SATELLITE_API_URL}/farmers/register`;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      return await handleResponse(response);
+    } catch (err) {
+      if (err.message === 'Failed to fetch' || err.message.includes('fetch')) {
+        throw new Error(`Network Error: Cannot connect to ${url}. Is the backend running?`);
+      }
+      throw err;
+    }
   },
   
   checkStatus: async (farmerId) => {
