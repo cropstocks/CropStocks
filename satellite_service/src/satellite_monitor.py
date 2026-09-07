@@ -4,6 +4,7 @@ import datetime
 import logging
 from typing import Optional, Tuple, Dict
 import requests
+import shutil
 from abc import ABC, abstractmethod
 
 logger = logging.getLogger(__name__)
@@ -164,15 +165,22 @@ class MockSatelliteProvider(SatelliteProvider):
         ndvi_path = os.path.join(farmer_dir, "latest_ndvi.png")
         
         # Download the mock images to disk so they can be served as static files
+        import requests
         if acquisition.get("truecolor_url"):
-            resp = requests.get(acquisition["truecolor_url"])
-            with open(truecolor_path, "wb") as f:
-                f.write(resp.content)
+            try:
+                resp = requests.get(acquisition["truecolor_url"], timeout=10)
+                with open(truecolor_path, "wb") as f:
+                    f.write(resp.content)
+            except Exception as e:
+                logger.error(f"Failed to download truecolor mock: {e}")
                 
         if acquisition.get("ndvi_url"):
-            resp = requests.get(acquisition["ndvi_url"])
-            with open(ndvi_path, "wb") as f:
-                f.write(resp.content)
+            try:
+                resp = requests.get(acquisition["ndvi_url"], timeout=10)
+                with open(ndvi_path, "wb") as f:
+                    f.write(resp.content)
+            except Exception as e:
+                logger.error(f"Failed to download ndvi mock: {e}")
                 
         return truecolor_path, ndvi_path
 
