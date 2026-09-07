@@ -1,4 +1,4 @@
-const SATELLITE_API_URL = import.meta.env.VITE_SATELLITE_API_URL || 'http://localhost:8000/api';
+const SATELLITE_API_URL = import.meta.env.VITE_SATELLITE_API_URL || 'http://localhost:8001/api';
 
 const handleResponse = async (response) => {
   const data = await response.json();
