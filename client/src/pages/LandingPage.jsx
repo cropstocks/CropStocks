@@ -57,7 +57,7 @@ export default function LandingPage() {
               </p>
             </div>
             <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-              <button className="btn btn-primary" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>
+              <button onClick={() => window.dispatchEvent(new Event('open-login'))} className="btn btn-primary" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>
                 {t('start_investing')}
               </button>
               <button className="btn btn-outline" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>
