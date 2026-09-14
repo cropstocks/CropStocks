@@ -8,6 +8,7 @@ export default function InvestmentsPage() {
   const { t } = useTranslation();
   const [selectedInvestment, setSelectedInvestment] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sharesCount, setSharesCount] = useState(1);
 
   const filteredInvestments = mockInvestments.filter(inv =>
     inv.farmName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -75,10 +76,21 @@ export default function InvestmentsPage() {
           </div>
 
           {/* Action Footer */}
-          <div style={{ padding: '2rem 3rem', background: 'var(--bg-main)', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '0.2rem' }}>{t('value_per_share')}</p>
-              <p style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--color-primary-dark)' }}>₹{selectedInvestment.valuePerShare.toLocaleString()}</p>
+          <div style={{ padding: '2rem 3rem', background: 'var(--bg-main)', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '3rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                 <p style={{ color: 'var(--text-muted)', fontSize: '1rem', marginBottom: '0.4rem', fontWeight: '500' }}>Number of Shares</p>
+                 <div style={{ background: 'var(--bg-surface)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', height: '48px', overflow: 'hidden' }}>
+                    <button onClick={() => setSharesCount(Math.max(1, sharesCount - 1))} style={{ padding: '0 1.25rem', background: 'transparent', color: 'var(--text-main)', fontSize: '1.5rem', display: 'flex', alignItems: 'center' }}>-</button>
+                    <span style={{ fontWeight: 600, width: '40px', textAlign: 'center', fontSize: '1.25rem', borderLeft: '1px solid var(--border-color)', borderRight: '1px solid var(--border-color)', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{sharesCount}</span>
+                    <button onClick={() => setSharesCount(sharesCount + 1)} style={{ padding: '0 1.25rem', background: 'transparent', color: 'var(--text-main)', fontSize: '1.5rem', display: 'flex', alignItems: 'center' }}>+</button>
+                 </div>
+              </div>
+
+              <div>
+                <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '0.2rem' }}>Total Price</p>
+                <p style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--color-primary-dark)' }}>₹{(selectedInvestment.valuePerShare * sharesCount).toLocaleString()}</p>
+              </div>
             </div>
             <button className="btn btn-primary" style={{ padding: '1.25rem 4rem', fontSize: '1.2rem', borderRadius: 'var(--radius-xl)', boxShadow: '0 8px 20px rgba(16, 185, 129, 0.4)' }}>
               {t('buy_now')}
@@ -124,7 +136,7 @@ export default function InvestmentsPage() {
           </thead>
           <tbody>
             {filteredInvestments.map(inv => (
-              <tr key={inv.id} onClick={() => setSelectedInvestment(inv)}>
+              <tr key={inv.id} onClick={() => { setSelectedInvestment(inv); setSharesCount(1); }}>
                 <td>
                   <div style={{ fontWeight: 600, color: 'var(--color-primary-dark)' }}>{inv.farmName}</div>
                   <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{inv.cropName}</div>
