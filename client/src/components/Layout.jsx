@@ -8,11 +8,17 @@ export default function Layout({ children }) {
   const [theme, setTheme] = useState('light');
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [loginRole, setLoginRole] = useState('investor');
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    const handleOpenLogin = () => setIsLoginOpen(true);
+    const handleOpenLogin = (e) => {
+      if (e.detail && e.detail.role) {
+        setLoginRole(e.detail.role);
+      }
+      setIsLoginOpen(true);
+    };
     window.addEventListener('open-login', handleOpenLogin);
     return () => window.removeEventListener('open-login', handleOpenLogin);
   }, []);
@@ -78,7 +84,7 @@ export default function Layout({ children }) {
               )}
             </div>
 
-            <button onClick={() => setIsLoginOpen(true)} className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button onClick={() => { setLoginRole('investor'); setIsLoginOpen(true); }} className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <LogIn size={18} /> {t('login')}
             </button>
           </div>
@@ -108,7 +114,7 @@ export default function Layout({ children }) {
             <button onClick={() => setIsLoginOpen(false)} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'transparent', color: 'var(--text-muted)', border: 'none', cursor: 'pointer' }}>
               <X size={24} />
             </button>
-            <h2 style={{ marginBottom: '2rem', fontSize: '2rem', color: 'var(--text-main)' }}>{t('login')}</h2>
+            <h2 style={{ marginBottom: '2rem', fontSize: '2rem', color: 'var(--text-main)' }}>{loginRole === 'investor' ? 'Investor Login' : 'Farmer Login'}</h2>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div>
@@ -119,24 +125,27 @@ export default function Layout({ children }) {
               </div>
 
               <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
-                <button onClick={() => handleLogin('investor')} className="btn btn-primary" style={{ flex: 1, padding: '1rem' }}>
-                  {t('login')} as Investor
-                </button>
-                <button onClick={() => handleLogin('farmer')} className="btn btn-outline" style={{ flex: 1, padding: '1rem' }}>
-                  {t('login')} as Farmer
+                <button onClick={() => handleLogin(loginRole)} className="btn btn-primary" style={{ width: '100%', padding: '1rem' }}>
+                  {t('sign_in')}
                 </button>
               </div>
-              <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                Demo Admin: <strong>admin@investor.com</strong> / <strong>admin@farmer.com</strong>
+              <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'underline' }} onClick={() => setLoginRole(loginRole === 'investor' ? 'farmer' : 'investor')}>
+                {loginRole === 'investor' ? 'Or login as Farmer' : 'Or login as Investor'}
               </p>
+              
+              <div style={{ padding: '0.75rem', background: 'var(--bg-main)', borderRadius: '8px', border: '1px dashed var(--border-color)', marginTop: '0.5rem' }}>
+                 <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>
+                   Demo Admin: <strong style={{ color: 'var(--color-primary-dark)' }}>admin@{loginRole === 'investor' ? 'investor' : 'farmer'}.com</strong>
+                 </p>
+              </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', textTransform: 'uppercase', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', textTransform: 'uppercase', color: 'var(--text-muted)', fontSize: '0.85rem', margin: '0.5rem 0' }}>
                 <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
                 <span style={{ padding: '0 10px' }}>OR</span>
                 <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
               </div>
 
-              <button onClick={() => handleLogin('investor')} className="btn btn-outline" style={{ width: '100%', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+              <button onClick={() => handleLogin(loginRole)} className="btn btn-outline" style={{ width: '100%', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
                 <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
@@ -147,8 +156,8 @@ export default function Layout({ children }) {
                 {t('sign_in_google')}
               </button>
 
-              <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-                <button onClick={() => handleLogin(true)} style={{ background: 'transparent', color: 'var(--color-primary)', fontWeight: 600, border: 'none', cursor: 'pointer', fontSize: '1rem' }}>
+              <div style={{ textAlign: 'center', marginTop: '0.5rem' }}>
+                <button onClick={() => handleLogin(loginRole)} style={{ background: 'transparent', color: 'var(--color-primary)', fontWeight: 600, border: 'none', cursor: 'pointer', fontSize: '1rem' }}>
                   {t('create_new_user')}
                 </button>
               </div>
