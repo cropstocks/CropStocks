@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Leaf, ShieldCheck, TrendingUp, Users } from 'lucide-react';
 import heroImg from '../assets/hero.png';
 
+
 export default function LandingPage() {
   const { t } = useTranslation();
 
@@ -13,43 +14,58 @@ export default function LandingPage() {
         minHeight: '80vh',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative',
-        overflow: 'hidden'
+        background: 'var(--bg-main)',
+        padding: '2rem 0'
       }}>
-        {/* Background Image / Gradient */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: `url(${heroImg})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'brightness(0.4)',
-          zIndex: -2
-        }} />
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'var(--gradient-green)',
-          opacity: 0.6,
-          zIndex: -1
-        }} />
+        <div className="container" style={{ display: 'grid', gridTemplateColumns: 'revert', gap: '4rem', '@media (minWidth: 768px)': { gridTemplateColumns: 'repeat(2, 1fr)' }, display: 'flex', flexWrap: 'wrap' }}>
 
-        <div className="container" style={{ textAlign: 'center', color: 'white' }}>
-          <h1 style={{ fontSize: '4rem', marginBottom: '1.5rem', textShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
-            {t('hero_title')}
-          </h1>
-          <p style={{ fontSize: '1.25rem', maxWidth: '800px', margin: '0 auto 3rem', opacity: 0.9, lineHeight: 1.6 }}>
-            {t('hero_subtitle')}
-          </p>
-          <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
-            <button className="btn btn-primary" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>
-              {t('start_investing')}
-            </button>
-            <button className="btn btn-outline" style={{ fontSize: '1.1rem', padding: '1rem 2rem', color: 'white', borderColor: 'white' }}>
-              {t('raise_capital')}
-            </button>
+          {/* Left Side: Farmer Image Card */}
+          <div style={{ flex: '1 1 400px', display: 'flex', justifyContent: 'center' }}>
+            <div className="glass-panel" style={{ position: 'relative', width: '100%', maxWidth: '500px', overflow: 'hidden', padding: '1rem', borderRadius: 'var(--radius-xl)' }}>
+              <div style={{
+                position: 'relative',
+                width: '100%',
+                height: '450px',
+                borderRadius: 'var(--radius-lg)',
+                overflow: 'hidden'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  backgroundImage: `url(${heroImg})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  filter: 'brightness(0.85)'
+                }} />
+                {/* Overlay text on image */}
+                <div style={{ position: 'absolute', bottom: '1rem', left: '1rem', right: '1rem', background: 'var(--glass-bg)', padding: '1rem', borderRadius: 'var(--radius-md)', backdropFilter: 'blur(8px)' }}>
+                  <h3 style={{ color: 'var(--text-main)', marginBottom: '0.2rem' }}>Verified Farms</h3>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Direct investments in agricultural growth.</p>
+                </div>
+              </div>
+            </div>
           </div>
+
+          {/* Right Side: Info & CTA */}
+          <div style={{ flex: '1 1 500px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2rem' }}>
+            <div>
+              <h1 style={{ fontSize: '3.5rem', marginBottom: '1.5rem', color: 'var(--color-primary-dark)', lineHeight: 1.1 }}>
+                {t('hero_title')}
+              </h1>
+              <p style={{ fontSize: '1.25rem', color: 'var(--text-main)', opacity: 0.9, lineHeight: 1.6 }}>
+                {t('hero_subtitle')}
+              </p>
+            </div>
+            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+              <button className="btn btn-primary" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>
+                {t('start_investing')}
+              </button>
+              <button className="btn btn-outline" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>
+                {t('raise_capital')}
+              </button>
+            </div>
+          </div>
+
         </div>
       </section>
 
