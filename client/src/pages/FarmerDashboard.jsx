@@ -41,8 +41,10 @@ const FarmerDashboard = () => {
         setLoading(false);
       }
     };
-    fetchListings();
-  }, []);
+    if (user?.id) {
+      fetchListings();
+    }
+  }, [user?.id]);
 
   useEffect(() => {
     if (selectedListingId) {
