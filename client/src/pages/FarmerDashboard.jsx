@@ -72,8 +72,16 @@ const FarmerDashboard = () => {
 
   if (loading) return <div className="p-8 text-center">{t('Loading...')}</div>;
   
-  if (listings.length === 0) {
-    return <div className="p-8 text-center">{t('No active listings found.')}</div>;
+  if (!loading && listings.length === 0) {
+    return (
+      <div className="p-4">
+        {t('No active listings found.')}
+        <pre className="mt-4 text-xs text-gray-500 bg-gray-100 p-4 rounded">
+          Debug Info:
+          {JSON.stringify({ userId: user?.id, userName: user?.name }, null, 2)}
+        </pre>
+      </div>
+    );
   }
 
   if (!cycleState) {
