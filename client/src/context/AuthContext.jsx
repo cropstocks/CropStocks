@@ -7,17 +7,27 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    if (token && storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+    const validateSession = async () => {
+      const token = localStorage.getItem('token');
+      const storedUser = localStorage.getItem('user');
+      
+      if (token && storedUser) {
+        try {
+          // Verify with backend
+          const apiModule = await import('../services/api');
+          const userData = await apiModule.default.get('/auth/me');
+          setUser(userData);
+          localStorage.setItem('user', JSON.stringify(userData));
+        } catch (e) {
+          console.error("Session invalid or expired, logging out.");
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setUser(null);
+        }
       }
-    }
-    setLoading(false);
+      setLoading(false);
+    };
+    validateSession();
   }, []);
 
   const login = (userData, token) => {
