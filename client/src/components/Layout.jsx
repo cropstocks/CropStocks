@@ -84,7 +84,7 @@ export default function Layout({ children }) {
         <div className="container flex-between" style={{ height: '70px' }}>
           <div className="logo-section" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Link to="/">
-              <img src="/logo.png" alt="CropStocks" style={{ height: '40px', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
+              <img src="/logo.png" alt="CropStocks" style={{ height: '55px', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
             </Link>
           </div>
 
