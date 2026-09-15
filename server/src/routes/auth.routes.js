@@ -48,7 +48,8 @@ router.post('/register', async (req, res) => {
           cycleDuration: 20,
           capitalRequired: 150000,
           capitalRaised: 150000, // Fully funded
-          expectedRevenue: 250000,
+          expectedReturn: 15, // 15% expected return
+          expectedPrice: 1500,
           stockPrice: 1200,
           status: 'ACTIVE' // Ready for cycle
         }
