@@ -83,9 +83,8 @@ export default function Layout({ children }) {
       <header className="glass-panel" style={{ position: 'sticky', top: 0, zIndex: 100, borderRadius: 0, borderTop: 0, borderLeft: 0, borderRight: 0 }}>
         <div className="container flex-between" style={{ height: '70px' }}>
           <div className="logo-section" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <img src="/logo.png" alt="Logo" style={{ height: '40px', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
             <Link to="/">
-              <h2 style={{ color: 'var(--color-primary-dark)' }}>{t('app_name')}</h2>
+              <img src="/logo.png" alt="CropStocks" style={{ height: '40px', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
             </Link>
           </div>
 
