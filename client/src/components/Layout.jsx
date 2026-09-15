@@ -14,6 +14,8 @@ export default function Layout({ children }) {
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [loginRole, setLoginRole] = useState('investor');
+  const [emailInput, setEmailInput] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -28,37 +30,41 @@ export default function Layout({ children }) {
     return () => window.removeEventListener('open-login', handleOpenLogin);
   }, []);
 
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
-  };
-
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
     setLangOpen(false);
   };
 
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
+
   const { login, user, logout } = React.useContext(AuthContext);
 
-  const handleLogin = async (role) => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if (!emailInput || !passwordInput) {
+      alert('Please enter email and password');
+      return;
+    }
+    
     try {
-      // Use hardcoded demo accounts for seamless reviewer testing
-      const email = role === 'farmer' ? 'rajesh@example.com' : 'priya@example.com';
-      const res = await api.post('/auth/login', { email, password: 'password123' });
+      const res = await api.post('/auth/login', { email: emailInput, password: passwordInput });
       login(res.user, res.token);
       setIsLoginOpen(false);
+      setEmailInput('');
+      setPasswordInput('');
       
-      if (role === 'farmer') {
+      if (res.user.role === 'FARMER') {
         navigate('/farmer-dashboard');
-      } else {
+      } else if (res.user.role === 'INVESTOR') {
         navigate('/dashboard');
       }
     } catch (err) {
       console.error('Login failed:', err);
-      alert('Login failed. Ensure backend is running.');
+      alert(err.message || 'Login failed. Please check your credentials.');
     }
   };
 
@@ -142,16 +148,16 @@ export default function Layout({ children }) {
             </button>
             <h2 style={{ marginBottom: '2rem', fontSize: '2rem', color: 'var(--text-main)' }}>{loginRole === 'investor' ? 'Investor Login' : 'Farmer Login'}</h2>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div>
-                <input type="email" placeholder={t('email')} className="input-field" style={{ width: '100%', padding: '1rem', border: '1px solid var(--border-color)', borderRadius: '8px' }} />
+                <input required type="email" value={emailInput} onChange={e => setEmailInput(e.target.value)} placeholder={t('email')} className="input-field" style={{ width: '100%', padding: '1rem', border: '1px solid var(--border-color)', borderRadius: '8px' }} />
               </div>
               <div>
-                <input type="password" placeholder={t('password')} className="input-field" style={{ width: '100%', padding: '1rem', border: '1px solid var(--border-color)', borderRadius: '8px' }} />
+                <input required type="password" value={passwordInput} onChange={e => setPasswordInput(e.target.value)} placeholder={t('password')} className="input-field" style={{ width: '100%', padding: '1rem', border: '1px solid var(--border-color)', borderRadius: '8px' }} />
               </div>
 
               <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
-                <button onClick={() => handleLogin(loginRole)} className="btn btn-primary" style={{ width: '100%', padding: '1rem' }}>
+                <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '1rem' }}>
                   {t('sign_in')}
                 </button>
               </div>
@@ -159,12 +165,6 @@ export default function Layout({ children }) {
                 {loginRole === 'investor' ? 'Or login as Farmer' : 'Or login as Investor'}
               </p>
               
-              <div style={{ padding: '0.75rem', background: 'var(--bg-main)', borderRadius: '8px', border: '1px dashed var(--border-color)', marginTop: '0.5rem' }}>
-                 <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>
-                   Demo Admin: <strong style={{ color: 'var(--color-primary-dark)' }}>admin@{loginRole === 'investor' ? 'investor' : 'farmer'}.com</strong>
-                 </p>
-              </div>
-
               <div style={{ display: 'flex', alignItems: 'center', textTransform: 'uppercase', color: 'var(--text-muted)', fontSize: '0.85rem', margin: '0.5rem 0' }}>
                 <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
                 <span style={{ padding: '0 10px' }}>OR</span>
@@ -187,7 +187,7 @@ export default function Layout({ children }) {
                   {t('create_new_user')}
                 </button>
               </div>
-            </div>
+            </form>
           </div>
 
         </div>
