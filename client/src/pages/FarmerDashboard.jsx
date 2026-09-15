@@ -26,9 +26,13 @@ const FarmerDashboard = () => {
     const fetchListings = async () => {
       try {
         const res = await api.get('/listings');
-        setListings(res);
-        if (res.length > 0) {
-          setSelectedListingId(res[0].id);
+        // Filter to only this farmer's listings
+        const myListings = res.filter(l => l.farmerId === user?.id);
+        setListings(myListings);
+        if (myListings.length > 0) {
+          // Sort to prioritize Wheat/Soybean (the seeded ones)
+          const seedListing = myListings.find(l => l.produceName === 'Wheat' || l.produceName === 'Soybean');
+          setSelectedListingId(seedListing ? seedListing.id : myListings[0].id);
         } else {
           setLoading(false);
         }
@@ -107,7 +111,7 @@ const FarmerDashboard = () => {
               onChange={(e) => setSelectedListingId(e.target.value)}
               className="ml-2 bg-transparent border-b border-gray-300 font-bold focus:outline-none"
             >
-              {listings.map(l => <option key={l.id} value={l.id}>{l.crop} - {l.region}</option>)}
+              {listings.map(l => <option key={l.id} value={l.id}>{l.produceName} - {l.region}</option>)}
             </select>
           </p>
         </div>

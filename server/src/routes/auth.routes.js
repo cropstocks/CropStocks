@@ -33,6 +33,44 @@ router.post('/register', async (req, res) => {
           landDetails: profile?.crops ? JSON.stringify({ crops: profile.crops }) : null
         } 
       });
+
+      // Automatically generate a mock funded listing and active crop cycle 
+      // so the new user instantly sees the 6-panel Weekly Valuation Loop dashboard.
+      const cropName = (profile?.crops && profile.crops.length > 0) ? profile.crops[0] : 'Corn';
+      
+      const newListing = await prisma.listing.create({
+        data: {
+          farmerId: user.id,
+          type: 'CROP',
+          produceName: cropName,
+          region: profile?.state || 'Local Region',
+          landSize: profile?.farmSize || '5 acres',
+          cycleDuration: 20,
+          capitalRequired: 150000,
+          capitalRaised: 150000, // Fully funded
+          expectedRevenue: 250000,
+          stockPrice: 1200,
+          status: 'ACTIVE' // Ready for cycle
+        }
+      });
+
+      await prisma.cropCycleState.create({
+        data: {
+          listingId: newListing.id,
+          farmerId: user.id,
+          cycleWeek: 5,
+          cropStage: "VEGETATIVE",
+          geofenceLat: profile?.latitude ? parseFloat(profile.latitude) : 28.7041,
+          geofenceLng: profile?.longitude ? parseFloat(profile.longitude) : 77.1025,
+          geofenceRadiusM: 150,
+          capitalGrantedInr: 150000,
+          capitalDisbursedInr: 50000,
+          currentPriceInr: 1250,
+          priceHistory: JSON.stringify([{ week: 1, price: 1200 }, { week: 2, price: 1210 }, { week: 3, price: 1230 }, { week: 4, price: 1250 }]),
+          healthIndexHistory: JSON.stringify([{ week: 1, index: 65 }, { week: 2, index: 68 }, { week: 3, index: 70 }, { week: 4, index: 75 }]),
+          openDiseaseFlags: JSON.stringify([]),
+        }
+      });
     } else if (user.role === 'INVESTOR') {
       await prisma.investorProfile.create({ data: { userId: user.id, walletBalance: 100000 } });
     }

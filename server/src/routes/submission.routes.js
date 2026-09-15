@@ -33,7 +33,6 @@ router.get('/window/:listingId', authenticate, requireRole(['FARMER']), async (r
       where: {
         listingId,
         status: 'ACTIVE',
-        farmerId: req.user.userId,
       },
     });
 
@@ -313,7 +312,6 @@ router.get('/:listingId/status', authenticate, requireRole(['FARMER']), async (r
       where: {
         listingId,
         status: 'ACTIVE',
-        farmerId: req.user.userId,
       },
     });
 

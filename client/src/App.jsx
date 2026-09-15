@@ -19,8 +19,8 @@ export default function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/investments" element={<InvestmentsPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/farmer-dashboard" element={<FarmerDashboardPage />} />
-          <Route path="/farmer-dashboard-new" element={<FarmerDashboard />} />
+          <Route path="/farmer-dashboard" element={<FarmerDashboard />} />
+          <Route path="/farmer-dashboard-old" element={<FarmerDashboardPage />} />
           <Route path="/farmer/capture/:listingId" element={<CaptureScreen />} />
           <Route path="/farmer/report/:listingId/:week" element={<WeeklyReportView />} />
           <Route path="/farmer/appeal/:listingId" element={<FarmerAppealForm />} />

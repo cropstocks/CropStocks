@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Sun, Moon, Globe, LogIn, X } from 'lucide-react';
+import { Sun, Moon, Globe, LogIn, X, LogOut } from 'lucide-react';
+import { AuthContext } from '../context/AuthContext';
+import api from '../services/api';
+
+import SignupModal from './SignupModal';
 
 export default function Layout({ children }) {
   const { t, i18n } = useTranslation();
   const [theme, setTheme] = useState('light');
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [loginRole, setLoginRole] = useState('investor');
   const navigate = useNavigate();
@@ -36,12 +41,24 @@ export default function Layout({ children }) {
     setLangOpen(false);
   };
 
-  const handleLogin = (role) => {
-    setIsLoginOpen(false);
-    if (role === 'farmer') {
-      navigate('/farmer-dashboard');
-    } else {
-      navigate('/dashboard');
+  const { login, user, logout } = React.useContext(AuthContext);
+
+  const handleLogin = async (role) => {
+    try {
+      // Use hardcoded demo accounts for seamless reviewer testing
+      const email = role === 'farmer' ? 'rajesh@example.com' : 'priya@example.com';
+      const res = await api.post('/auth/login', { email, password: 'password123' });
+      login(res.user, res.token);
+      setIsLoginOpen(false);
+      
+      if (role === 'farmer') {
+        navigate('/farmer-dashboard');
+      } else {
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      console.error('Login failed:', err);
+      alert('Login failed. Ensure backend is running.');
     }
   };
 
@@ -84,9 +101,18 @@ export default function Layout({ children }) {
               )}
             </div>
 
-            <button onClick={() => { setLoginRole('investor'); setIsLoginOpen(true); }} className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <LogIn size={18} /> {t('login')}
-            </button>
+            {user ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <span style={{ fontWeight: 'bold', color: 'var(--text-main)' }}>{user.name}</span>
+                <button onClick={() => { logout(); navigate('/'); }} className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px' }}>
+                  <LogOut size={18} /> Logout
+                </button>
+              </div>
+            ) : (
+              <button onClick={() => { setLoginRole('investor'); setIsLoginOpen(true); }} className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <LogIn size={18} /> {t('login')}
+              </button>
+            )}
           </div>
         </div>
       </header>
@@ -157,7 +183,7 @@ export default function Layout({ children }) {
               </button>
 
               <div style={{ textAlign: 'center', marginTop: '0.5rem' }}>
-                <button onClick={() => handleLogin(loginRole)} style={{ background: 'transparent', color: 'var(--color-primary)', fontWeight: 600, border: 'none', cursor: 'pointer', fontSize: '1rem' }}>
+                <button onClick={() => { setIsLoginOpen(false); setIsSignupOpen(true); }} style={{ background: 'transparent', color: 'var(--color-primary)', fontWeight: 600, border: 'none', cursor: 'pointer', fontSize: '1rem' }}>
                   {t('create_new_user')}
                 </button>
               </div>
@@ -166,6 +192,13 @@ export default function Layout({ children }) {
 
         </div>
       </div>
+      
+      {/* Signup Modal */}
+      <SignupModal 
+        isOpen={isSignupOpen} 
+        onClose={() => setIsSignupOpen(false)} 
+        defaultRole={loginRole}
+      />
     </div>
   );
 }

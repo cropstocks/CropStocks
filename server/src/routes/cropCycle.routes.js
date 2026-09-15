@@ -83,7 +83,6 @@ router.get('/:listingId', authenticate, requireRole(['FARMER']), async (req, res
       where: {
         listingId,
         status: 'ACTIVE',
-        farmerId: req.user.userId,
       },
       include: {
         submissionWindows: {
