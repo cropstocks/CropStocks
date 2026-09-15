@@ -88,16 +88,25 @@ const FarmerDashboard = () => {
     );
   }
 
-  const healthHistory = cycleState.healthIndexHistory || [];
-  const priceHistory = cycleState.priceHistory || [];
-  const prevPrice = priceHistory.length > 1 ? priceHistory[priceHistory.length - 2].price : cycleState.currentPrice;
-  const priceDeltaPercent = cycleState.currentPrice > 0 ? ((cycleState.currentPrice - prevPrice) / prevPrice) * 100 : 0;
+  const safeParseJSON = (data) => {
+    if (typeof data === 'string') {
+      try { return JSON.parse(data); } catch (e) { return null; } // Changed to return null for objects
+    }
+    return data || null;
+  };
+
+  const healthHistory = safeParseJSON(cycleState.healthIndexHistory) || [];
+  const priceHistory = safeParseJSON(cycleState.priceHistory) || [];
+  const currentPrice = cycleState.currentPriceInr || 0;
+  const prevPrice = priceHistory.length > 1 ? priceHistory[priceHistory.length - 2].price : currentPrice;
+  const priceDeltaPercent = currentPrice > 0 && prevPrice > 0 ? ((currentPrice - prevPrice) / prevPrice) * 100 : 0;
   
   const latestReport = reports.length > 0 ? reports[0] : null;
-  const satelliteCurrent = latestReport?.data?.satelliteCurrentUrl;
-  const satellitePrev = latestReport?.data?.satellitePrevUrl;
+  const latestReportData = latestReport ? safeParseJSON(latestReport.reportData) : null;
+  const satelliteCurrent = latestReportData?.satelliteCurrentUrl || latestReportData?.satelliteUrl;
+  const satellitePrev = latestReportData?.satellitePrevUrl;
 
-  const activeFlags = cycleState.flags || [];
+  const activeFlags = safeParseJSON(cycleState.openDiseaseFlags) || [];
 
   return (
     <div className="max-w-6xl mx-auto p-4 space-y-6">
@@ -122,7 +131,7 @@ const FarmerDashboard = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
-        <div className="glass-card p-5 flex flex-col">
+        <div className="glass-panel p-5 flex flex-col">
           <h3 className="font-heading font-semibold text-lg mb-4">{t('Satellite NDVI')}</h3>
           <div className="mb-4">
             <SatelliteCompare 
@@ -144,7 +153,7 @@ const FarmerDashboard = () => {
           </div>
         </div>
 
-        <div className="glass-card p-5 flex flex-col justify-center">
+        <div className="glass-panel p-5 flex flex-col justify-center">
           <h3 className="font-heading font-semibold text-lg mb-6">{t('Capital Status')}</h3>
           
           <div className="flex justify-between items-end mb-2">
@@ -185,7 +194,7 @@ const FarmerDashboard = () => {
           )}
         </div>
 
-        <div className="glass-card p-5">
+        <div className="glass-panel p-5">
           <h3 className="font-heading font-semibold text-lg mb-2">{t('Weekly Submission')}</h3>
           <SubmissionStatus 
             currentStep={windowStatus?.status || 'WINDOW_OPEN'} 
@@ -204,7 +213,7 @@ const FarmerDashboard = () => {
         <div className="glass-panel p-5 md:col-span-2 lg:col-span-1">
           <h3 className="font-heading font-semibold text-lg mb-4">{t('Crop Health')}</h3>
           <div className="flex justify-center mb-6">
-            <HealthGauge value={cycleState.currentHealthIndex} size={150} />
+            <HealthGauge value={healthHistory.length > 0 ? healthHistory[healthHistory.length - 1].index || healthHistory[healthHistory.length - 1].health || 0 : 0} size={150} />
           </div>
           
           {activeFlags.length > 0 ? (
@@ -228,27 +237,29 @@ const FarmerDashboard = () => {
         <div className="glass-panel p-5 md:col-span-2 lg:col-span-1">
           <h3 className="font-heading font-semibold text-lg mb-4">{t('Weekly Reports')}</h3>
           <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
-            {reports.map((r, i) => (
+            {reports.map((r, i) => {
+              const rData = safeParseJSON(r.reportData) || {};
+              return (
               <Link 
                 key={i} 
-                to={`/farmer/report/${selectedListingId}/${r.week}`}
+                to={`/farmer/report/${selectedListingId}/${r.cycleWeek || r.week}`}
                 className="block border rounded-lg p-3 hover:border-brand-green transition-colors bg-white group"
               >
                 <div className="flex justify-between items-center mb-2">
-                  <span className="font-bold">Week {r.week}</span>
+                  <span className="font-bold">Week {r.cycleWeek || r.week}</span>
                   <span className="text-xs text-gray-400">{new Date(r.createdAt).toLocaleDateString()}</span>
                 </div>
                 <div className="flex justify-between text-sm text-brand-slate">
-                  <span>Health: <span className="font-semibold text-brand-dark">{r.data?.healthIndex || '-'}</span></span>
-                  <span>Price Δ: <span className={`font-semibold ${r.data?.newPrice >= r.data?.priorPrice ? 'text-green-600' : 'text-red-600'}`}>
-                    {r.data?.newPrice >= r.data?.priorPrice ? '+' : ''}{r.data?.newPrice ? ((r.data.newPrice - r.data.priorPrice)/r.data.priorPrice*100).toFixed(1) : 0}%
+                  <span>Health: <span className="font-semibold text-brand-dark">{rData.healthIndex || '-'}</span></span>
+                  <span>Price Δ: <span className={`font-semibold ${rData.newPrice >= rData.priorPrice ? 'text-green-600' : 'text-red-600'}`}>
+                    {rData.newPrice >= rData.priorPrice ? '+' : ''}{rData.newPrice && rData.priorPrice ? ((rData.newPrice - rData.priorPrice)/rData.priorPrice*100).toFixed(1) : 0}%
                   </span></span>
                 </div>
                 <div className="mt-2 text-xs text-brand-blue opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-end">
                   {t('View Full Report')} <Download size={12} className="ml-1" />
                 </div>
               </Link>
-            ))}
+            )})}
             {reports.length === 0 && (
               <div className="text-center text-gray-500 py-8">{t('No reports generated yet.')}</div>
             )}
