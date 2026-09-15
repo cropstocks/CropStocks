@@ -1,0 +1,85 @@
+{
+  "version": "1.0.0",
+  "diseases": {
+    "late_blight": {
+      "name": { "en": "Late Blight", "hi": "लेट ब्लाइट", "gu": "લેટ બ્લાઇટ" },
+      "crops": ["potato", "tomato"],
+      "explanation": { "en": "Fungal disease causing rapid browning of leaves.", "hi": "कवक रोग जिससे पत्ते जल्दी भूरे हो जाते हैं।", "gu": "ફંગલ રોગ જેનાથી પાંદડા ઝડપથી ભૂરા થઈ જાય છે." },
+      "treatment": { "en": "Apply Metalaxyl at 2g/L water.", "hi": "2 ग्राम/लीटर पानी में मेटालेक्सिल मिलाएं।", "gu": "2g/L પાણીમાં મેટાલેક્સિલ લાગુ કરો." },
+      "dosage": "2g/L",
+      "urgency": "HIGH",
+      "estimated_cost_inr": 2500,
+      "yield_impact": "30-70% loss if untreated"
+    },
+    "yellow_rust": {
+      "name": { "en": "Yellow Rust", "hi": "पीला रतुआ", "gu": "યલો રસ્ટ" },
+      "crops": ["wheat"],
+      "explanation": { "en": "Yellow pustules on leaves.", "hi": "पत्तियों पर पीले धब्बे।", "gu": "પાંદડા પર પીળા ફોલ્લા." },
+      "treatment": { "en": "Spray Propiconazole.", "hi": "प्रोपीकोनाजोल का छिड़काव करें।", "gu": "પ્રોપીકોનાઝોલ સ્પ્રે કરો." },
+      "dosage": "1ml/L",
+      "urgency": "HIGH",
+      "estimated_cost_inr": 1200,
+      "yield_impact": "10-50% loss"
+    },
+    "powdery_mildew": {
+      "name": { "en": "Powdery Mildew", "hi": "चूर्णी फफूंद", "gu": "પાવડરી માઇલ્ડ્યુ" },
+      "crops": ["grape", "apple", "mango"],
+      "explanation": { "en": "White powdery spots on leaves.", "hi": "पत्तियों पर सफेद पाउडर जैसे धब्बे।", "gu": "પાંદડા પર સફેદ પાવડર જેવા ડાઘ." },
+      "treatment": { "en": "Apply Sulfur fungicide.", "hi": "सल्फर कवकनाशी का प्रयोग करें।", "gu": "સલ્ફર ફૂગનાશક લાગુ કરો." },
+      "dosage": "2.5g/L",
+      "urgency": "MODERATE",
+      "estimated_cost_inr": 800,
+      "yield_impact": "20% loss"
+    },
+    "nutrient_deficiency": {
+      "name": { "en": "Nutrient Deficiency", "hi": "पोषक तत्वों की कमी", "gu": "પોષક તત્વોની ઉણપ" },
+      "crops": ["all"],
+      "explanation": { "en": "Yellowing or stunted growth.", "hi": "पीलापन या विकास रुकना।", "gu": "પીળાશ અથવા અટકી ગયેલ વૃદ્ધિ." },
+      "treatment": { "en": "Apply NPK fertilizer.", "hi": "एनपीके उर्वरक डालें।", "gu": "NPK ખાતર ઉમેરો." },
+      "dosage": "Varies",
+      "urgency": "LOW",
+      "estimated_cost_inr": 500,
+      "yield_impact": "10% loss"
+    },
+    "aphid_infestation": {
+      "name": { "en": "Aphid Infestation", "hi": "एफिड का प्रकोप", "gu": "એફિડનો ઉપદ્રવ" },
+      "crops": ["cotton", "mustard"],
+      "explanation": { "en": "Small insects sucking sap.", "hi": "रस चूसने वाले छोटे कीड़े।", "gu": "રસ ચૂસતા નાના જંતુઓ." },
+      "treatment": { "en": "Spray Imidacloprid.", "hi": "इमिडाक्लोप्रिड का छिड़काव करें।", "gu": "ઇમિડાક્લોપ્રિડ સ્પ્રે કરો." },
+      "dosage": "0.5ml/L",
+      "urgency": "MODERATE",
+      "estimated_cost_inr": 600,
+      "yield_impact": "15-25% loss"
+    },
+    "leaf_spot": {
+      "name": { "en": "Leaf Spot", "hi": "पत्ती धब्बा", "gu": "લીફ સ્પોટ" },
+      "crops": ["banana", "groundnut"],
+      "explanation": { "en": "Brown spots on leaves.", "hi": "पत्तियों पर भूरे रंग के धब्बे।", "gu": "પાંદડા પર ભૂરા ડાઘ." },
+      "treatment": { "en": "Apply Mancozeb.", "hi": "मैनकोज़ेब लागू करें।", "gu": "મેન્કોઝેબ લાગુ કરો." },
+      "dosage": "2g/L",
+      "urgency": "MODERATE",
+      "estimated_cost_inr": 1000,
+      "yield_impact": "20% loss"
+    },
+    "stem_borer": {
+      "name": { "en": "Stem Borer", "hi": "तना छेदक", "gu": "સ્ટેમ બોરર" },
+      "crops": ["rice", "maize"],
+      "explanation": { "en": "Larvae boring into stems.", "hi": "तनों में छेद करने वाले लार्वा।", "gu": "દાંડીમાં કાણાં પાડતા લાર્વા." },
+      "treatment": { "en": "Apply Cartap Hydrochloride.", "hi": "कार्टैप हाइड्रोक्लोराइड का प्रयोग करें।", "gu": "કાર્ટાપ હાઇડ્રોક્લોરાઇડ લાગુ કરો." },
+      "dosage": "1g/L",
+      "urgency": "HIGH",
+      "estimated_cost_inr": 1500,
+      "yield_impact": "40% loss"
+    },
+    "root_rot": {
+      "name": { "en": "Root Rot", "hi": "जड़ गलन", "gu": "રૂટ રોટ" },
+      "crops": ["cotton", "pulses"],
+      "explanation": { "en": "Decaying roots leading to wilt.", "hi": "जड़ों का सड़ना जिससे पौधा मुरझा जाता है।", "gu": "મૂળ સડી જવાથી છોડ કરમાઈ જાય છે." },
+      "treatment": { "en": "Drench with Carbendazim.", "hi": "कार्बेन्डाज़िम से भीगोएं।", "gu": "કાર્બેન્ડાઝિમ સાથે પલાળો." },
+      "dosage": "2g/L",
+      "urgency": "HIGH",
+      "estimated_cost_inr": 1800,
+      "yield_impact": "50% loss"
+    }
+  }
+}

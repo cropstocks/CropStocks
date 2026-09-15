@@ -5,6 +5,20 @@ const prisma = new PrismaClient();
 
 async function main() {
   // Clean slate
+  await prisma.priceAttribution.deleteMany();
+  await prisma.priceChange.deleteMany();
+  await prisma.weeklyCropReport.deleteMany();
+  await prisma.remediationCard.deleteMany();
+  await prisma.healthDetection.deleteMany();
+  await prisma.cropHealthAnalysis.deleteMany();
+  await prisma.verificationResult.deleteMany();
+  await prisma.submissionBill.deleteMany();
+  await prisma.submissionImage.deleteMany();
+  await prisma.farmerSubmission.deleteMany();
+  await prisma.satelliteSnapshot.deleteMany();
+  await prisma.submissionWindow.deleteMany();
+  await prisma.farmerAppeal.deleteMany();
+  await prisma.cropCycleState.deleteMany();
   await prisma.payout.deleteMany();
   await prisma.investment.deleteMany();
   await prisma.progressUpdate.deleteMany();
@@ -216,6 +230,163 @@ async function main() {
   });
   await prisma.guidanceTip.create({
     data: { applicableType: 'soybean', stage: 'GROWTH', content: 'Monitor for pod borer insects. Apply organic pesticide if needed.' }
+  });
+
+  // ════ WEEKLY LOOP SEED DATA ════
+  const cycle1 = await prisma.cropCycleState.create({
+    data: {
+      listingId: listing1.id,
+      farmerId: farmer1.id,
+      cycleWeek: 14,
+      cropStage: "FLOWERING",
+      geofenceLat: 30.901,
+      geofenceLng: 75.8573,
+      geofenceRadiusM: 100,
+      capitalGrantedInr: 120000,
+      capitalDisbursedInr: 95000,
+      currentPriceInr: 1560,
+      priceHistory: JSON.stringify([{ week: 10, price: 1500 }, { week: 11, price: 1520 }, { week: 12, price: 1540 }, { week: 13, price: 1560 }]),
+      healthIndexHistory: JSON.stringify([{ week: 10, index: 68 }, { week: 11, index: 70 }, { week: 12, index: 71 }, { week: 13, index: 72 }])
+    }
+  });
+
+  const cycle2 = await prisma.cropCycleState.create({
+    data: {
+      listingId: listing2.id,
+      farmerId: farmer2.id,
+      cycleWeek: 10,
+      cropStage: "VEGETATIVE",
+      geofenceLat: 22.7196,
+      geofenceLng: 75.8577,
+      geofenceRadiusM: 100,
+      capitalGrantedInr: 80000,
+      capitalDisbursedInr: 40000,
+      currentPriceInr: 2800,
+      priceHistory: JSON.stringify([{ week: 7, price: 2750 }, { week: 8, price: 2780 }, { week: 9, price: 2800 }]),
+      healthIndexHistory: JSON.stringify([{ week: 7, index: 65 }, { week: 8, index: 66 }, { week: 9, index: 68 }])
+    }
+  });
+
+  const window1 = await prisma.submissionWindow.create({
+    data: {
+      cycleStateId: cycle1.id,
+      cycleWeek: 13,
+      opensAt: new Date('2026-08-31'),
+      closesAt: new Date('2026-09-06'),
+      status: 'CLOSED'
+    }
+  });
+  await prisma.submissionWindow.create({
+    data: {
+      cycleStateId: cycle1.id,
+      cycleWeek: 14,
+      opensAt: new Date('2026-09-07'),
+      closesAt: new Date('2026-09-13'),
+      status: 'OPEN'
+    }
+  });
+
+  const snap1 = await prisma.satelliteSnapshot.create({
+    data: {
+      cycleStateId: cycle1.id,
+      cycleWeek: 13,
+      ndviMean: 0.76,
+      cloudCoverPct: 5,
+      acquisitionDate: '2026-09-02'
+    }
+  });
+  await prisma.satelliteSnapshot.create({
+    data: {
+      cycleStateId: cycle1.id,
+      cycleWeek: 14,
+      ndviMean: 0.78,
+      cloudCoverPct: 2,
+      acquisitionDate: '2026-09-09'
+    }
+  });
+
+  const sub1 = await prisma.farmerSubmission.create({
+    data: {
+      cycleStateId: cycle1.id,
+      cycleWeek: 13,
+      status: 'VERIFIED',
+      submittedAt: new Date('2026-09-05'),
+      images: {
+        create: [
+          { fileUrl: 'https://example.com/img1.jpg', captureLat: 30.9011, captureLng: 75.8574, captureAccuracyM: 5, subLocationIndex: 1 },
+          { fileUrl: 'https://example.com/img2.jpg', captureLat: 30.9012, captureLng: 75.8572, captureAccuracyM: 4, subLocationIndex: 2 },
+          { fileUrl: 'https://example.com/img3.jpg', captureLat: 30.9009, captureLng: 75.8575, captureAccuracyM: 6, subLocationIndex: 3 },
+          { fileUrl: 'https://example.com/img4.jpg', captureLat: 30.9008, captureLng: 75.8571, captureAccuracyM: 5, subLocationIndex: 4 }
+        ]
+      },
+      bills: {
+        create: [
+          { fileUrl: 'https://example.com/bill1.jpg', fileType: 'IMAGE', extractedAmount: 5000, extractedVendor: 'Agri Supply' },
+          { fileUrl: 'https://example.com/bill2.jpg', fileType: 'IMAGE', extractedAmount: 2000, extractedVendor: 'Local Labor' }
+        ]
+      }
+    }
+  });
+
+  await prisma.verificationResult.create({
+    data: {
+      submissionId: sub1.id,
+      geofencePass: true, livenessPass: true, noveltyPass: true, legibilityPass: true, billSanityPass: true, overallPass: true
+    }
+  });
+
+  const analysis1 = await prisma.cropHealthAnalysis.create({
+    data: {
+      submissionId: sub1.id,
+      healthIndex: 72,
+      confidence: 0.85,
+      modelVersion: 'crop-health-v1.0.0-mock',
+      kbVersion: 'agronomy-kb-v1.0.0',
+      detections: {
+        create: [ { diseaseName: 'Minor Leaf Spot', severity: 'LOW', affectedPct: 5, confidence: 0.88 } ]
+      }
+    }
+  });
+
+  await prisma.remediationCard.create({
+    data: {
+      analysisId: analysis1.id,
+      diseaseName: 'Minor Leaf Spot',
+      explanation: JSON.stringify({ en: 'Minor fungal infection detected.', hi: 'मामूली फंगल संक्रमण पाया गया।', gu: 'નાનો ફંગલ ચેપ જોવા મળ્યો.' }),
+      treatment: JSON.stringify({ en: 'Apply copper-based fungicide.', hi: 'तांबे आधारित कवकनाशी लगाएं।', gu: 'તાંબા આધારિત ફૂગનાશક લગાવો.' }),
+      urgencyLevel: 'LOW'
+    }
+  });
+
+  const report1 = await prisma.weeklyCropReport.create({
+    data: {
+      cycleStateId: cycle1.id,
+      cycleWeek: 13,
+      status: 'APPROVED',
+      contentHash: 'mock-sha-256-hash',
+      reportData: JSON.stringify({ health: 'Good', growth: 'Normal', issues: ['Minor Leaf Spot'] }),
+      modelVersion: '1.0', kbVersion: '1.0'
+    }
+  });
+
+  await prisma.priceChange.create({
+    data: {
+      cycleStateId: cycle1.id,
+      reportId: report1.id,
+      cycleWeek: 13,
+      priorPriceInr: 1540,
+      newPriceInr: 1560,
+      deltaPercent: 1.3,
+      publishAt: new Date('2026-09-06'),
+      published: true,
+      attributions: {
+        create: [
+          { factor: 'HEALTH_INDEX', weight: 0.3, rawValue: 0.5, basisPoints: 15 },
+          { factor: 'GROWTH_STAGE', weight: 0.15, rawValue: 0.5, basisPoints: 7 },
+          { factor: 'DISEASE_PENALTY', weight: 0.15, rawValue: 0.1, basisPoints: -2 }
+        ]
+      }
+    }
   });
 
   console.log('✅ Seed completed — Demo data with stock prices & NDVI loaded');

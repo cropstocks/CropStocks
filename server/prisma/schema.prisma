@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -41,6 +41,7 @@ model User {
   payouts         Payout[]        @relation("RecipientPayouts")
   progressUpdates ProgressUpdate[] @relation("VerifiedBy")
   auditLogs       AuditLog[]
+  cropCycles      CropCycleState[] @relation("FarmerCycles")
 }
 
 model FarmerProfile {
@@ -119,6 +120,7 @@ model Listing {
   insuranceClaims InsuranceClaim[]
   payouts         Payout[]
   guidanceTips    GuidanceTip[]
+  cropCycleStates CropCycleState[]
 }
 
 model Investment {
@@ -209,4 +211,249 @@ model SurveyResponse {
   id        String   @id @default(uuid())
   data      String   // JSON string containing all form answers
   createdAt DateTime @default(now())
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ═══ WEEKLY VALUATION LOOP MODELS (T0–T7) ═══════════════════════
+// ═══════════════════════════════════════════════════════════════════
+
+// Loop state object — the loop's persistent memory (spec §2)
+// One per farmer per listing per crop cycle.
+// Read at T0 (start of week), written at T7 (end of week).
+model CropCycleState {
+  id                           String   @id @default(uuid())
+  farmerId                     String
+  farmer                       User     @relation("FarmerCycles", fields: [farmerId], references: [id])
+  listingId                    String
+  listing                      Listing  @relation(fields: [listingId], references: [id])
+  cycleWeek                    Int      @default(1)
+  cropStage                    String   @default("VEGETATIVE") // VEGETATIVE, FLOWERING, FRUITING, MATURITY
+  status                       String   @default("ACTIVE") // ACTIVE, HARVEST_CONFIRMED, PLOT_ABANDONED, CONTRACT_TERMINATED
+  geofenceLat                  Float
+  geofenceLng                  Float
+  geofenceRadiusM              Float    @default(150)
+  capitalGrantedInr            Float    @default(0)
+  capitalDisbursedInr          Float    @default(0)
+  currentPriceInr              Float    @default(0)
+  priceHistory                 String   @default("[]") // JSON: [{week, price, delta}]
+  healthIndexHistory           String   @default("[]") // JSON: [{week, index, confidence}]
+  openDiseaseFlags             String   @default("[]") // JSON: [{disease, severity, flaggedWeek}]
+  consecutiveMissedSubmissions Int      @default(0)
+  trustScore                   Float    @default(0.5)
+  lastReportId                 String?
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+
+  submissionWindows  SubmissionWindow[]
+  submissions        FarmerSubmission[]
+  satelliteSnapshots SatelliteSnapshot[]
+  reports            WeeklyCropReport[]
+  priceChanges       PriceChange[]
+  appeals            FarmerAppeal[]
+}
+
+// T0 — OPEN_WINDOW output
+// Tracks the 72-hour submission window per ISO week.
+model SubmissionWindow {
+  id           String         @id @default(uuid())
+  cycleStateId String
+  cycleState   CropCycleState @relation(fields: [cycleStateId], references: [id])
+  cycleWeek    Int
+  opensAt      DateTime
+  closesAt     DateTime
+  status       String         @default("OPEN") // OPEN, CLOSED, MISSED
+  notifiedAt   DateTime?
+  createdAt    DateTime       @default(now())
+}
+
+// T0 — Satellite snapshot pre-fetched each week
+model SatelliteSnapshot {
+  id              String         @id @default(uuid())
+  cycleStateId    String
+  cycleState      CropCycleState @relation(fields: [cycleStateId], references: [id])
+  cycleWeek       Int
+  truecolorUrl    String?
+  ndviUrl         String?
+  ndviMean        Float?
+  ndviDelta       Float? // delta vs previous week
+  ndwiMean        Float?
+  ndwiDelta       Float?
+  acquisitionDate String?
+  cloudCoverPct   Float?
+  createdAt       DateTime       @default(now())
+}
+
+// T1 — CAPTURE: Farmer submission (images + bills)
+model FarmerSubmission {
+  id                       String         @id @default(uuid())
+  cycleStateId             String
+  cycleState               CropCycleState @relation(fields: [cycleStateId], references: [id])
+  cycleWeek                Int
+  status                   String         @default("PENDING") // PENDING, VERIFIED, REJECTED, RESUBMIT
+  resubmitCount            Int            @default(0)
+  rejectionReason          String?
+  rejectionReasonLocalized String? // JSON: {en, hi, gu}
+  submittedAt              DateTime       @default(now())
+  verifiedAt               DateTime?
+
+  images       SubmissionImage[]
+  bills        SubmissionBill[]
+  verification VerificationResult?
+  analysis     CropHealthAnalysis?
+}
+
+// T1 — Individual geotagged crop images
+model SubmissionImage {
+  id               String           @id @default(uuid())
+  submissionId     String
+  submission       FarmerSubmission @relation(fields: [submissionId], references: [id])
+  fileUrl          String
+  captureLat       Float
+  captureLng       Float
+  captureAccuracyM Float
+  serverTimestamp  DateTime         @default(now())
+  perceptualHash   String? // for novelty check (T2)
+  subLocationIndex Int // which sub-location (≥3 distinct required)
+}
+
+// T1 — Agricultural bills with OCR data
+model SubmissionBill {
+  id              String           @id @default(uuid())
+  submissionId    String
+  submission      FarmerSubmission @relation(fields: [submissionId], references: [id])
+  fileUrl         String
+  fileType        String // IMAGE, PDF
+  ocrConfidence   Float?
+  extractedVendor String?
+  extractedDate   String?
+  extractedAmount Float?
+  extractedItems  String? // JSON array of line items
+  isValid         Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+}
+
+// T2 — VERIFY: Gate verification result
+model VerificationResult {
+  id                       String           @id @default(uuid())
+  submissionId             String           @unique
+  submission               FarmerSubmission @relation(fields: [submissionId], references: [id])
+  geofencePass             Boolean
+  livenessPass             Boolean
+  noveltyPass              Boolean
+  legibilityPass           Boolean
+  billSanityPass           Boolean
+  overallPass              Boolean
+  failureReason            String?
+  failureReasonLocalized   String? // JSON: {en, hi, gu}
+  checkedAt                DateTime         @default(now())
+}
+
+// T3 — ANALYSE: Crop health pipeline output
+model CropHealthAnalysis {
+  id             String           @id @default(uuid())
+  submissionId   String           @unique
+  submission     FarmerSubmission @relation(fields: [submissionId], references: [id])
+  healthIndex    Float // 0–100
+  confidence     Float // 0–1
+  growthStageEst String? // model's estimate of crop stage
+  anomalyFlags   String           @default("[]") // JSON array
+  modelVersion   String
+  kbVersion      String
+  analyzedAt     DateTime         @default(now())
+
+  detections   HealthDetection[]
+  remediations RemediationCard[]
+}
+
+// T3 — Individual disease/pest detections
+model HealthDetection {
+  id          String             @id @default(uuid())
+  analysisId  String
+  analysis    CropHealthAnalysis @relation(fields: [analysisId], references: [id])
+  diseaseName String
+  severity    String // LOW, MODERATE, SEVERE
+  affectedPct Float
+  confidence  Float
+}
+
+// T4 — ADVISE: Remediation advisory cards
+model RemediationCard {
+  id                  String             @id @default(uuid())
+  analysisId          String
+  analysis            CropHealthAnalysis @relation(fields: [analysisId], references: [id])
+  diseaseName         String
+  explanation         String // JSON: {en, hi, gu}
+  treatment           String // JSON: {en, hi, gu}
+  dosage              String?
+  urgencyLevel        String // LOW, MEDIUM, HIGH, CRITICAL
+  expectedYieldImpact String?
+  estimatedCostInr    Float?
+  followUpFlag        Boolean            @default(true)
+}
+
+// T5 — REPORT: Immutable weekly crop report
+model WeeklyCropReport {
+  id           String         @id @default(uuid())
+  cycleStateId String
+  cycleState   CropCycleState @relation(fields: [cycleStateId], references: [id])
+  cycleWeek    Int
+  contentHash  String // SHA-256 hash of reportData for immutability
+  reportData   String // JSON: full report content (all 9 sections)
+  status       String         @default("PENDING_REVIEW") // PENDING_REVIEW, APPROVED, MANUAL_REVIEW
+  reviewerId   String?
+  reviewNotes  String?
+  modelVersion String
+  kbVersion    String
+  createdAt    DateTime       @default(now())
+  approvedAt   DateTime?
+
+  priceChange PriceChange?
+}
+
+// T7 — REPRICE: Price change record with factor attribution
+model PriceChange {
+  id                      String           @id @default(uuid())
+  cycleStateId            String
+  cycleState              CropCycleState   @relation(fields: [cycleStateId], references: [id])
+  reportId                String           @unique
+  report                  WeeklyCropReport @relation(fields: [reportId], references: [id])
+  cycleWeek               Int
+  priorPriceInr           Float
+  newPriceInr             Float
+  deltaPercent            Float
+  clamped                 Boolean          @default(false)
+  circuitBreakerTriggered Boolean          @default(false)
+  publishAt               DateTime // Friday 18:00 IST
+  published               Boolean          @default(false)
+
+  attributions PriceAttribution[]
+  createdAt    DateTime           @default(now())
+}
+
+// T7 — Per-factor price attribution (auditable breakdown)
+model PriceAttribution {
+  id            String      @id @default(uuid())
+  priceChangeId String
+  priceChange   PriceChange @relation(fields: [priceChangeId], references: [id])
+  factor        String // HEALTH_INDEX, GROWTH_STAGE, INPUT_COMPLIANCE, MARKET_SIGNAL, DISEASE_PENALTY, NON_SUBMISSION_PENALTY
+  weight        Float
+  rawValue      Float
+  basisPoints   Float // contribution in basis points
+  description   String?
+}
+
+// Appeals — Farmer dispute mechanism
+model FarmerAppeal {
+  id              String         @id @default(uuid())
+  cycleStateId    String
+  cycleState      CropCycleState @relation(fields: [cycleStateId], references: [id])
+  cycleWeek       Int
+  appealType      String // HEALTH_SCORE, PRICE_MOVE
+  reason          String
+  status          String         @default("PENDING") // PENDING, UNDER_REVIEW, UPHELD, OVERTURNED
+  resolutionNotes String?
+  fieldAgentId    String?
+  slaDeadline     DateTime
+  createdAt       DateTime       @default(now())
+  resolvedAt      DateTime?
 }

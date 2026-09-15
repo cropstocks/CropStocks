@@ -9,6 +9,12 @@ import adminRoutes from './routes/admin.routes.js';
 import guidanceRoutes from './routes/guidance.routes.js';
 import surveyRoutes from './routes/survey.routes.js';
 import satelliteRoutes from './routes/satellite.routes.js';
+import cropCycleRoutes from './routes/cropCycle.routes.js';
+import submissionRoutes from './routes/submission.routes.js';
+import reportRoutes from './routes/report.routes.js';
+import reviewRoutes from './routes/review.routes.js';
+import appealRoutes from './routes/appeal.routes.js';
+import { initializeScheduler } from './services/weeklyLoop/weeklyLoopScheduler.js';
 
 dotenv.config();
 
@@ -29,9 +35,17 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/guidance', guidanceRoutes);
 app.use('/api/survey', surveyRoutes);
 app.use('/api/farmers', satelliteRoutes);
+app.use('/api/crop-cycle', cropCycleRoutes);
+app.use('/api/submissions', submissionRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/appeals', appealRoutes);
+
+app.use('/uploads', express.static('uploads'));
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  initializeScheduler();
 });

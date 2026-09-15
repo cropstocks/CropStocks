@@ -1,135 +1,259 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import StatsCard from '../components/StatsCard';
-import { api } from '../services/api';
+import { useTranslation } from 'react-i18next';
+import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
+import HealthGauge from '../components/HealthGauge';
+import SatelliteCompare from '../components/SatelliteCompare';
+import PriceSparkline from '../components/PriceSparkline';
+import SubmissionStatus from '../components/SubmissionStatus';
+import RemediationCardComponent from '../components/RemediationCardComponent';
+import { LineChart, Line, ResponsiveContainer, XAxis, Tooltip } from 'recharts';
+import { Download, AlertTriangle } from 'lucide-react';
 
-export default function FarmerDashboard() {
+const FarmerDashboard = () => {
   const { user } = useContext(AuthContext);
+  const { t, i18n } = useTranslation();
+  
   const [listings, setListings] = useState([]);
+  const [selectedListingId, setSelectedListingId] = useState(null);
+  const [cycleState, setCycleState] = useState(null);
+  const [windowStatus, setWindowStatus] = useState(null);
+  const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const response = await api.get('/listings');
-        const items = Array.isArray(response) ? response : (response.listings || []);
-        const myListings = items.filter(l => l.farmerId === user?.id);
-        setListings(myListings);
+        const res = await api.get('/listings');
+        setListings(res);
+        if (res.length > 0) {
+          setSelectedListingId(res[0].id);
+        } else {
+          setLoading(false);
+        }
       } catch (err) {
-        setError(err.message || 'Failed to fetch listings');
-      } finally {
+        console.error(err);
         setLoading(false);
       }
     };
-    if (user?.id) fetchListings();
-    else setLoading(false);
-  }, [user]);
+    fetchListings();
+  }, []);
 
-  const totalRaised = listings.reduce((sum, l) => sum + (l.capitalRaised || 0), 0);
-  const activeCount = listings.filter(l => l.status === 'ACTIVE' || l.status === 'FUNDING').length;
-  const avgStockPrice = listings.length > 0
-    ? Math.round(listings.reduce((sum, l) => sum + (l.stockPrice || 0), 0) / listings.length)
-    : 0;
+  useEffect(() => {
+    if (selectedListingId) {
+      fetchDashboardData();
+    }
+  }, [selectedListingId]);
 
-  if (loading) return <div className="p-12 text-center">Loading dashboard...</div>;
-  if (error) return <div className="p-12 text-center text-red-500">{error}</div>;
-
-  const getVegColor = (status) => {
-    const map = { 'Excellent': 'text-green-600 bg-green-50', 'Good': 'text-lime-600 bg-lime-50', 'Fair': 'text-yellow-600 bg-yellow-50', 'Poor': 'text-orange-600 bg-orange-50', 'Critical': 'text-red-600 bg-red-50' };
-    return map[status] || 'text-gray-500 bg-gray-50';
+  const fetchDashboardData = async () => {
+    setLoading(true);
+    try {
+      const [cycleRes, windowRes, reportsRes] = await Promise.all([
+        api.get(`/crop-cycle/${selectedListingId}`).catch(() => null),
+        api.get(`/submissions/window/${selectedListingId}`).catch(() => null),
+        api.get(`/reports/${selectedListingId}`).catch(() => [])
+      ]);
+      setCycleState(cycleRes);
+      setWindowStatus(windowRes);
+      setReports(reportsRes);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  if (loading) return <div className="p-8 text-center">{t('Loading...')}</div>;
+  
+  if (listings.length === 0) {
+    return <div className="p-8 text-center">{t('No active listings found.')}</div>;
+  }
+
+  if (!cycleState) {
+    return (
+      <div className="max-w-4xl mx-auto p-4 text-center">
+        <h2 className="text-xl font-bold mb-4">{t('Welcome')}, {user?.name}</h2>
+        <div className="glass-panel p-8">
+          <p className="mb-4">{t('No active crop cycle found for this listing.')}</p>
+          <button className="btn btn-primary bg-brand-green text-white px-6 py-2">
+            {t('Initialize Crop Cycle')}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const healthHistory = cycleState.healthIndexHistory || [];
+  const priceHistory = cycleState.priceHistory || [];
+  const prevPrice = priceHistory.length > 1 ? priceHistory[priceHistory.length - 2].price : cycleState.currentPrice;
+  const priceDeltaPercent = cycleState.currentPrice > 0 ? ((cycleState.currentPrice - prevPrice) / prevPrice) * 100 : 0;
+  
+  const latestReport = reports.length > 0 ? reports[0] : null;
+  const satelliteCurrent = latestReport?.data?.satelliteCurrentUrl;
+  const satellitePrev = latestReport?.data?.satellitePrevUrl;
+
+  const activeFlags = cycleState.flags || [];
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+    <div className="max-w-6xl mx-auto p-4 space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center bg-brand-light p-4 rounded-lg shadow-sm">
         <div>
-          <h1 className="text-3xl font-bold font-heading text-brand-dark">🧑‍🌾 Farmer Dashboard</h1>
-          <p className="text-gray-500 text-sm mt-1">Welcome back, {user?.name}</p>
+          <h1 className="text-2xl font-heading font-bold text-brand-dark">{t('Welcome')}, {user?.name}</h1>
+          <p className="text-brand-slate text-sm">
+            {t('Managing')}: 
+            <select 
+              value={selectedListingId} 
+              onChange={(e) => setSelectedListingId(e.target.value)}
+              className="ml-2 bg-transparent border-b border-gray-300 font-bold focus:outline-none"
+            >
+              {listings.map(l => <option key={l.id} value={l.id}>{l.crop} - {l.region}</option>)}
+            </select>
+          </p>
         </div>
-        <div className="flex gap-3">
-          <Link to="/farmer/satellite" className="px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-lg shadow text-sm transition-colors border border-blue-200">
-            🛰️ Satellite Monitor
-          </Link>
-          <Link to="/farmer/new-listing" className="btn-primary text-sm">
-            + New Listing
-          </Link>
-        </div>
+        <Link to={`/farmer/appeal/${selectedListingId}`} className="text-brand-blue font-semibold text-sm hover:underline mt-2 sm:mt-0">
+          📋 {t('File Appeal')}
+        </Link>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <StatsCard title="Capital Raised" value={totalRaised} prefix="₹" />
-        <StatsCard title="Active Listings" value={activeCount} />
-        <StatsCard title="Avg Stock Price" value={avgStockPrice} prefix="₹" />
-        <StatsCard title="Total Listings" value={listings.length} />
-      </div>
-      
-      <h2 className="text-2xl font-bold mb-4 font-heading">My Crop Listings</h2>
-      {listings.length === 0 ? (
-        <div className="glass-card p-12 text-center">
-          <p className="text-gray-500 text-lg mb-4">No listings yet.</p>
-          <Link to="/farmer/new-listing" className="btn-primary">Create your first listing →</Link>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <div className="glass-card p-5 flex flex-col">
+          <h3 className="font-heading font-semibold text-lg mb-4">{t('Satellite NDVI')}</h3>
+          <div className="mb-4">
+            <SatelliteCompare 
+              currentImage={satelliteCurrent} 
+              previousImage={satellitePrev} 
+              currentLabel={t('Latest')} 
+              previousLabel={t('Previous')} 
+            />
+          </div>
+          <div className="h-24 w-full mt-auto">
+            <h4 className="text-xs text-brand-slate mb-1">{t('NDVI Trend')}</h4>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={healthHistory}>
+                <XAxis dataKey="week" hide />
+                <Tooltip />
+                <Line type="monotone" dataKey="health" stroke="#eab308" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-      ) : (
-        <div className="space-y-4">
-          {listings.map(listing => {
-            const progress = listing.capitalRequired ? (listing.capitalRaised / listing.capitalRequired) * 100 : 0;
-            const changePercent = listing.ndviScore ? ((listing.ndviScore - 0.5) * 20).toFixed(1) : '0.0';
-            const isPositive = parseFloat(changePercent) >= 0;
 
-            return (
-              <div key={listing.id} className="glass-card p-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  {/* Left: Info */}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-bold">{listing.produceName}</h3>
-                      <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                        listing.status === 'ACTIVE' ? 'bg-green-100 text-green-800' :
-                        listing.status === 'FUNDING' ? 'bg-blue-100 text-blue-800' :
-                        'bg-gray-100 text-gray-600'
-                      }`}>{listing.status}</span>
-                    </div>
-                    <p className="text-sm text-gray-500">{listing.region} • {listing.landSize} acres • {listing.cycleDuration} day cycle</p>
-                  </div>
+        <div className="glass-card p-5 flex flex-col justify-center">
+          <h3 className="font-heading font-semibold text-lg mb-6">{t('Capital Status')}</h3>
+          
+          <div className="flex justify-between items-end mb-2">
+            <div>
+              <div className="text-sm text-brand-slate">{t('Disbursed')}</div>
+              <div className="text-3xl font-bold text-brand-dark">₹{cycleState.capitalDisbursedInr}</div>
+            </div>
+            <div className="text-right">
+              <div className="text-sm text-brand-slate">{t('Total Granted')}</div>
+              <div className="text-xl font-bold text-gray-500">₹{cycleState.capitalGrantedInr}</div>
+            </div>
+          </div>
+          
+          <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
+            <div 
+              className="bg-brand-blue h-3 rounded-full" 
+              style={{ width: `${Math.min(100, (cycleState.capitalDisbursedInr / cycleState.capitalGrantedInr) * 100)}%` }}
+            ></div>
+          </div>
+          
+          <div className="bg-brand-light p-3 rounded text-sm flex justify-between items-center">
+            <span className="font-medium">{t('Pending Allocation')}</span>
+            <span className="font-bold">₹{Math.max(0, cycleState.capitalGrantedInr - cycleState.capitalDisbursedInr)}</span>
+          </div>
+        </div>
 
-                  {/* Center: Stock Price */}
-                  <div className="text-center md:text-right">
-                    <p className="text-xs text-gray-400 uppercase tracking-wider">Stock Price</p>
-                    <p className="text-2xl font-bold text-brand-dark">₹{listing.stockPrice?.toLocaleString() || '—'}</p>
-                    <span className={`text-sm font-bold ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-                      {isPositive ? '▲' : '▼'} {Math.abs(changePercent)}%
-                    </span>
-                  </div>
+        <div className="glass-panel p-5">
+          <h3 className="font-heading font-semibold text-lg mb-4">{t('Stock Price')} (Week {cycleState.currentWeek})</h3>
+          <PriceSparkline 
+            data={priceHistory} 
+            currentPrice={cycleState.currentPrice} 
+            deltaPercent={priceDeltaPercent} 
+          />
+          {latestReport?.data?.attribution && (
+            <div className="mt-4 text-sm text-brand-slate bg-white p-3 border rounded">
+              <strong>{t('Latest Update')}:</strong> {latestReport.data.attribution[0]?.factor || t('Standard market movement.')}
+            </div>
+          )}
+        </div>
 
-                  {/* Right: Vegetation Health */}
-                  <div className="text-center">
-                    <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Vegetation</p>
-                    <span className={`inline-block text-sm font-bold px-3 py-1 rounded-full ${getVegColor(listing.vegetationStatus)}`}>
-                      {listing.vegetationStatus || 'Awaiting Data'}
-                    </span>
-                    {listing.ndviScore && (
-                      <p className="text-xs text-gray-400 mt-1">NDVI: {(listing.ndviScore * 100).toFixed(0)}%</p>
-                    )}
-                  </div>
-                </div>
+        <div className="glass-card p-5">
+          <h3 className="font-heading font-semibold text-lg mb-2">{t('Weekly Submission')}</h3>
+          <SubmissionStatus 
+            currentStep={windowStatus?.status || 'WINDOW_OPEN'} 
+            windowCloseTime={windowStatus?.closeTime} 
+          />
+          <div className="mt-6 flex justify-center">
+            <Link 
+              to={`/farmer/capture/${selectedListingId}`} 
+              className={`btn btn-primary px-6 py-2 w-full text-center ${windowStatus?.status !== 'OPEN' ? 'opacity-50 pointer-events-none' : 'bg-brand-green text-white hover:bg-green-700'}`}
+            >
+              {t('Upload Evidence')}
+            </Link>
+          </div>
+        </div>
 
-                {/* Funding Progress */}
-                <div className="mt-4 pt-4 border-t">
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-500">₹{listing.capitalRaised?.toLocaleString()} raised</span>
-                    <span className="font-bold">{progress.toFixed(0)}% of ₹{listing.capitalRequired?.toLocaleString()}</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-brand-green h-2 rounded-full transition-all" style={{ width: `${Math.min(progress, 100)}%` }}></div>
-                  </div>
-                </div>
+        <div className="glass-panel p-5 md:col-span-2 lg:col-span-1">
+          <h3 className="font-heading font-semibold text-lg mb-4">{t('Crop Health')}</h3>
+          <div className="flex justify-center mb-6">
+            <HealthGauge value={cycleState.currentHealthIndex} size={150} />
+          </div>
+          
+          {activeFlags.length > 0 ? (
+            <div>
+              <h4 className="text-sm font-bold text-red-600 flex items-center gap-1 mb-3">
+                <AlertTriangle size={16} /> {t('Active Flags')}
+              </h4>
+              <div className="space-y-3 max-h-60 overflow-y-auto">
+                {activeFlags.map((flag, i) => (
+                  <RemediationCardComponent key={i} detection={flag} remediation={flag.remediation} language={i18n.language} />
+                ))}
               </div>
-            );
-          })}
+            </div>
+          ) : (
+            <div className="text-center text-sm text-green-600 bg-green-50 p-3 rounded">
+              {t('No active diseases or pests detected.')}
+            </div>
+          )}
         </div>
-      )}
+
+        <div className="glass-panel p-5 md:col-span-2 lg:col-span-1">
+          <h3 className="font-heading font-semibold text-lg mb-4">{t('Weekly Reports')}</h3>
+          <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+            {reports.map((r, i) => (
+              <Link 
+                key={i} 
+                to={`/farmer/report/${selectedListingId}/${r.week}`}
+                className="block border rounded-lg p-3 hover:border-brand-green transition-colors bg-white group"
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-bold">Week {r.week}</span>
+                  <span className="text-xs text-gray-400">{new Date(r.createdAt).toLocaleDateString()}</span>
+                </div>
+                <div className="flex justify-between text-sm text-brand-slate">
+                  <span>Health: <span className="font-semibold text-brand-dark">{r.data?.healthIndex || '-'}</span></span>
+                  <span>Price Δ: <span className={`font-semibold ${r.data?.newPrice >= r.data?.priorPrice ? 'text-green-600' : 'text-red-600'}`}>
+                    {r.data?.newPrice >= r.data?.priorPrice ? '+' : ''}{r.data?.newPrice ? ((r.data.newPrice - r.data.priorPrice)/r.data.priorPrice*100).toFixed(1) : 0}%
+                  </span></span>
+                </div>
+                <div className="mt-2 text-xs text-brand-blue opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-end">
+                  {t('View Full Report')} <Download size={12} className="ml-1" />
+                </div>
+              </Link>
+            ))}
+            {reports.length === 0 && (
+              <div className="text-center text-gray-500 py-8">{t('No reports generated yet.')}</div>
+            )}
+          </div>
+        </div>
+
+      </div>
     </div>
   );
-}
+};
+
+export default FarmerDashboard;

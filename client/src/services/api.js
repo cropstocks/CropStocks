@@ -46,5 +46,18 @@ export const api = {
       headers: getHeaders()
     });
     return handleResponse(response);
+  },
+  upload: async (endpoint, formData) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      method: 'POST',
+      headers: {
+        ...(token && { Authorization: `Bearer ${token}` })
+        // No Content-Type — browser auto-sets with boundary
+      },
+      body: formData
+    });
+    return handleResponse(response);
   }
 };
+export default api; 

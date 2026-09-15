@@ -67,3 +67,25 @@ export const getVegetationColor = (status) => {
   };
   return colors[status] || colors['Awaiting Data'];
 };
+
+/**
+ * Apply a weekly reprice delta to a listing's stock price.
+ * Called by the weekly loop's repricingEngine after T7.
+ * @param {Object} listing — The listing from Prisma
+ * @param {number} deltaPercent — The computed price change percentage
+ * @param {number} maxClamp — Maximum allowed weekly movement (default 8%)
+ * @returns {{ newPrice: number, clamped: boolean, actualDelta: number }}
+ */
+export const applyWeeklyReprice = (listing, deltaPercent, maxClamp = 8) => {
+  const currentPrice = listing.stockPrice || computeStockPrice(listing);
+  let actualDelta = deltaPercent;
+  let clamped = false;
+  
+  if (Math.abs(deltaPercent) > maxClamp) {
+    actualDelta = maxClamp * Math.sign(deltaPercent);
+    clamped = true;
+  }
+  
+  const newPrice = Math.round(currentPrice * (1 + actualDelta / 100) * 100) / 100;
+  return { newPrice: Math.max(newPrice, 1), clamped, actualDelta }; // floor at ₹1
+};

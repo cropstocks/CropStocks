@@ -5,6 +5,11 @@ import LandingPage from './pages/LandingPage';
 import InvestmentsPage from './pages/InvestmentsPage';
 import DashboardPage from './pages/DashboardPage';
 import FarmerDashboardPage from './pages/FarmerDashboardPage';
+import CaptureScreen from './pages/CaptureScreen';
+import WeeklyReportView from './pages/WeeklyReportView';
+import AdminReviewQueue from './pages/AdminReviewQueue';
+import FarmerAppealForm from './pages/FarmerAppealForm';
+import FarmerDashboard from './pages/FarmerDashboard';
 
 export default function App() {
   return (
@@ -15,6 +20,11 @@ export default function App() {
           <Route path="/investments" element={<InvestmentsPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/farmer-dashboard" element={<FarmerDashboardPage />} />
+          <Route path="/farmer-dashboard-new" element={<FarmerDashboard />} />
+          <Route path="/farmer/capture/:listingId" element={<CaptureScreen />} />
+          <Route path="/farmer/report/:listingId/:week" element={<WeeklyReportView />} />
+          <Route path="/farmer/appeal/:listingId" element={<FarmerAppealForm />} />
+          <Route path="/admin/reviews" element={<AdminReviewQueue />} />
           {/* We keep other existing routes out of this scope for simplicity as per requirement, or we could leave them. The prompt asks to redesign the frontend. */}
         </Routes>
       </Layout>
