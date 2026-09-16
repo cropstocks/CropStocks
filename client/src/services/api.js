@@ -85,6 +85,24 @@ const handleMock = (endpoint, method, data) => {
         }
       ];
     }
+    if (endpoint.includes('/investments/my')) {
+      return [
+        {
+          id: 'inv-1',
+          listingId: 'listing-1',
+          amount: 50000,
+          sharePercent: 100,
+          payoutStatus: 'PENDING'
+        },
+        {
+          id: 'inv-2',
+          listingId: 'listing-2',
+          amount: 100000,
+          sharePercent: 83.3,
+          payoutStatus: 'PENDING'
+        }
+      ];
+    }
     if (endpoint.includes('/crop-cycle/')) {
       return {
         id: 'cycle-1',

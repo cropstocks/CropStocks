@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
 import InvestmentsPage from './pages/InvestmentsPage';
-import DashboardPage from './pages/DashboardPage';
+import InvestorDashboard from './pages/InvestorDashboard';
 import FarmerDashboardPage from './pages/FarmerDashboardPage';
 import CaptureScreen from './pages/CaptureScreen';
 import WeeklyReportView from './pages/WeeklyReportView';
@@ -18,7 +18,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/investments" element={<InvestmentsPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/dashboard" element={<InvestorDashboard />} />
           <Route path="/farmer-dashboard" element={<FarmerDashboard />} />
           <Route path="/farmer-dashboard-old" element={<FarmerDashboardPage />} />
           <Route path="/farmer/capture/:listingId" element={<CaptureScreen />} />
