@@ -28,58 +28,78 @@ export default function Navbar() {
     : user?.role === 'ADMIN' ? adminLinks : [];
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50 print:hidden">
+    <nav className="bg-[#2a2a2a] shadow-lg sticky top-0 z-50 print:hidden text-white border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          <Link to="/" className="flex-shrink-0 flex items-center">
-            <img src="/logo.png" alt="CropStocks™" className="h-12 w-auto object-contain" />
+        <div className="flex justify-between h-20 items-center">
+          <Link to="/" className="flex-shrink-0 flex items-center gap-2">
+            <img src="/homepage-logo.png" alt="CropStocks™" className="h-12 w-auto object-contain" />
+            <span className="font-bold text-2xl tracking-tight hidden sm:block">CropStocks™</span>
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center space-x-1">
-            <Link to="/marketplace" className="text-gray-600 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium transition-colors">
+          <div className="hidden md:flex items-center space-x-6">
+            <Link to="/" className="text-white hover:text-yellow-400 text-sm font-semibold transition-colors">
+              Home
+            </Link>
+            <Link to="/marketplace" className="text-white hover:text-yellow-400 text-sm font-semibold transition-colors">
               {t('marketplace')}
             </Link>
-
-            <select
-              value={locale}
-              onChange={(e) => changeLocale(e.target.value)}
-              className="text-gray-600 bg-transparent hover:text-brand-green px-2 py-2 rounded-md text-sm font-medium cursor-pointer outline-none"
-            >
-              <option value="en">English</option>
-              <option value="hi">Hinglish</option>
-              <option value="gu">ગુજરાતી</option>
-            </select>
 
             {user ? (
               <>
                 {roleLinks.map(link => (
-                  <Link key={link.to} to={link.to} className="text-gray-600 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                  <Link key={link.to} to={link.to} className="text-white hover:text-yellow-400 text-sm font-semibold transition-colors">
                     {link.label}
                   </Link>
                 ))}
-                <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full">
-                  {user.role}
-                </span>
-                <button onClick={logout} className="btn-outline text-sm ml-2">
-                  {t('logout')}
-                </button>
+                <div className="flex items-center gap-3 border-l border-white/20 pl-6 ml-2">
+                  <select
+                    value={locale}
+                    onChange={(e) => changeLocale(e.target.value)}
+                    className="text-white bg-transparent hover:text-yellow-400 text-sm font-medium cursor-pointer outline-none appearance-none"
+                  >
+                    <option value="en" className="text-black">EN</option>
+                    <option value="hi" className="text-black">HI</option>
+                    <option value="gu" className="text-black">GU</option>
+                  </select>
+                  <span className="text-xs bg-white/10 text-white px-3 py-1 rounded-full font-semibold border border-white/20">
+                    {user.name} ({user.role})
+                  </span>
+                  <button onClick={logout} className="text-white hover:text-red-400 text-sm font-semibold transition-colors ml-2">
+                    {t('logout')}
+                  </button>
+                </div>
               </>
             ) : (
               <>
-                <Link to="/login" className="text-gray-600 hover:text-brand-green px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                  {t('login')}
-                </Link>
-                <Link to="/register/investor" className="btn-primary text-sm">
-                  Start Investing
-                </Link>
+                <Link to="/#how-it-works" className="text-white hover:text-yellow-400 text-sm font-semibold transition-colors">How it Works</Link>
+                <Link to="/#about" className="text-white hover:text-yellow-400 text-sm font-semibold transition-colors">About Us</Link>
+                
+                <div className="flex items-center gap-4 border-l border-white/20 pl-6 ml-2">
+                  <select
+                    value={locale}
+                    onChange={(e) => changeLocale(e.target.value)}
+                    className="text-white bg-transparent hover:text-yellow-400 text-sm font-medium cursor-pointer outline-none appearance-none"
+                  >
+                    <option value="en" className="text-black">EN</option>
+                    <option value="hi" className="text-black">HI</option>
+                    <option value="gu" className="text-black">GU</option>
+                  </select>
+                  
+                  <Link to="/login" className="text-white hover:text-yellow-400 text-sm font-semibold transition-colors">
+                    {t('login')}
+                  </Link>
+                  <Link to="/register/investor" className="bg-[#348a21] hover:bg-[#286f18] text-white px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 transition-all shadow-lg hover:shadow-xl">
+                    Get Started Now
+                  </Link>
+                </div>
               </>
             )}
           </div>
 
           {/* Mobile hamburger */}
           <div className="md:hidden flex items-center">
-            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-gray-700 hover:text-brand-green">
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-white hover:text-yellow-400">
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {isMobileMenuOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -94,31 +114,28 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t">
+        <div className="md:hidden border-t border-white/10 bg-[#2a2a2a]">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            <Link to="/marketplace" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
+            <Link to="/marketplace" className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 hover:text-yellow-400">
               {t('marketplace')}
             </Link>
             {user ? (
               <>
                 {roleLinks.map(link => (
-                  <Link key={link.to} to={link.to} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
+                  <Link key={link.to} to={link.to} className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 hover:text-yellow-400">
                     {link.label}
                   </Link>
                 ))}
-                <button onClick={logout} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-gray-50">
+                <button onClick={logout} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-400 hover:bg-white/10">
                   {t('logout')}
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
+                <Link to="/login" className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 hover:text-yellow-400">
                   {t('login')}
                 </Link>
-                <Link to="/register/farmer" className="block px-3 py-2 rounded-md text-base font-medium text-brand-green hover:bg-gray-50">
-                  Register as Farmer
-                </Link>
-                <Link to="/register/investor" className="block px-3 py-2 rounded-md text-base font-medium text-blue-600 hover:bg-gray-50">
+                <Link to="/register/investor" className="block px-3 py-2 rounded-md text-base font-medium text-brand-green hover:bg-white/10">
                   Start Investing
                 </Link>
               </>
