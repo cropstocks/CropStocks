@@ -47,7 +47,65 @@ const handleMock = (endpoint, method, data) => {
   // Default mock fallback: empty arrays for listings/data, success messages for posts
   if (method === 'GET') {
     if (endpoint.includes('stats') || endpoint.includes('summary')) {
-      return { totalInvested: 0, activeInvestments: 0, totalReturns: 0 };
+      return { totalInvested: 150000, activeInvestments: 3, totalReturns: 12500 };
+    }
+    if (endpoint.includes('/listings')) {
+      return [
+        {
+          id: 'listing-1',
+          farmerId: 'mock-user-1',
+          produceName: 'Wheat',
+          region: 'Punjab',
+          status: 'ACTIVE',
+          capitalRequired: 50000,
+          capitalRaised: 50000,
+          profitSplitFarmer: 60,
+          profitSplitInvestor: 40,
+          insuranceFlag: true,
+          riskTier: 'LOW',
+          cycleDuration: 120,
+          stockPrice: 105,
+          ndviScore: 0.82
+        },
+        {
+          id: 'listing-2',
+          farmerId: 'mock-user-1',
+          produceName: 'Soybean',
+          region: 'Maharashtra',
+          status: 'FUNDING',
+          capitalRequired: 120000,
+          capitalRaised: 45000,
+          profitSplitFarmer: 70,
+          profitSplitInvestor: 30,
+          insuranceFlag: true,
+          riskTier: 'MEDIUM',
+          cycleDuration: 90,
+          stockPrice: 100,
+          ndviScore: null
+        }
+      ];
+    }
+    if (endpoint.includes('/crop-cycle/')) {
+      return {
+        id: 'cycle-1',
+        cycleWeek: 3,
+        cropStage: 'VEGETATIVE',
+        status: 'ACTIVE',
+        trustScore: 0.85,
+        currentPriceInr: 105
+      };
+    }
+    if (endpoint.includes('/submissions/window/')) {
+      return {
+        status: 'OPEN',
+        closesAt: new Date(Date.now() + 86400000).toISOString()
+      };
+    }
+    if (endpoint.includes('/reports/')) {
+      return [
+        { id: 'report-1', cycleWeek: 1, status: 'APPROVED', createdAt: new Date(Date.now() - 14*86400000).toISOString() },
+        { id: 'report-2', cycleWeek: 2, status: 'APPROVED', createdAt: new Date(Date.now() - 7*86400000).toISOString() }
+      ];
     }
     return [];
   }
