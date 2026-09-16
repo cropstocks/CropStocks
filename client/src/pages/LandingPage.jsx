@@ -31,8 +31,7 @@ export default function LandingPage() {
             <img 
               src="/homepage-logo.png" 
               alt="CropStocks Logo" 
-              className="w-12 h-12 object-cover rounded-full bg-white shadow-md border-2 border-yellow-400"
-              style={{ padding: '2px' }}
+              className="w-12 h-12 object-contain"
             />
             <span className="font-bold text-2xl tracking-tight">CropStocks™</span>
           </div>
