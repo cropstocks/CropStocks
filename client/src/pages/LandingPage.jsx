@@ -255,7 +255,7 @@ export default function LandingPage() {
                   src="/TitleVideo.mp4" 
                   autoPlay 
                   loop 
-                  muted 
+                  controls 
                   playsInline 
                   className="w-full h-[600px] object-contain"
                 />
