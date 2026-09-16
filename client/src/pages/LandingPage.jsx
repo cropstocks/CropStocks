@@ -37,7 +37,7 @@ export default function LandingPage() {
             <button onClick={() => window.dispatchEvent(new CustomEvent('toggle-lang'))} className="text-white hover:text-yellow-400 transition-colors p-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
             </button>
-            <button onClick={() => window.dispatchEvent(new CustomEvent('open-login', { detail: { role: 'investor' } }))} className="bg-[#348a21] hover:bg-[#286f18] text-white px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 transition-all shadow-lg hover:shadow-xl">
+            <button onClick={() => window.dispatchEvent(new CustomEvent('open-login'))} className="bg-[#348a21] hover:bg-[#286f18] text-white px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 transition-all shadow-lg hover:shadow-xl">
               Get Started Now <ArrowRight size={16} className="bg-[#fbbf24] text-white rounded-full p-0.5" />
             </button>
           </div>
@@ -55,10 +55,10 @@ export default function LandingPage() {
             Direct investments in agricultural growth. When farmers succeed, you succeed. Harvest profits are distributed securely while ensuring global food security.
           </p>
           <div className="flex flex-wrap gap-4">
-            <button onClick={() => window.dispatchEvent(new CustomEvent('open-login', { detail: { role: 'investor' } }))} className="bg-[#348a21] hover:bg-[#286f18] text-white px-8 py-3.5 rounded-full font-bold flex items-center gap-2 transition-all shadow-lg">
+            <button onClick={() => window.dispatchEvent(new CustomEvent('open-login'))} className="bg-[#348a21] hover:bg-[#286f18] text-white px-8 py-3.5 rounded-full font-bold flex items-center gap-2 transition-all shadow-lg">
               Start Investing <ArrowRight size={18} className="bg-[#fbbf24] text-white rounded-full p-0.5" />
             </button>
-            <button onClick={() => window.dispatchEvent(new CustomEvent('open-login', { detail: { role: 'farmer' } }))} className="border border-white hover:border-yellow-400 hover:text-yellow-400 text-white px-8 py-3.5 rounded-full font-bold flex items-center gap-2 transition-all">
+            <button onClick={() => window.dispatchEvent(new CustomEvent('open-login'))} className="border border-white hover:border-yellow-400 hover:text-yellow-400 text-white px-8 py-3.5 rounded-full font-bold flex items-center gap-2 transition-all">
               Raise Capital <ArrowRight size={18} className="bg-[#fbbf24] text-white rounded-full p-0.5" />
             </button>
           </div>
