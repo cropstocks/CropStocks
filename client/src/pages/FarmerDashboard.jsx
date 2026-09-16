@@ -133,9 +133,7 @@ const FarmerDashboard = () => {
       <aside className="w-64 bg-[#fef8f3] border-r border-gray-200 flex flex-col shrink-0 h-full hidden md:flex">
         <div className="h-20 flex items-center px-6 border-b border-transparent shrink-0">
           <div className="flex items-center gap-3">
-            <div className="bg-[#e6f4ea] p-2 rounded-lg text-[#348a21]">
-              <Leaf size={24} />
-            </div>
+            <img src="/logo.png" alt="CropStocks Logo" className="h-10 w-auto object-contain drop-shadow-sm" />
             <div>
               <h1 className="text-xl font-bold text-gray-900 tracking-tight leading-none">CropStocks™</h1>
               <span className="text-xs text-gray-500 font-medium">Farmer Portal</span>
