@@ -103,7 +103,8 @@ export default function Layout({ children }) {
             
             <div className="flex items-center gap-6">
               <Link to="/" className="flex items-center gap-2">
-                <img src="/logo.png" alt="CropStocks™" className="h-14 w-auto object-contain" onError={(e) => { e.target.style.display = 'none' }} />
+                <img src="/logo.png" alt="CropStocks™" className="h-10 w-auto object-contain" onError={(e) => { e.target.style.display = 'none' }} />
+                <span className="font-bold text-xl text-[#348a21] hidden md:block">CropStocks™</span>
               </Link>
             </div>
 
@@ -160,9 +161,8 @@ export default function Layout({ children }) {
               <button onClick={() => setIsLoginOpen(false)} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'transparent', color: 'white', border: 'none', cursor: 'pointer' }}>
                 <X size={24} />
               </button>
-              <div style={{ background: 'white', padding: '1rem', borderRadius: '1rem', marginBottom: '1.5rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-                <img src="/logo.png" alt="Logo" style={{ height: '120px', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
-              </div>
+              <img src="/logo.png" alt="Logo" style={{ height: '100px', marginBottom: '1.5rem', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
+              <h1 style={{ fontSize: '3rem', marginBottom: '1rem', textShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>{t('app_name')}</h1>
               <p style={{ fontSize: '1.1rem', opacity: 0.9, lineHeight: 1.5, marginBottom: '2.5rem' }}>
                 A transparent stock market for agricultural produce.
               </p>
@@ -197,9 +197,8 @@ export default function Layout({ children }) {
             <>
               {/* Left Side: Branding (Green Gradient) */}
               <div style={{ flex: 1, background: 'var(--gradient-green)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'white', padding: '3rem', textAlign: 'center' }}>
-                <div style={{ background: 'white', padding: '1rem', borderRadius: '1rem', marginBottom: '1.5rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-                  <img src="/logo.png" alt="Logo" style={{ height: '120px', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
-                </div>
+                <img src="/logo.png" alt="Logo" style={{ height: '100px', marginBottom: '1.5rem', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
+                <h1 style={{ fontSize: '3rem', marginBottom: '1rem', textShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>{t('app_name')}</h1>
                 <p style={{ fontSize: '1.1rem', opacity: 0.9, lineHeight: 1.5 }}>
                   A transparent stock market for agricultural produce.
                 </p>

@@ -19,7 +19,8 @@ export default function LandingPage() {
         {/* Transparent Header */}
         <header className="relative z-10 flex items-center justify-between px-6 lg:px-12 py-6 text-white border-b border-white/20">
           <div className="flex items-center gap-2">
-            <img src="/logo.png" alt="CropStocks™" className="h-16 w-auto object-contain bg-white/90 p-1 rounded-lg backdrop-blur-sm" />
+            <Leaf className="text-yellow-400 w-8 h-8" />
+            <span className="font-bold text-2xl tracking-tight">CropStocks™</span>
           </div>
           
           <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold">
