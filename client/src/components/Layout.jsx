@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Sun, Moon, Globe, LogIn, X, LogOut, Search, Bell, Menu, ChevronDown } from 'lucide-react';
+import { Sun, Moon, Globe, LogIn, X, LogOut } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 
@@ -14,7 +14,6 @@ export default function Layout({ children }) {
   const [loginStep, setLoginStep] = useState(0);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
   const [loginRole, setLoginRole] = useState('investor');
   const [emailInput, setEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
@@ -99,83 +98,46 @@ export default function Layout({ children }) {
 
       {/* Navbar */}
       {location.pathname !== '/' && (
-        <header className="bg-white shadow-sm sticky top-0 z-[100] border-b border-gray-100">
-          <div className="container mx-auto px-4 py-2.5 flex items-center justify-between">
+        <header className="bg-[#111] shadow-lg sticky top-0 z-[100] border-b border-white/10 text-white">
+          <div className="container mx-auto px-6 py-3 flex items-center justify-between">
             
-            {/* Left side: Logo + Search */}
-            <div className="flex items-center gap-4 flex-1">
-              <Link to="/" className="flex items-center gap-2 mr-4">
-                <img src="/logo.png" alt="CropStocks™" className="h-8 w-auto object-contain" onError={(e) => { e.target.style.display = 'none' }} />
-                <span className="font-bold text-xl text-[#348a21] hidden lg:block">CropStocks™</span>
+            <div className="flex items-center gap-6">
+              <Link to="/" className="flex items-center gap-2">
+                <img src="/homepage-logo.png" alt="CropStocks™" className="h-10 w-auto object-contain" onError={(e) => { e.target.style.display = 'none' }} />
+                <span className="font-bold text-xl text-white hidden md:block">CropStocks™</span>
               </Link>
-              
-              <button className="p-2 text-gray-500 hover:text-gray-700 bg-gray-50 rounded-md block md:hidden border border-gray-100">
-                <Menu size={20} />
-              </button>
-
-              <div className="hidden md:flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 w-full max-w-md transition-colors focus-within:border-[#348a21] focus-within:bg-white">
-                <Search size={18} className="text-gray-400 mr-2" />
-                <input 
-                  type="text" 
-                  placeholder="Search or type command..." 
-                  className="bg-transparent border-none outline-none text-sm w-full text-gray-700 placeholder-gray-400"
-                />
-                <div className="hidden lg:flex items-center justify-center bg-white border border-gray-200 rounded px-1.5 py-0.5 ml-2 shadow-sm">
-                  <span className="text-[10px] text-gray-400 font-bold tracking-widest">⌘K</span>
-                </div>
-              </div>
             </div>
 
-            {/* Right side: Icons + Profile */}
-            <div className="flex items-center gap-3">
-              <button onClick={toggleTheme} className="p-2.5 text-gray-500 hover:text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-full transition-colors relative border border-transparent">
-                {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+            <div className="flex items-center gap-4">
+              <button onClick={toggleTheme} className="text-gray-300 hover:text-white transition-colors p-2">
+                {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
               </button>
 
               <div className="relative">
-                <button onClick={() => setLangOpen(!langOpen)} className="p-2.5 text-gray-500 hover:text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-full transition-colors relative border border-transparent">
-                  <Globe size={18} />
+                <button onClick={() => setLangOpen(!langOpen)} className="flex items-center gap-1 text-gray-300 hover:text-white transition-colors p-2 font-medium text-sm">
+                  <Globe size={18} /> {i18n.language.toUpperCase()}
                 </button>
                 {langOpen && (
-                  <div className="absolute top-full right-0 mt-2 bg-white border border-gray-100 shadow-xl rounded-xl p-2 flex flex-col gap-1 min-w-[120px] z-[110]">
-                    <button onClick={() => changeLanguage('en')} className="text-left px-3 py-2 hover:bg-gray-50 rounded-lg text-sm text-gray-700 transition-colors font-medium">English</button>
-                    <button onClick={() => changeLanguage('hi')} className="text-left px-3 py-2 hover:bg-gray-50 rounded-lg text-sm text-gray-700 transition-colors font-medium">हिंदी</button>
-                    <button onClick={() => changeLanguage('gu')} className="text-left px-3 py-2 hover:bg-gray-50 rounded-lg text-sm text-gray-700 transition-colors font-medium">ગુજરાતી</button>
+                  <div className="absolute top-full right-0 mt-1 bg-white border border-gray-100 shadow-lg rounded-lg p-2 flex flex-col gap-1 min-w-[120px] z-[110] text-black">
+                    <button onClick={() => changeLanguage('en')} className="text-left px-3 py-1.5 hover:bg-green-50 rounded-md text-sm text-gray-700 transition-colors">English</button>
+                    <button onClick={() => changeLanguage('hi')} className="text-left px-3 py-1.5 hover:bg-green-50 rounded-md text-sm text-gray-700 transition-colors">हिंदी</button>
+                    <button onClick={() => changeLanguage('gu')} className="text-left px-3 py-1.5 hover:bg-green-50 rounded-md text-sm text-gray-700 transition-colors">ગુજરાતી</button>
                   </div>
                 )}
               </div>
 
-              <button className="p-2.5 text-gray-500 hover:text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-full transition-colors relative border border-transparent">
-                <Bell size={18} />
-                <span className="absolute top-2 right-2 w-2 h-2 bg-orange-500 rounded-full border-2 border-white"></span>
-              </button>
-
               {user ? (
-                <div className="relative ml-2 pl-4 border-l border-gray-200">
-                  <button onClick={() => setProfileOpen(!profileOpen)} className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-1.5 rounded-xl transition-colors group">
-                    <div className="flex flex-col text-right hidden sm:block">
-                      <span className="font-bold text-gray-700 text-sm leading-tight">{user.name}</span>
-                      <span className="text-[11px] text-gray-500 font-medium capitalize">{user.role.toLowerCase()}</span>
-                    </div>
-                    <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=348a21&color=fff`} alt="Avatar" className="w-10 h-10 rounded-full shadow-sm" />
-                    <ChevronDown size={16} className="text-gray-400 group-hover:text-gray-600 transition-colors hidden sm:block" />
+                <div className="flex items-center gap-4 ml-2 pl-4 border-l border-gray-200">
+                  <div className="flex items-center gap-3">
+                    <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=348a21&color=fff`} alt="Avatar" className="w-8 h-8 rounded-full" />
+                    <span className="font-semibold text-gray-700 text-sm hidden sm:block">{user.name}</span>
+                  </div>
+                  <button onClick={() => { logout(); navigate('/'); }} className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-colors">
+                    <LogOut size={16} /> <span className="hidden sm:inline">Logout</span>
                   </button>
-                  
-                  {profileOpen && (
-                    <div className="absolute top-full right-0 mt-2 bg-white border border-gray-100 shadow-xl rounded-xl p-2 flex flex-col gap-1 min-w-[160px] z-[110]">
-                      <div className="px-3 py-2 border-b border-gray-100 mb-1 sm:hidden">
-                        <span className="block font-bold text-gray-700 text-sm">{user.name}</span>
-                        <span className="block text-xs text-gray-500 capitalize">{user.role.toLowerCase()}</span>
-                      </div>
-                      <Link to={user.role === 'FARMER' ? '/farmer-dashboard' : '/dashboard'} onClick={() => setProfileOpen(false)} className="text-left px-3 py-2 hover:bg-gray-50 rounded-lg text-sm text-gray-700 transition-colors font-medium">Dashboard</Link>
-                      <button onClick={() => { setProfileOpen(false); logout(); navigate('/'); }} className="text-left px-3 py-2 hover:bg-red-50 hover:text-red-600 rounded-lg text-sm text-red-500 transition-colors font-medium flex items-center gap-2">
-                        <LogOut size={14} /> Logout
-                      </button>
-                    </div>
-                  )}
                 </div>
               ) : (
-                <button onClick={() => { setLoginStep(0); setIsLoginOpen(true); }} className="ml-2 bg-[#348a21] hover:bg-[#286f18] text-white px-5 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all shadow-sm">
+                <button onClick={() => { setLoginStep(0); setIsLoginOpen(true); }} className="ml-2 bg-[#348a21] hover:bg-[#286f18] text-white px-5 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors shadow-sm">
                   <LogIn size={16} /> {t('login')}
                 </button>
               )}
@@ -199,7 +161,7 @@ export default function Layout({ children }) {
               <button onClick={() => setIsLoginOpen(false)} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'transparent', color: 'white', border: 'none', cursor: 'pointer' }}>
                 <X size={24} />
               </button>
-              <img src="/logo.png" alt="Logo" style={{ height: '100px', marginBottom: '1.5rem', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
+              <img src="/homepage-logo.png" alt="Logo" style={{ height: '100px', marginBottom: '1.5rem', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
               <h1 style={{ fontSize: '3rem', marginBottom: '1rem', textShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>{t('app_name')}</h1>
               <p style={{ fontSize: '1.1rem', opacity: 0.9, lineHeight: 1.5, marginBottom: '2.5rem' }}>
                 A transparent stock market for agricultural produce.
@@ -235,7 +197,7 @@ export default function Layout({ children }) {
             <>
               {/* Left Side: Branding (Green Gradient) */}
               <div style={{ flex: 1, background: 'var(--gradient-green)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'white', padding: '3rem', textAlign: 'center' }}>
-                <img src="/logo.png" alt="Logo" style={{ height: '100px', marginBottom: '1.5rem', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
+                <img src="/homepage-logo.png" alt="Logo" style={{ height: '100px', marginBottom: '1.5rem', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
                 <h1 style={{ fontSize: '3rem', marginBottom: '1rem', textShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>{t('app_name')}</h1>
                 <p style={{ fontSize: '1.1rem', opacity: 0.9, lineHeight: 1.5 }}>
                   A transparent stock market for agricultural produce.
