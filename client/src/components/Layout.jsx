@@ -146,22 +146,29 @@ export default function Layout({ children }) {
                 A transparent stock market for agricultural produce.
               </p>
               
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', maxWidth: '300px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', width: '100%', maxWidth: '300px' }}>
+                <div style={{ display: 'flex', width: '100%', background: 'rgba(255,255,255,0.2)', padding: '0.4rem', borderRadius: '30px' }}>
+                  <button 
+                    onClick={() => setLoginRole('investor')} 
+                    style={{ flex: 1, padding: '0.6rem 1rem', borderRadius: '25px', border: 'none', background: loginRole === 'investor' ? 'white' : 'transparent', color: loginRole === 'investor' ? 'var(--color-primary-dark)' : 'white', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.3s ease' }}
+                  >
+                    Investor
+                  </button>
+                  <button 
+                    onClick={() => setLoginRole('farmer')} 
+                    style={{ flex: 1, padding: '0.6rem 1rem', borderRadius: '25px', border: 'none', background: loginRole === 'farmer' ? 'white' : 'transparent', color: loginRole === 'farmer' ? 'var(--color-primary-dark)' : 'white', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.3s ease' }}
+                  >
+                    Farmer
+                  </button>
+                </div>
+                
                 <button 
-                  onClick={() => { setLoginRole('investor'); setLoginStep(1); }} 
-                  style={{ padding: '1rem', borderRadius: '8px', border: 'none', background: 'white', color: 'var(--color-primary-dark)', cursor: 'pointer', fontWeight: 'bold', fontSize: '1.1rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', transition: 'transform 0.2s' }}
+                  onClick={() => setLoginStep(1)} 
+                  style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: 'none', background: 'white', color: 'var(--color-primary-dark)', cursor: 'pointer', fontWeight: 'bold', fontSize: '1.1rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', transition: 'transform 0.2s' }}
                   onMouseEnter={(e) => e.target.style.transform = 'scale(1.02)'}
                   onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
                 >
-                  Login as Investor
-                </button>
-                <button 
-                  onClick={() => { setLoginRole('farmer'); setLoginStep(1); }} 
-                  style={{ padding: '1rem', borderRadius: '8px', border: 'none', background: 'white', color: 'var(--color-primary-dark)', cursor: 'pointer', fontWeight: 'bold', fontSize: '1.1rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', transition: 'transform 0.2s' }}
-                  onMouseEnter={(e) => e.target.style.transform = 'scale(1.02)'}
-                  onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
-                >
-                  Login as Farmer
+                  Continue
                 </button>
               </div>
             </div>
