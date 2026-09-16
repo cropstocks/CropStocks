@@ -20,13 +20,13 @@ export default function LandingPage() {
         <header className="relative z-10 flex items-center justify-between px-6 lg:px-12 py-6 text-white border-b border-white/20">
           <div className="flex items-center gap-2">
             <Leaf className="text-yellow-400 w-8 h-8" />
-            <span className="font-bold text-2xl tracking-tight">Ecoland</span>
+            <span className="font-bold text-2xl tracking-tight">CropStocks</span>
           </div>
           
           <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold">
             <a href="#" className="hover:text-yellow-400 transition-colors">Home</a>
-            <a href="#" className="hover:text-yellow-400 transition-colors flex items-center gap-1">Essential Pages <span className="text-xs">▼</span></a>
-            <a href="#" className="hover:text-yellow-400 transition-colors">Blogs</a>
+            <a href="/marketplace" className="hover:text-yellow-400 transition-colors">Marketplace</a>
+            <a href="#" className="hover:text-yellow-400 transition-colors">How it Works</a>
             <a href="#" className="hover:text-yellow-400 transition-colors">Contact Us</a>
           </nav>
           
@@ -38,20 +38,20 @@ export default function LandingPage() {
         {/* Hero Content */}
         <div className="relative z-10 container mx-auto px-6 lg:px-12 flex-1 flex flex-col justify-center pb-20">
           <div className="inline-block border border-yellow-400 text-yellow-400 rounded-full px-5 py-1.5 text-xs font-semibold mb-6 uppercase tracking-wider w-max">
-            We are Producing Natural Products
+            Transparent Agricultural Marketplace
           </div>
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6 max-w-3xl">
-            Organic Farming<br />and Agriculture
+            Invest in Local Farms<br />& Shared Growth
           </h1>
           <p className="text-gray-200 text-lg max-w-2xl mb-10 leading-relaxed font-light">
-            A successful middle-sized farm may generate gross revenue in the range of $500,000 to $1 million annually, depending on the scale and type of operations.
+            Direct investments in agricultural growth. When farmers succeed, you succeed. Harvest profits are distributed securely while ensuring global food security.
           </p>
           <div className="flex flex-wrap gap-4">
-            <button className="bg-[#348a21] hover:bg-[#286f18] text-white px-8 py-3.5 rounded-full font-bold flex items-center gap-2 transition-all shadow-lg">
-              Discover More <ArrowRight size={18} className="bg-[#fbbf24] text-white rounded-full p-0.5" />
+            <button onClick={() => window.dispatchEvent(new CustomEvent('open-login', { detail: { role: 'investor' } }))} className="bg-[#348a21] hover:bg-[#286f18] text-white px-8 py-3.5 rounded-full font-bold flex items-center gap-2 transition-all shadow-lg">
+              Start Investing <ArrowRight size={18} className="bg-[#fbbf24] text-white rounded-full p-0.5" />
             </button>
-            <button className="border border-white hover:border-yellow-400 hover:text-yellow-400 text-white px-8 py-3.5 rounded-full font-bold flex items-center gap-2 transition-all">
-              See All Service <ArrowRight size={18} className="bg-[#fbbf24] text-white rounded-full p-0.5" />
+            <button onClick={() => window.dispatchEvent(new CustomEvent('open-login', { detail: { role: 'farmer' } }))} className="border border-white hover:border-yellow-400 hover:text-yellow-400 text-white px-8 py-3.5 rounded-full font-bold flex items-center gap-2 transition-all">
+              Raise Capital <ArrowRight size={18} className="bg-[#fbbf24] text-white rounded-full p-0.5" />
             </button>
           </div>
         </div>
@@ -68,16 +68,13 @@ export default function LandingPage() {
               <img src="https://i.pravatar.cc/100?img=3" className="w-12 h-12 rounded-full border-2 border-white object-cover shadow-sm" alt="Client" />
             </div>
             <div>
-              <div className="font-bold text-xl text-gray-900 leading-tight">100K+ Client With</div>
-              <div className="font-bold text-xl text-gray-900 leading-tight">Positive Reviews</div>
+              <div className="font-bold text-xl text-gray-900 leading-tight">10,000+ Verified</div>
+              <div className="font-bold text-xl text-gray-900 leading-tight">Farmers & Investors</div>
             </div>
           </div>
 
           <div className="flex items-center justify-center relative">
             <div className="w-24 h-24 rounded-full border border-dashed border-gray-900 flex items-center justify-center animate-spin-slow" style={{ animationDuration: '10s' }}>
-              <div className="text-[10px] uppercase font-bold tracking-widest text-center w-full h-full relative">
-                {/* Simplified circular text effect */}
-              </div>
             </div>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="bg-[#348a21] text-white w-12 h-12 rounded-full flex items-center justify-center">
@@ -88,8 +85,8 @@ export default function LandingPage() {
 
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <div className="font-bold text-xl text-gray-900 leading-tight">Healthy Life With</div>
-              <div className="font-bold text-xl text-gray-900 leading-tight">Fresh Products</div>
+              <div className="font-bold text-xl text-gray-900 leading-tight">Secure, Monitored,</div>
+              <div className="font-bold text-xl text-gray-900 leading-tight">and Profitable</div>
             </div>
             <div className="relative w-24 h-16 rounded-lg overflow-hidden shadow-md group cursor-pointer">
               <img src="https://images.unsplash.com/photo-1595858178877-3e33f9d50cc1?q=80&w=300&auto=format&fit=crop" className="w-full h-full object-cover" alt="Video thumbnail" />
@@ -109,10 +106,10 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
             <div>
               <div className="inline-block border border-[#348a21] text-[#348a21] rounded-full px-4 py-1 text-xs font-bold mb-4 uppercase tracking-wider">
-                Our Services
+                Key Features
               </div>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight max-w-xl">
-                We Offers Eco & Agriculture Services
+                Why Invest with CropStocks
               </h2>
             </div>
             <div className="flex gap-3">
@@ -130,15 +127,15 @@ export default function LandingPage() {
             {/* Card 1 */}
             <div className="bg-[#348a21] rounded-2xl p-4 text-white group cursor-pointer transition-transform hover:-translate-y-2 duration-300 shadow-xl">
               <div className="rounded-xl overflow-hidden mb-6 h-48">
-                <img src="https://images.unsplash.com/photo-1592982537447-6f2c395e5927?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Tractor" />
+                <img src="https://images.unsplash.com/photo-1592982537447-6f2c395e5927?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Satellite" />
               </div>
               <div className="px-2 pb-4">
                 <div className="inline-block border border-white/30 rounded-full px-3 py-1 text-[10px] font-bold mb-3 uppercase tracking-wider">
-                  Agricultural Consulting
+                  Technology
                 </div>
-                <h3 className="text-2xl font-bold mb-3">Agriculture Products</h3>
+                <h3 className="text-2xl font-bold mb-3">Satellite Monitoring</h3>
                 <p className="text-white/80 text-sm leading-relaxed mb-4">
-                  Commitment to organic practices, providing fresh, chemical-free produce straight from the farm.
+                  Track crop health in real-time with NDVI satellite imagery ensuring your investments are actively growing.
                 </p>
               </div>
             </div>
@@ -146,15 +143,15 @@ export default function LandingPage() {
             {/* Card 2 */}
             <div className="bg-[#348a21] rounded-2xl p-4 text-white group cursor-pointer transition-transform hover:-translate-y-2 duration-300 shadow-xl">
               <div className="rounded-xl overflow-hidden mb-6 h-48">
-                <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Sprouts" />
+                <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Farmer" />
               </div>
               <div className="px-2 pb-4">
                 <div className="inline-block border border-white/30 rounded-full px-3 py-1 text-[10px] font-bold mb-3 uppercase tracking-wider">
-                  Soil Enhancement
+                  Security
                 </div>
-                <h3 className="text-2xl font-bold mb-3">Soil Fertilization</h3>
+                <h3 className="text-2xl font-bold mb-3">Verified Farmers</h3>
                 <p className="text-white/80 text-sm leading-relaxed mb-4">
-                  Comprehensive soil testing and enhancement strategies for optimal crop growth.
+                  Every listing is vetted and tied directly to registered land records and farmer identities to ensure trust.
                 </p>
               </div>
             </div>
@@ -162,15 +159,15 @@ export default function LandingPage() {
             {/* Card 3 */}
             <div className="bg-[#348a21] rounded-2xl p-4 text-white group cursor-pointer transition-transform hover:-translate-y-2 duration-300 shadow-xl">
               <div className="rounded-xl overflow-hidden mb-6 h-48">
-                <img src="https://images.unsplash.com/photo-1549429141-86e5893d98f7?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Cows" />
+                <img src="https://images.unsplash.com/photo-1549429141-86e5893d98f7?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Growth" />
               </div>
               <div className="px-2 pb-4">
                 <div className="inline-block border border-white/30 rounded-full px-3 py-1 text-[10px] font-bold mb-3 uppercase tracking-wider">
-                  Animal Husbandry
+                  Returns
                 </div>
-                <h3 className="text-2xl font-bold mb-3">Dairy Production</h3>
+                <h3 className="text-2xl font-bold mb-3">Shared Growth</h3>
                 <p className="text-white/80 text-sm leading-relaxed mb-4">
-                  Direct delivery of fresh, farm-grown produce straight to your doorstep for convenience.
+                  When farmers succeed, you succeed. Harvest profits are distributed securely straight to your portfolio.
                 </p>
               </div>
             </div>
@@ -186,23 +183,23 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row justify-between items-start mb-12 gap-8">
             <div className="max-w-xl">
               <div className="inline-block border border-[#348a21] text-[#348a21] rounded-full px-4 py-1 text-xs font-bold mb-4 uppercase tracking-wider">
-                Recently Completed
+                Recently Funded
               </div>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-                Recently Completed Project
+                Recently Funded Farms
               </h2>
             </div>
             <p className="text-gray-500 max-w-md text-sm leading-relaxed">
-              Affordable rental of well-maintained farming equipment to support your agricultural needs. Innovative irrigation solutions to ensure efficient water use and healthy crops.
+              Discover farms that have recently reached their funding goals and are currently in the active growing cycle, monitored by our platform.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { title: 'Agriculture Farming', img: 'https://images.unsplash.com/photo-1628102491629-778571d893a3?q=80&w=400&auto=format&fit=crop' },
-              { title: 'Fertilizers & Pesticides', img: 'https://images.unsplash.com/photo-1592982537447-6f2c395e5927?q=80&w=400&auto=format&fit=crop' },
-              { title: 'Eco and Agriculture', img: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=400&auto=format&fit=crop' },
-              { title: 'Harvest Innovations', img: 'https://images.unsplash.com/photo-1605000797499-95a51c5269ae?q=80&w=400&auto=format&fit=crop' }
+              { title: 'Wheat - Punjab', img: 'https://images.unsplash.com/photo-1628102491629-778571d893a3?q=80&w=400&auto=format&fit=crop' },
+              { title: 'Soybean - MP', img: 'https://images.unsplash.com/photo-1592982537447-6f2c395e5927?q=80&w=400&auto=format&fit=crop' },
+              { title: 'Cotton - Gujarat', img: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=400&auto=format&fit=crop' },
+              { title: 'Rice - West Bengal', img: 'https://images.unsplash.com/photo-1605000797499-95a51c5269ae?q=80&w=400&auto=format&fit=crop' }
             ].map((proj, idx) => (
               <div key={idx} className="group relative rounded-2xl overflow-hidden h-[350px] shadow-lg cursor-pointer">
                 <img src={proj.img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={proj.title} />
@@ -238,21 +235,21 @@ export default function LandingPage() {
 
             <div className="w-full lg:w-1/2">
               <div className="inline-block border border-[#348a21] text-[#348a21] rounded-full px-4 py-1 text-xs font-bold mb-4 uppercase tracking-wider">
-                Our Working Step
+                How It Works
               </div>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
-                How We Do Agricultural Work
+                From Investment to Harvest
               </h2>
               <p className="text-gray-500 mb-12 text-sm leading-relaxed max-w-md">
-                The modern consumer demands quality organic products which is why our selection of farm-grown herbs are top quality, always fresh, and 100% organic certified.
+                CropStocks connects investors directly with vetted farmers, providing transparent tracking and secure returns while eliminating middlemen.
               </p>
 
               <div className="space-y-8">
                 {[
-                  { num: '01', title: 'Schedule Your Experience', desc: 'Enrich soil with nutrients for healthy crop growth.' },
-                  { num: '02', title: 'Get Professional Advice', desc: 'Carefully sow seeds to ensure optimal growth.' },
-                  { num: '03', title: 'Meet Our Expert Farmer', desc: 'Monitor and care for crops with sustainable practices.' },
-                  { num: '04', title: 'Now Get a Best Products', desc: 'Harvest at peak freshness and deliver straight to you.' }
+                  { num: '01', title: 'Browse Verified Listings', desc: 'Explore vetted farms needing capital for the upcoming season.' },
+                  { num: '02', title: 'Invest Capital', desc: 'Purchase shares in a farm\'s crop cycle securely through the platform.' },
+                  { num: '03', title: 'Monitor Growth', desc: 'Track crop health via satellite NDVI and weekly farmer reports.' },
+                  { num: '04', title: 'Receive Returns', desc: 'Once the harvest is sold, receive your share of the profits directly.' }
                 ].map((step, idx) => (
                   <div key={idx} className="flex gap-6 items-start">
                     <div className="text-4xl font-light text-gray-300 font-serif leading-none mt-1">
@@ -276,18 +273,18 @@ export default function LandingPage() {
         <div className="container mx-auto px-6 lg:px-12 text-center">
           
           <div className="inline-block border border-yellow-400 text-yellow-400 rounded-full px-4 py-1 text-xs font-bold mb-4 uppercase tracking-wider">
-            Our Farmers
+            Top Farmers
           </div>
           <h2 className="text-4xl md:text-5xl font-bold leading-tight mb-16 max-w-2xl mx-auto">
-            We Have Lot's Of Experience Team Members
+            Meet Some of Our Successful Partners
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { name: 'James Albert', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop' },
-              { name: 'David M. Hawer', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop' },
-              { name: 'Dennis R.', img: 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=400&auto=format&fit=crop' },
-              { name: 'Floyd Miles', img: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=400&auto=format&fit=crop' }
+              { name: 'Rajesh Kumar', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop' },
+              { name: 'Amit Singh', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop' },
+              { name: 'Ramesh Patel', img: 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=400&auto=format&fit=crop' },
+              { name: 'Suresh Reddy', img: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=400&auto=format&fit=crop' }
             ].map((member, idx) => (
               <div key={idx} className="group relative rounded-2xl overflow-hidden bg-gray-800 p-2 border border-white/10">
                 <div className="rounded-xl overflow-hidden h-[300px]">
@@ -309,7 +306,7 @@ export default function LandingPage() {
           About Us
         </div>
         <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
-          We're Best Agriculture
+          Empowering Agriculture Through Investment
         </h2>
       </section>
 
