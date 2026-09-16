@@ -26,6 +26,7 @@ const FarmerDashboard = () => {
   const [windowStatus, setWindowStatus] = useState(null);
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('My Farm Data');
 
   useEffect(() => {
     // Hide global layout header for this specific dashboard
@@ -146,13 +147,22 @@ const FarmerDashboard = () => {
           <div className="mb-8">
             <h3 className="text-[10px] uppercase text-gray-500 font-bold tracking-widest mb-3 px-2">Overview</h3>
             <div className="space-y-1">
-              <button className="w-full flex items-center gap-3 px-3 py-2.5 bg-[#1b2b1b] text-[#86efac] rounded-xl font-medium transition-colors">
+              <button 
+                onClick={() => setActiveTab('My Farm Data')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-colors ${activeTab === 'My Farm Data' ? 'bg-[#1b2b1b] text-[#86efac]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+              >
                 <LayoutDashboard size={18} /> My Farm Data
               </button>
-              <button className="w-full flex items-center gap-3 px-3 py-2.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+              <button 
+                onClick={() => setActiveTab('Stock Price')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-colors ${activeTab === 'Stock Price' ? 'bg-[#1b2b1b] text-[#86efac]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+              >
                 <TrendingUp size={18} /> Stock Price
               </button>
-              <button className="w-full flex items-center gap-3 px-3 py-2.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+              <button 
+                onClick={() => setActiveTab('Weekly Submissions')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-colors ${activeTab === 'Weekly Submissions' ? 'bg-[#1b2b1b] text-[#86efac]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+              >
                 <ClipboardCheck size={18} /> Weekly Submissions
               </button>
             </div>
@@ -161,13 +171,22 @@ const FarmerDashboard = () => {
           <div className="mb-8">
             <h3 className="text-[10px] uppercase text-gray-500 font-bold tracking-widest mb-3 px-2">Finance</h3>
             <div className="space-y-1">
-              <button className="w-full flex items-center gap-3 px-3 py-2.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+              <button 
+                onClick={() => setActiveTab('Allocations')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-colors ${activeTab === 'Allocations' ? 'bg-[#1b2b1b] text-[#86efac]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+              >
                 <Wallet size={18} /> Allocations
               </button>
-              <button className="w-full flex items-center gap-3 px-3 py-2.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+              <button 
+                onClick={() => setActiveTab('Payouts')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-colors ${activeTab === 'Payouts' ? 'bg-[#1b2b1b] text-[#86efac]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+              >
                 <Banknote size={18} /> Payouts
               </button>
-              <button className="w-full flex items-center gap-3 px-3 py-2.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+              <button 
+                onClick={() => setActiveTab('Reports')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-colors ${activeTab === 'Reports' ? 'bg-[#1b2b1b] text-[#86efac]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+              >
                 <FileText size={18} /> Reports
               </button>
             </div>
@@ -176,10 +195,16 @@ const FarmerDashboard = () => {
           <div>
             <h3 className="text-[10px] uppercase text-gray-500 font-bold tracking-widest mb-3 px-2">Account</h3>
             <div className="space-y-1">
-              <button className="w-full flex items-center gap-3 px-3 py-2.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+              <button 
+                onClick={() => setActiveTab('Profile')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-colors ${activeTab === 'Profile' ? 'bg-[#1b2b1b] text-[#86efac]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+              >
                 <User size={18} /> Profile
               </button>
-              <button className="w-full flex items-center gap-3 px-3 py-2.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+              <button 
+                onClick={() => setActiveTab('Settings')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-colors ${activeTab === 'Settings' ? 'bg-[#1b2b1b] text-[#86efac]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+              >
                 <Settings size={18} /> Settings
               </button>
             </div>
@@ -239,8 +264,17 @@ const FarmerDashboard = () => {
           {/* Header Row */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
             <div>
-              <h2 className="text-2xl font-bold text-white mb-1">My Farm Data</h2>
-              <p className="text-sm text-gray-400">Live plot health, weekly verification and payout status</p>
+              <h2 className="text-2xl font-bold text-white mb-1">{activeTab}</h2>
+              <p className="text-sm text-gray-400">
+                {activeTab === 'My Farm Data' && 'Live plot health, weekly verification and payout status'}
+                {activeTab === 'Stock Price' && 'Track market trends and stock valuation'}
+                {activeTab === 'Weekly Submissions' && 'Manage your ongoing verification tasks'}
+                {activeTab === 'Allocations' && 'View your pending and disbursed capital'}
+                {activeTab === 'Payouts' && 'Manage your harvest returns and payments'}
+                {activeTab === 'Reports' && 'Download official verification reports'}
+                {activeTab === 'Profile' && 'Manage your personal details'}
+                {activeTab === 'Settings' && 'Configure your platform preferences'}
+              </p>
             </div>
             
             <div className="relative">
@@ -257,7 +291,9 @@ const FarmerDashboard = () => {
             </div>
           </div>
 
-          {/* Top 4 Cards */}
+          {activeTab === 'My Farm Data' ? (
+            <>
+              {/* Top 4 Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
             {/* Card 1 */}
             <div className="bg-[#151a15] border border-white/5 rounded-2xl p-5 flex flex-col justify-between h-36">
@@ -443,6 +479,16 @@ const FarmerDashboard = () => {
 
             </div>
           </div>
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-64 bg-[#151a15] border border-white/5 rounded-2xl">
+              <div className="w-16 h-16 rounded-full bg-[#1b2b1b] flex items-center justify-center text-gray-500 mb-4">
+                <AlertTriangle size={24} />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Module Under Construction</h3>
+              <p className="text-gray-400 text-sm">The {activeTab} section is currently being updated for the new layout.</p>
+            </div>
+          )}
 
         </div>
       </div>
