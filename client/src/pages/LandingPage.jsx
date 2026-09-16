@@ -250,14 +250,14 @@ export default function LandingPage() {
           <div className="flex flex-col lg:flex-row gap-16 items-center">
             
             <div className="w-full lg:w-1/2">
-              <div className="rounded-3xl overflow-hidden shadow-2xl relative">
+              <div className="rounded-3xl overflow-hidden shadow-2xl relative bg-white flex items-center justify-center">
                 <video 
                   src="/TitleVideo.mp4" 
                   autoPlay 
                   loop 
                   muted 
                   playsInline 
-                  className="w-full h-[600px] object-cover"
+                  className="w-full h-[600px] object-contain"
                 />
               </div>
             </div>
