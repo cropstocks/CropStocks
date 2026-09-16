@@ -4,9 +4,9 @@
 @tailwind components;
 @tailwind utilities;
 :root {
-  --color-primary: #10b981;
-  --color-primary-dark: #059669;
-  --color-primary-light: #34d399;
+  --color-primary: #348a21;
+  --color-primary-dark: #286f18;
+  --color-primary-light: #4ade80;
   --color-bg-light: #f8fafc;
   --color-bg-dark: #0f172a;
   --color-surface-light: #ffffff;
@@ -34,7 +34,7 @@
 }
 
 :root {
-  --bg-main: #eefdf0;
+  --bg-main: #f9fafb;
   --bg-surface: #ffffff;
   --text-main: #1f2937;
   --text-muted: #6b7280;

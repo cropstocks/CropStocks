@@ -4,7 +4,7 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
-      "app_name": "CropStocks",
+      "app_name": "CropStocks™",
       "login": "Login",
       "logout": "Logout",
       "theme": "Theme",

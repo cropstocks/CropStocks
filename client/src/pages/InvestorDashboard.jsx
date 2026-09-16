@@ -74,7 +74,7 @@ export default function InvestorDashboard() {
       {investments.length === 0 ? (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
           <p className="text-gray-500 text-lg mb-4">No investments yet.</p>
-          <Link to="/marketplace" className="bg-[#10b981] hover:bg-[#059669] text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition-colors shadow-sm inline-block">Browse Marketplace →</Link>
+          <Link to="/marketplace" className="bg-[#348a21] hover:bg-[#286f18] text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition-colors shadow-sm inline-block">Browse Marketplace →</Link>
         </div>
       ) : (
         <div className="space-y-4">
@@ -117,7 +117,7 @@ export default function InvestorDashboard() {
                   {/* Right: P&L */}
                   <div className="text-right flex-shrink-0">
                     <p className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Total Return</p>
-                    <div className={`text-lg font-bold flex items-center justify-end gap-1 ${isPositive ? 'text-[#10b981]' : 'text-red-500'}`}>
+                    <div className={`text-lg font-bold flex items-center justify-end gap-1 ${isPositive ? 'text-[#348a21]' : 'text-red-500'}`}>
                       {isPositive ? '▲' : '▼'} ₹{Math.abs(Math.round(invPnl)).toLocaleString()}
                       <span className="text-sm">({isPositive ? '+' : ''}{invPnlPercent}%)</span>
                     </div>

@@ -82,7 +82,7 @@ export default function FarmerRegister() {
         <h2 className="text-3xl font-extrabold text-brand-dark text-center mb-2 font-heading">
           🧑‍🌾 Farmer Registration
         </h2>
-        <p className="text-center text-gray-500 text-sm mb-8">Join CropStocks to raise capital and get satellite monitoring</p>
+        <p className="text-center text-gray-500 text-sm mb-8">Join CropStocks™ to raise capital and get satellite monitoring</p>
         
         {/* Progress Bar */}
         <div className="mb-8">

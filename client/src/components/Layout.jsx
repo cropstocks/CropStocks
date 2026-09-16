@@ -30,9 +30,22 @@ export default function Layout({ children }) {
       }
       setIsLoginOpen(true);
     };
+    const handleToggleTheme = () => toggleTheme();
+    const handleToggleLang = () => {
+      const nextLang = i18n.language === 'en' ? 'hi' : (i18n.language === 'hi' ? 'gu' : 'en');
+      changeLanguage(nextLang);
+    };
+
     window.addEventListener('open-login', handleOpenLogin);
-    return () => window.removeEventListener('open-login', handleOpenLogin);
-  }, []);
+    window.addEventListener('toggle-theme', handleToggleTheme);
+    window.addEventListener('toggle-lang', handleToggleLang);
+    
+    return () => {
+      window.removeEventListener('open-login', handleOpenLogin);
+      window.removeEventListener('toggle-theme', handleToggleTheme);
+      window.removeEventListener('toggle-lang', handleToggleLang);
+    };
+  }, [theme, i18n.language]);
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
@@ -90,8 +103,8 @@ export default function Layout({ children }) {
             
             <div className="flex items-center gap-6">
               <Link to="/" className="flex items-center gap-2">
-                <img src="/logo.png" alt="CropStocks" className="h-10 w-auto object-contain" onError={(e) => { e.target.style.display = 'none' }} />
-                <span className="font-bold text-xl text-[#2d6a4f] hidden md:block">CropStocks</span>
+                <img src="/logo.png" alt="CropStocks™" className="h-10 w-auto object-contain" onError={(e) => { e.target.style.display = 'none' }} />
+                <span className="font-bold text-xl text-[#348a21] hidden md:block">CropStocks™</span>
               </Link>
             </div>
 
@@ -116,7 +129,7 @@ export default function Layout({ children }) {
               {user ? (
                 <div className="flex items-center gap-4 ml-2 pl-4 border-l border-gray-200">
                   <div className="flex items-center gap-3">
-                    <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=10b981&color=fff`} alt="Avatar" className="w-8 h-8 rounded-full" />
+                    <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=348a21&color=fff`} alt="Avatar" className="w-8 h-8 rounded-full" />
                     <span className="font-semibold text-gray-700 text-sm hidden sm:block">{user.name}</span>
                   </div>
                   <button onClick={() => { logout(); navigate('/'); }} className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-colors">
@@ -124,7 +137,7 @@ export default function Layout({ children }) {
                   </button>
                 </div>
               ) : (
-                <button onClick={() => { setLoginStep(0); setIsLoginOpen(true); }} className="ml-2 bg-[#10b981] hover:bg-[#059669] text-white px-5 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors shadow-sm">
+                <button onClick={() => { setLoginStep(0); setIsLoginOpen(true); }} className="ml-2 bg-[#348a21] hover:bg-[#286f18] text-white px-5 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors shadow-sm">
                   <LogIn size={16} /> {t('login')}
                 </button>
               )}

@@ -79,7 +79,7 @@ export default function SignupModal({ isOpen, onClose, defaultRole = 'farmer' })
           <img src="/logo.png" alt="Logo" style={{ height: '80px', marginBottom: '1.5rem', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
           <h2 style={{ fontSize: '2rem', marginBottom: '1rem', textShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>{t('create_new_user')}</h2>
           <p style={{ opacity: 0.9, lineHeight: 1.5 }}>
-            Join CropStocks today to {role === 'farmer' ? 'tokenize your farm and raise capital directly.' : 'invest in high-yield agricultural produce.'}
+            Join CropStocks™ today to {role === 'farmer' ? 'tokenize your farm and raise capital directly.' : 'invest in high-yield agricultural produce.'}
           </p>
           
           <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', background: 'rgba(255,255,255,0.2)', padding: '0.5rem', borderRadius: '30px' }}>

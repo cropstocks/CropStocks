@@ -43,7 +43,7 @@ export default function Marketplace() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold font-heading text-brand-dark">📈 CropStocks Marketplace</h1>
+        <h1 className="text-3xl font-bold font-heading text-brand-dark">📈 CropStocks™ Marketplace</h1>
         <p className="text-gray-500 mt-1">Invest in satellite-verified agricultural projects across India</p>
       </div>
 

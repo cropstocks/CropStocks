@@ -128,7 +128,7 @@ const FarmerDashboard = () => {
             <select 
               value={selectedListingId} 
               onChange={(e) => setSelectedListingId(e.target.value)}
-              className="appearance-none bg-gray-50 border border-gray-200 rounded-md py-1.5 pl-4 pr-10 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-[#10b981]"
+              className="appearance-none bg-gray-50 border border-gray-200 rounded-md py-1.5 pl-4 pr-10 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-[#348a21]"
             >
               {listings.map(l => <option key={l.id} value={l.id}>{l.produceName} - {l.region}</option>)}
             </select>
@@ -174,7 +174,7 @@ const FarmerDashboard = () => {
                   <LineChart data={healthHistory}>
                     <XAxis dataKey="week" hide />
                     <Tooltip />
-                    <Line type="monotone" dataKey="health" stroke="#10b981" strokeWidth={2} dot={{ r: 3, fill: '#10b981' }} />
+                    <Line type="monotone" dataKey="health" stroke="#348a21" strokeWidth={2} dot={{ r: 3, fill: '#348a21' }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -218,7 +218,7 @@ const FarmerDashboard = () => {
               
               <div className="w-full bg-gray-200 rounded-full h-3 mb-6 flex overflow-hidden">
                 <div 
-                  className="bg-[#10b981] h-full" 
+                  className="bg-[#348a21] h-full" 
                   style={{ width: `${Math.min(100, (cycleState.capitalDisbursedInr / cycleState.capitalGrantedInr) * 100) || 65}%` }}
                 ></div>
                 <div className="bg-[#3b82f6] h-full opacity-50" style={{ width: '15%' }}></div>
@@ -263,7 +263,7 @@ const FarmerDashboard = () => {
               <div className="flex items-center gap-4">
                 <Link 
                   to={`/farmer/capture/${selectedListingId}`} 
-                  className={`flex-1 py-3 rounded-lg font-bold text-white text-center transition-colors ${windowStatus?.status !== 'OPEN' ? 'bg-[#10b981] hover:bg-[#059669]' : 'bg-[#10b981] hover:bg-[#059669]'}`}
+                  className={`flex-1 py-3 rounded-lg font-bold text-white text-center transition-colors ${windowStatus?.status !== 'OPEN' ? 'bg-[#348a21] hover:bg-[#286f18]' : 'bg-[#348a21] hover:bg-[#286f18]'}`}
                 >
                   {t('Upload Evidence')}
                 </Link>

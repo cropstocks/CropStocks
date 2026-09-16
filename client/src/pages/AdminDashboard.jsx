@@ -85,7 +85,7 @@ export default function AdminDashboard() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'CropStocks_Surveys.csv';
+    a.download = 'CropStocks™_Surveys.csv';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -239,13 +239,13 @@ export default function AdminDashboard() {
             <div className="relative z-10 flex flex-col h-full justify-between">
               <div className="text-center flex flex-col items-center">
                 <div className="flex justify-center mb-1 items-center">
-                  <img src="/logo.png" alt="CropStocks Logo" className="w-full max-w-[220px] object-contain mix-blend-multiply" />
+                  <img src="/logo.png" alt="CropStocks™ Logo" className="w-full max-w-[220px] object-contain mix-blend-multiply" />
                 </div>
                 <h1 className="text-lg font-bold mb-1">
                   {slip === 1 ? 'NO OBJECTION CERTIFICATE (NOC) / વાંધા પ્રમાણપત્ર (NOC)' : 'DATA PRIVACY GUARANTEE / ડેટા ગોપનીયતાની બાંયધરી'}
                 </h1>
                 <h2 className="text-sm font-semibold text-gray-600">
-                  {slip === 1 ? 'CropStocks Agricultural Survey Consent / ક્રોપસ્ટોક્સ કૃષિ સર્વેક્ષણ સંમતિ' : 'CropStocks Data Usage Policy / ક્રોપસ્ટોક્સ ડેટા વપરાશ નીતિ'}
+                  {slip === 1 ? 'CropStocks™ Agricultural Survey Consent / ક્રોપસ્ટોક્સ કૃષિ સર્વેક્ષણ સંમતિ' : 'CropStocks™ Data Usage Policy / ક્રોપસ્ટોક્સ ડેટા વપરાશ નીતિ'}
                 </h2>
               </div>
               
@@ -254,7 +254,7 @@ export default function AdminDashboard() {
                   <>
                     <p className="text-sm leading-[2] text-justify">
                       I, <span className="inline-block border-b border-black w-64"></span>, resident of <span className="inline-block border-b border-black w-64"></span>, 
-                      hereby give my full consent and have no objection to participating in the CropStocks Agricultural Survey and providing my agricultural data. I understand that this information will be used for agricultural analysis and platform listings.
+                      hereby give my full consent and have no objection to participating in the CropStocks™ Agricultural Survey and providing my agricultural data. I understand that this information will be used for agricultural analysis and platform listings.
                     </p>
                     <p className="text-sm leading-[2] text-justify font-medium">
                       હું, <span className="inline-block border-b border-black w-64"></span>, રહેવાસી <span className="inline-block border-b border-black w-64"></span>, 
@@ -264,7 +264,7 @@ export default function AdminDashboard() {
                 ) : (
                   <>
                     <p className="text-sm leading-[2] text-justify">
-                      We, CropStocks, guarantee that the agricultural data collected from you will be used exclusively to build our algorithms and train our LLM (Large Language Model) only. Your personal data will NOT be shared further with any third party or external organization. We are collecting this data strictly for educational project purposes only.
+                      We, CropStocks™, guarantee that the agricultural data collected from you will be used exclusively to build our algorithms and train our LLM (Large Language Model) only. Your personal data will NOT be shared further with any third party or external organization. We are collecting this data strictly for educational project purposes only.
                     </p>
                     <p className="text-sm leading-[2] text-justify font-medium">
                       અમે, ક્રોપસ્ટોક્સ, બાંયધરી આપીએ છીએ કે તમારી પાસેથી એકત્રિત કરવામાં આવેલ કૃષિ ડેટાનો ઉપયોગ ફક્ત અમારા અલ્ગોરિધમ્સ બનાવવા અને અમારા LLM ને તાલીમ આપવા માટે જ કરવામાં આવશે. તમારો વ્યક્તિગત ડેટા કોઈપણ તૃતીય પક્ષ અથવા બહારની સંસ્થા સાથે શેર કરવામાં આવશે નહીં. આ સર્વેક્ષણનો ડેટા ફક્ત શૈક્ષણિક પ્રોજેક્ટ હેતુઓ માટે જ એકત્રિત કરવામાં આવી રહ્યો છે.
@@ -289,7 +289,7 @@ export default function AdminDashboard() {
                       </>
                     ) : (
                       <>
-                        <span>Authorized Signatory (CropStocks)</span>
+                        <span>Authorized Signatory (CropStocks™)</span>
                         <span>અધિકૃત સહી (ક્રોપસ્ટોક્સ)</span>
                       </>
                     )}
