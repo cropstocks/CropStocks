@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Leaf, ArrowRight, Play, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 import heroImg from '../assets/hero.png';
 
 export default function LandingPage() {
   const { t } = useTranslation();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <div className="font-sans text-gray-800 bg-white">
@@ -17,7 +26,7 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
         
         {/* Transparent Header */}
-        <header className="relative z-10 flex items-center justify-between px-6 lg:px-12 py-6 text-white border-b border-white/20">
+        <header className={`fixed top-0 w-full z-50 transition-all duration-300 flex items-center justify-between px-6 lg:px-12 py-6 text-white ${isScrolled ? 'bg-black/60 backdrop-blur-md border-b border-white/10 shadow-lg py-4' : 'bg-transparent border-b border-white/20'}`}>
           <div className="flex items-center gap-2">
             <Leaf className="text-yellow-400 w-8 h-8" />
             <span className="font-bold text-2xl tracking-tight">CropStocks™</span>
