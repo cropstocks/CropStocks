@@ -98,13 +98,13 @@ export default function Layout({ children }) {
 
       {/* Navbar */}
       {location.pathname !== '/' && (
-        <header className="bg-[#111] shadow-lg sticky top-0 z-[100] border-b border-white/10 text-white">
+        <header className="bg-black/60 backdrop-blur-md shadow-lg sticky top-0 z-[100] border-b border-white/10 text-white">
           <div className="container mx-auto px-6 py-3 flex items-center justify-between">
             
             <div className="flex items-center gap-6">
               <Link to="/" className="flex items-center gap-2">
                 <img src="/homepage-logo.png" alt="CropStocks™" className="h-10 w-auto object-contain" onError={(e) => { e.target.style.display = 'none' }} />
-                <span className="font-bold text-xl text-white hidden md:block">CropStocks™</span>
+                <span className="font-bold text-xl text-white hidden md:block tracking-tight">CropStocks™</span>
               </Link>
             </div>
 

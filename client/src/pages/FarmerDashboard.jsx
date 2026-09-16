@@ -137,7 +137,7 @@ const FarmerDashboard = () => {
               <Leaf size={24} />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900 tracking-tight leading-none">CropStocks</h1>
+              <h1 className="text-xl font-bold text-gray-900 tracking-tight leading-none">CropStocks™</h1>
               <span className="text-xs text-gray-500 font-medium">Farmer Portal</span>
             </div>
           </div>
@@ -224,7 +224,7 @@ const FarmerDashboard = () => {
       <div className="flex-1 flex flex-col min-w-0 bg-[#fef8f3]">
         
         {/* Topbar */}
-        <header className="h-20 px-4 md:px-8 flex items-center justify-between border-b border-gray-200 shrink-0">
+        <header className="h-20 px-4 md:px-8 flex items-center justify-between border-b border-gray-200 bg-[#fef8f3]/80 backdrop-blur-md sticky top-0 z-50 shrink-0">
           <div className="flex-1 max-w-xl relative group">
             <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-gray-900 transition-colors" />
             <input 
