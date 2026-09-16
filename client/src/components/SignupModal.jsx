@@ -76,7 +76,7 @@ export default function SignupModal({ isOpen, onClose, defaultRole = 'farmer' })
         
         {/* Left Side: Branding */}
         <div style={{ flex: 1, background: 'var(--gradient-green)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'white', padding: '3rem', textAlign: 'center' }}>
-          <img src="/logo.png" alt="Logo" style={{ height: '80px', width: '80px', marginBottom: '1.5rem', objectFit: 'cover', borderRadius: '50%', backgroundColor: 'white', padding: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }} onError={(e) => { e.target.style.display = 'none' }} />
+          <img src="/logo.png" alt="Logo" style={{ height: '80px', marginBottom: '1.5rem', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
           <h2 style={{ fontSize: '2rem', marginBottom: '1rem', textShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>{t('create_new_user')}</h2>
           <p style={{ opacity: 0.9, lineHeight: 1.5 }}>
             Join CropStocks™ today to {role === 'farmer' ? 'tokenize your farm and raise capital directly.' : 'invest in high-yield agricultural produce.'}
