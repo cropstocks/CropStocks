@@ -28,7 +28,12 @@ export default function LandingPage() {
         {/* Transparent Header */}
         <header className={`fixed top-0 w-full z-50 transition-all duration-300 flex items-center justify-between px-6 lg:px-12 text-white ${isScrolled ? 'bg-black/60 backdrop-blur-md border-b border-white/10 shadow-lg py-4' : 'bg-transparent border-b border-white/20 py-6'}`}>
           <div className="flex items-center gap-2">
-            <Leaf className="text-yellow-400 w-8 h-8" />
+            <img 
+              src="/logo.png" 
+              alt="CropStocks Logo" 
+              className="w-12 h-12 object-contain drop-shadow-md"
+              style={{ filter: 'sepia(1) saturate(3) hue-rotate(-10deg)' }}
+            />
             <span className="font-bold text-2xl tracking-tight">CropStocks™</span>
           </div>
           
