@@ -55,7 +55,7 @@ export default function Layout({ children }) {
     }
     
     try {
-      const res = await api.post('/auth/login', { email: emailInput, password: passwordInput });
+      const res = await api.post('/auth/login', { email: emailInput, password: passwordInput, role: loginRole });
       login(res.user, res.token);
       setIsLoginOpen(false);
       setEmailInput('');
