@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Leaf, ArrowRight, Play, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 import heroImg from '../assets/hero.png';
@@ -13,6 +13,33 @@ export default function LandingPage() {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            videoRef.current?.play().catch(e => console.log("Autoplay prevented:", e));
+          } else {
+            videoRef.current?.pause();
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    if (videoRef.current) {
+      observer.observe(videoRef.current);
+    }
+
+    return () => {
+      if (videoRef.current) {
+        observer.unobserve(videoRef.current);
+      }
+    };
   }, []);
 
   return (
@@ -252,8 +279,8 @@ export default function LandingPage() {
             <div className="w-full lg:w-1/2">
               <div className="rounded-3xl overflow-hidden shadow-2xl relative bg-white flex items-center justify-center">
                 <video 
+                  ref={videoRef}
                   src="/TitleVideo.mp4" 
-                  autoPlay 
                   loop 
                   controls 
                   playsInline 
