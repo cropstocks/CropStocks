@@ -323,12 +323,17 @@ export default function LandingPage() {
 
       {/* Footer / About Us teaser */}
       <section className="py-24 bg-white text-center">
-        <div className="inline-block border border-[#348a21] text-[#348a21] rounded-full px-4 py-1 text-xs font-bold mb-4 uppercase tracking-wider">
-          About Us
+        <div className="container mx-auto px-6 lg:px-12 max-w-4xl">
+          <div className="inline-block border border-[#348a21] text-[#348a21] rounded-full px-4 py-1 text-xs font-bold mb-4 uppercase tracking-wider">
+            About Us
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
+            Empowering Agriculture Through Investment
+          </h2>
+          <p className="text-gray-600 text-lg md:text-xl leading-relaxed font-normal max-w-3xl mx-auto">
+            CropStocks™ is India's premier agricultural marketplace, bridging the gap between hardworking farmers and forward-thinking investors. By replacing predatory middlemen with transparent, fractional crop funding, we empower farmers with upfront seasonal capital while enabling investors to earn returns directly from harvest yields. Backed by satellite NDVI tracking and verified land records, we make farm investing secure, profitable, and impactful.
+          </p>
         </div>
-        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
-          Empowering Agriculture Through Investment
-        </h2>
       </section>
 
     </div>
