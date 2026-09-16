@@ -37,10 +37,11 @@ export default function LandingPage() {
           </div>
           
           <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold">
-            <a href="#" className="hover:text-yellow-400 transition-colors">Home</a>
+            <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-yellow-400 transition-colors">Home</button>
             <a href="/marketplace" className="hover:text-yellow-400 transition-colors">Marketplace</a>
-            <a href="#" className="hover:text-yellow-400 transition-colors">How it Works</a>
-            <a href="#" className="hover:text-yellow-400 transition-colors">Contact Us</a>
+            <a href="#how-it-works" className="hover:text-yellow-400 transition-colors">How it Works</a>
+            <a href="#about" className="hover:text-yellow-400 transition-colors">About Us</a>
+            <a href="mailto:support@cropstocks.in" className="hover:text-yellow-400 transition-colors">Contact Us</a>
           </nav>
           
           <div className="flex items-center gap-4">
@@ -243,7 +244,7 @@ export default function LandingPage() {
       </section>
 
       {/* How We Do Agricultural Work Section */}
-      <section className="py-24 bg-white">
+      <section id="how-it-works" className="py-24 bg-white">
         <div className="container mx-auto px-6 lg:px-12">
           
           <div className="flex flex-col lg:flex-row gap-16 items-center">
@@ -322,7 +323,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer / About Us teaser */}
-      <section className="py-24 bg-white text-center">
+      <section id="about" className="py-24 bg-white text-center">
         <div className="container mx-auto px-6 lg:px-12 max-w-4xl">
           <div className="inline-block border border-[#348a21] text-[#348a21] rounded-full px-4 py-1 text-xs font-bold mb-4 uppercase tracking-wider">
             About Us
