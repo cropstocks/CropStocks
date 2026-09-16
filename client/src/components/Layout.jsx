@@ -85,45 +85,51 @@ export default function Layout({ children }) {
 
       {/* Navbar */}
       {location.pathname !== '/' && (
-        <header className="glass-panel" style={{ position: 'sticky', top: 0, zIndex: 100, borderRadius: 0, borderTop: 0, borderLeft: 0, borderRight: 0 }}>
-          <div className="container flex-between" style={{ height: '70px' }}>
-            <div className="logo-section" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Link to="/">
-                <img src="/logo.png" alt="CropStocks" style={{ height: '55px', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
+        <header className="bg-white shadow-sm sticky top-0 z-[100]">
+          <div className="container mx-auto px-6 py-3 flex items-center justify-between">
+            
+            <div className="flex items-center gap-6">
+              <Link to="/" className="flex items-center gap-2">
+                <img src="/logo.png" alt="CropStocks" className="h-10 w-auto object-contain" onError={(e) => { e.target.style.display = 'none' }} />
+                <span className="font-bold text-xl text-[#2d6a4f] hidden md:block">CropStocks</span>
               </Link>
             </div>
 
-            <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <button onClick={toggleTheme} className="icon-btn" style={{ background: 'transparent', color: 'var(--text-main)', border: 'none', cursor: 'pointer' }}>
+            <div className="flex items-center gap-4">
+              <button onClick={toggleTheme} className="text-gray-500 hover:text-gray-700 transition-colors p-2">
                 {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
               </button>
 
-              <div style={{ position: 'relative' }}>
-                <button onClick={() => setLangOpen(!langOpen)} className="icon-btn" style={{ background: 'transparent', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '5px', border: 'none', cursor: 'pointer' }}>
-                  <Globe size={20} /> {i18n.language.toUpperCase()}
+              <div className="relative">
+                <button onClick={() => setLangOpen(!langOpen)} className="flex items-center gap-1 text-gray-500 hover:text-gray-700 transition-colors p-2 font-medium text-sm">
+                  <Globe size={18} /> {i18n.language.toUpperCase()}
                 </button>
                 {langOpen && (
-                  <div className="glass-panel" style={{ position: 'absolute', top: '100%', right: 0, marginTop: '0.5rem', padding: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '100px', zIndex: 110 }}>
-                    <button onClick={() => changeLanguage('en')} style={{ background: 'transparent', color: 'var(--text-main)', textAlign: 'left', border: 'none', cursor: 'pointer', padding: '5px' }}>English</button>
-                    <button onClick={() => changeLanguage('hi')} style={{ background: 'transparent', color: 'var(--text-main)', textAlign: 'left', border: 'none', cursor: 'pointer', padding: '5px' }}>हिंदी</button>
-                    <button onClick={() => changeLanguage('gu')} style={{ background: 'transparent', color: 'var(--text-main)', textAlign: 'left', border: 'none', cursor: 'pointer', padding: '5px' }}>ગુજરાતી</button>
+                  <div className="absolute top-full right-0 mt-1 bg-white border border-gray-100 shadow-lg rounded-lg p-2 flex flex-col gap-1 min-w-[120px] z-[110]">
+                    <button onClick={() => changeLanguage('en')} className="text-left px-3 py-1.5 hover:bg-green-50 rounded-md text-sm text-gray-700 transition-colors">English</button>
+                    <button onClick={() => changeLanguage('hi')} className="text-left px-3 py-1.5 hover:bg-green-50 rounded-md text-sm text-gray-700 transition-colors">हिंदी</button>
+                    <button onClick={() => changeLanguage('gu')} className="text-left px-3 py-1.5 hover:bg-green-50 rounded-md text-sm text-gray-700 transition-colors">ગુજરાતી</button>
                   </div>
                 )}
               </div>
 
               {user ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                  <span style={{ fontWeight: 'bold', color: 'var(--text-main)' }}>{user.name}</span>
-                  <button onClick={() => { logout(); navigate('/'); }} className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px' }}>
-                    <LogOut size={18} /> Logout
+                <div className="flex items-center gap-4 ml-2 pl-4 border-l border-gray-200">
+                  <div className="flex items-center gap-3">
+                    <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=10b981&color=fff`} alt="Avatar" className="w-8 h-8 rounded-full" />
+                    <span className="font-semibold text-gray-700 text-sm hidden sm:block">{user.name}</span>
+                  </div>
+                  <button onClick={() => { logout(); navigate('/'); }} className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-colors">
+                    <LogOut size={16} /> <span className="hidden sm:inline">Logout</span>
                   </button>
                 </div>
               ) : (
-                <button onClick={() => { setLoginStep(0); setIsLoginOpen(true); }} className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <LogIn size={18} /> {t('login')}
+                <button onClick={() => { setLoginStep(0); setIsLoginOpen(true); }} className="ml-2 bg-[#10b981] hover:bg-[#059669] text-white px-5 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors shadow-sm">
+                  <LogIn size={16} /> {t('login')}
                 </button>
               )}
             </div>
+
           </div>
         </header>
       )}

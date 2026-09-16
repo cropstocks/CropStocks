@@ -70,11 +70,11 @@ export default function InvestorDashboard() {
         <StatsCard title="Active Holdings" value={investments.length} />
       </div>
       
-      <h2 className="text-2xl font-bold mb-4 font-heading">Your Holdings</h2>
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">Your Holdings</h2>
       {investments.length === 0 ? (
-        <div className="glass-card p-12 text-center">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
           <p className="text-gray-500 text-lg mb-4">No investments yet.</p>
-          <Link to="/marketplace" className="btn-primary">Browse Marketplace →</Link>
+          <Link to="/marketplace" className="bg-[#10b981] hover:bg-[#059669] text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition-colors shadow-sm inline-block">Browse Marketplace →</Link>
         </div>
       ) : (
         <div className="space-y-4">
@@ -87,48 +87,40 @@ export default function InvestorDashboard() {
             const isPositive = invPnl >= 0;
 
             return (
-              <Link key={inv.id} to={`/listing/${inv.listingId}`} className="glass-card p-6 block hover:shadow-xl transition-all">
+              <Link key={inv.id} to={`/listing/${inv.listingId}`} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 block hover:shadow-md transition-all">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   {/* Left: Crop Info */}
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-1">
-                      <h3 className="text-lg font-bold">{l.produceName}</h3>
+                      <h3 className="text-lg font-bold text-gray-800">{l.produceName}</h3>
                       <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                         l.status === 'ACTIVE' ? 'bg-green-100 text-green-800' :
                         l.status === 'FUNDING' ? 'bg-blue-100 text-blue-800' :
                         'bg-gray-100 text-gray-600'
                       }`}>{l.status}</span>
                     </div>
-                    <p className="text-sm text-gray-500">{l.region} • {l.farmer?.name || 'Farmer'}</p>
+                    <p className="text-sm text-gray-500">{l.region} • {inv.sharePercent}% Share</p>
                   </div>
 
-                  {/* Your Investment */}
-                  <div className="text-center">
-                    <p className="text-xs text-gray-400 uppercase tracking-wider">Invested</p>
-                    <p className="text-lg font-bold">₹{inv.amount.toLocaleString()}</p>
-                    <p className="text-xs text-gray-500">{inv.sharePercent?.toFixed(1)}% share</p>
+                  {/* Middle: Investment Stats */}
+                  <div className="flex gap-8 items-center flex-1">
+                    <div>
+                      <p className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Invested</p>
+                      <p className="font-semibold text-gray-800">₹{inv.amount.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Current Value</p>
+                      <p className="font-semibold text-gray-800">₹{Math.round(shareValue).toLocaleString()}</p>
+                    </div>
                   </div>
 
-                  {/* Current Value */}
-                  <div className="text-center">
-                    <p className="text-xs text-gray-400 uppercase tracking-wider">Current Value</p>
-                    <p className="text-lg font-bold">₹{Math.round(shareValue).toLocaleString()}</p>
-                    <span className={`text-sm font-bold ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-                      {isPositive ? '▲' : '▼'} {Math.abs(invPnlPercent)}%
-                    </span>
-                  </div>
-
-                  {/* Vegetation Health */}
-                  <div className="text-center">
-                    <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Health</p>
-                    <span className={`inline-block text-xs font-bold px-2 py-1 rounded-full ${
-                      l.vegetationStatus === 'Excellent' ? 'bg-green-100 text-green-800' :
-                      l.vegetationStatus === 'Good' ? 'bg-lime-100 text-lime-800' :
-                      l.vegetationStatus === 'Fair' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-gray-100 text-gray-600'
-                    }`}>
-                      {l.vegetationStatus || 'N/A'}
-                    </span>
+                  {/* Right: P&L */}
+                  <div className="text-right flex-shrink-0">
+                    <p className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Total Return</p>
+                    <div className={`text-lg font-bold flex items-center justify-end gap-1 ${isPositive ? 'text-[#10b981]' : 'text-red-500'}`}>
+                      {isPositive ? '▲' : '▼'} ₹{Math.abs(Math.round(invPnl)).toLocaleString()}
+                      <span className="text-sm">({isPositive ? '+' : ''}{invPnlPercent}%)</span>
+                    </div>
                   </div>
                 </div>
               </Link>

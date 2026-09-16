@@ -12,7 +12,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <div 
         className="relative min-h-screen bg-cover bg-center flex flex-col" 
-        style={{ backgroundImage: `url(https://images.unsplash.com/photo-1627920769841-3b7c845b4c10?q=80&w=2000&auto=format&fit=crop)` }}
+        style={{ backgroundImage: `url(/bg-hero.png)` }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
         

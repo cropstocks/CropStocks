@@ -119,20 +119,16 @@ const FarmerDashboard = () => {
   const activeFlags = safeParseJSON(cycleState.openDiseaseFlags) || [];
 
   return (
-    <div className="bg-[#eefdf0] min-h-screen">
-      {/* Mockup Header - overriding global nav visually for this dashboard */}
-      <div className="bg-white px-6 py-3 flex items-center justify-between shadow-sm sticky top-0 z-50">
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2">
-            <img src="/logo.png" alt="CropStocks" className="h-10 w-auto object-contain" onError={(e) => { e.target.style.display = 'none' }} />
-            <span className="font-bold text-xl text-[#2d6a4f] hidden md:block">CropStocks</span>
-          </div>
-          
+    <div className="min-h-screen">
+      {/* Dashboard Toolbar */}
+      <div className="bg-white px-6 py-4 flex items-center justify-between shadow-sm sticky top-[70px] z-40 border-t border-gray-100 mb-6">
+        <div className="flex items-center gap-4">
+          <h2 className="font-bold text-lg text-gray-800">My Farm Data</h2>
           <div className="relative">
             <select 
               value={selectedListingId} 
               onChange={(e) => setSelectedListingId(e.target.value)}
-              className="appearance-none bg-white border border-gray-200 rounded-md py-2 pl-4 pr-10 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-[#2d6a4f]"
+              className="appearance-none bg-gray-50 border border-gray-200 rounded-md py-1.5 pl-4 pr-10 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-[#10b981]"
             >
               {listings.map(l => <option key={l.id} value={l.id}>{l.produceName} - {l.region}</option>)}
             </select>
@@ -140,31 +136,6 @@ const FarmerDashboard = () => {
               <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
             </div>
           </div>
-        </div>
-
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-gray-600">{t('Welcome')},</span>
-            <span className="font-bold text-gray-800">{user?.name}</span>
-            <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden ml-1 border border-gray-300">
-              <img src="https://ui-avatars.com/api/?name=Demo+User&background=random" alt="Avatar" className="w-full h-full object-cover" />
-            </div>
-            <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-          </div>
-
-          <div className="flex items-center gap-1 cursor-pointer">
-            <Globe size={18} className="text-gray-600" />
-            <span className="text-sm font-medium text-gray-700">EN</span>
-            <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-          </div>
-
-          <div className="text-gray-600 cursor-pointer hover:text-[#2d6a4f]">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
-          </div>
-
-          <button className="flex items-center gap-2 border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-            <LogOut size={16} /> {t('Logout')}
-          </button>
         </div>
       </div>
 
