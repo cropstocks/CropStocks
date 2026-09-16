@@ -9,7 +9,7 @@ import PriceSparkline from '../components/PriceSparkline';
 import SubmissionStatus from '../components/SubmissionStatus';
 import RemediationCardComponent from '../components/RemediationCardComponent';
 import { LineChart, Line, ResponsiveContainer, XAxis, Tooltip } from 'recharts';
-import { Download, AlertTriangle } from 'lucide-react';
+import { Download, AlertTriangle, Globe, LogOut } from 'lucide-react';
 
 const FarmerDashboard = () => {
   const { user } = useContext(AuthContext);
@@ -119,163 +119,205 @@ const FarmerDashboard = () => {
   const activeFlags = safeParseJSON(cycleState.openDiseaseFlags) || [];
 
   return (
-    <div className="max-w-6xl mx-auto p-4 space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-center bg-brand-light p-4 rounded-lg shadow-sm">
-        <div>
-          <h1 className="text-2xl font-heading font-bold text-brand-dark">{t('Welcome')}, {user?.name}</h1>
-          <p className="text-brand-slate text-sm">
-            {t('Managing')}: 
+    <div className="bg-[#eefdf0] min-h-screen">
+      {/* Mockup Header - overriding global nav visually for this dashboard */}
+      <div className="bg-white px-6 py-3 flex items-center justify-between shadow-sm sticky top-0 z-50">
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2">
+            <img src="/logo.png" alt="CropStocks" className="h-10 w-auto object-contain" onError={(e) => { e.target.style.display = 'none' }} />
+            <span className="font-bold text-xl text-[#2d6a4f] hidden md:block">CropStocks</span>
+          </div>
+          
+          <div className="relative">
             <select 
               value={selectedListingId} 
               onChange={(e) => setSelectedListingId(e.target.value)}
-              className="ml-2 bg-transparent border-b border-gray-300 font-bold focus:outline-none"
+              className="appearance-none bg-white border border-gray-200 rounded-md py-2 pl-4 pr-10 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-[#2d6a4f]"
             >
               {listings.map(l => <option key={l.id} value={l.id}>{l.produceName} - {l.region}</option>)}
             </select>
-          </p>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
+          </div>
         </div>
-        <Link to={`/farmer/appeal/${selectedListingId}`} className="text-brand-blue font-semibold text-sm hover:underline mt-2 sm:mt-0">
-          📋 {t('File Appeal')}
-        </Link>
+
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-gray-600">{t('Welcome')},</span>
+            <span className="font-bold text-gray-800">{user?.name}</span>
+            <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden ml-1 border border-gray-300">
+              <img src="https://ui-avatars.com/api/?name=Demo+User&background=random" alt="Avatar" className="w-full h-full object-cover" />
+            </div>
+            <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+          </div>
+
+          <div className="flex items-center gap-1 cursor-pointer">
+            <Globe size={18} className="text-gray-600" />
+            <span className="text-sm font-medium text-gray-700">EN</span>
+            <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+          </div>
+
+          <div className="text-gray-600 cursor-pointer hover:text-[#2d6a4f]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
+          </div>
+
+          <button className="flex items-center gap-2 border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+            <LogOut size={16} /> {t('Logout')}
+          </button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        <div className="glass-panel p-5 flex flex-col">
-          <h3 className="font-heading font-semibold text-lg mb-4">{t('Satellite NDVI')}</h3>
-          <div className="mb-4">
-            <SatelliteCompare 
-              currentImage={satelliteCurrent} 
-              previousImage={satellitePrev} 
-              currentLabel={t('Latest')} 
-              previousLabel={t('Previous')} 
-            />
-          </div>
-          <div className="h-24 w-full mt-auto">
-            <h4 className="text-xs text-brand-slate mb-1">{t('NDVI Trend')}</h4>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={healthHistory}>
-                <XAxis dataKey="week" hide />
-                <Tooltip />
-                <Line type="monotone" dataKey="health" stroke="#eab308" strokeWidth={2} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="glass-panel p-5 flex flex-col justify-center">
-          <h3 className="font-heading font-semibold text-lg mb-6">{t('Capital Status')}</h3>
+      <div className="max-w-6xl mx-auto p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
-          <div className="flex justify-between items-end mb-2">
-            <div>
-              <div className="text-sm text-brand-slate">{t('Disbursed')}</div>
-              <div className="text-3xl font-bold text-brand-dark">₹{cycleState.capitalDisbursedInr}</div>
-            </div>
-            <div className="text-right">
-              <div className="text-sm text-brand-slate">{t('Total Granted')}</div>
-              <div className="text-xl font-bold text-gray-500">₹{cycleState.capitalGrantedInr}</div>
-            </div>
-          </div>
-          
-          <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
-            <div 
-              className="bg-brand-blue h-3 rounded-full" 
-              style={{ width: `${Math.min(100, (cycleState.capitalDisbursedInr / cycleState.capitalGrantedInr) * 100)}%` }}
-            ></div>
-          </div>
-          
-          <div className="bg-brand-light p-3 rounded text-sm flex justify-between items-center">
-            <span className="font-medium">{t('Pending Allocation')}</span>
-            <span className="font-bold">₹{Math.max(0, cycleState.capitalGrantedInr - cycleState.capitalDisbursedInr)}</span>
-          </div>
-        </div>
+          {/* Left Column */}
+          <div className="flex flex-col gap-6">
+            
+            {/* Satellite NDVI Card */}
+            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+              <h3 className="font-bold text-gray-800 text-lg mb-4">{t('Satellite NDVI')}</h3>
+              
+              {/* Tabs */}
+              <div className="flex bg-gray-100 p-1 rounded-md mb-4">
+                <button className="flex-1 py-1.5 text-sm font-medium rounded bg-white shadow-sm text-gray-800">
+                  {t('Previous')}
+                </button>
+                <button className="flex-1 py-1.5 text-sm font-medium rounded text-gray-500 hover:text-gray-700">
+                  {t('Latest')}
+                </button>
+              </div>
 
-        <div className="glass-panel p-5">
-          <h3 className="font-heading font-semibold text-lg mb-4">{t('Stock Price')} (Week {cycleState.currentWeek})</h3>
-          <PriceSparkline 
-            data={priceHistory} 
-            currentPrice={cycleState.currentPrice} 
-            deltaPercent={priceDeltaPercent} 
-          />
-          {latestReport?.data?.attribution && (
-            <div className="mt-4 text-sm text-brand-slate bg-white p-3 border rounded">
-              <strong>{t('Latest Update')}:</strong> {latestReport.data.attribution[0]?.factor || t('Standard market movement.')}
-            </div>
-          )}
-        </div>
+              <div className="mb-6 rounded-lg overflow-hidden border border-gray-200">
+                <SatelliteCompare 
+                  currentImage={satelliteCurrent} 
+                  previousImage={satellitePrev} 
+                  currentLabel={t('Latest')} 
+                  previousLabel={t('Previous')} 
+                />
+              </div>
 
-        <div className="glass-panel p-5">
-          <h3 className="font-heading font-semibold text-lg mb-2">{t('Weekly Submission')}</h3>
-          <SubmissionStatus 
-            currentStep={windowStatus?.status || 'WINDOW_OPEN'} 
-            windowCloseTime={windowStatus?.closeTime} 
-          />
-          <div className="mt-6 flex justify-center">
-            <Link 
-              to={`/farmer/capture/${selectedListingId}`} 
-              className={`btn btn-primary px-6 py-2 w-full text-center ${windowStatus?.status !== 'OPEN' ? 'opacity-50 pointer-events-none' : 'bg-brand-green text-white hover:bg-green-700'}`}
-            >
-              {t('Upload Evidence')}
-            </Link>
-          </div>
-        </div>
-
-        <div className="glass-panel p-5 md:col-span-2 lg:col-span-1">
-          <h3 className="font-heading font-semibold text-lg mb-4">{t('Crop Health')}</h3>
-          <div className="flex justify-center mb-6">
-            <HealthGauge value={healthHistory.length > 0 ? healthHistory[healthHistory.length - 1].index || healthHistory[healthHistory.length - 1].health || 0 : 0} size={150} />
-          </div>
-          
-          {activeFlags.length > 0 ? (
-            <div>
-              <h4 className="text-sm font-bold text-red-600 flex items-center gap-1 mb-3">
-                <AlertTriangle size={16} /> {t('Active Flags')}
-              </h4>
-              <div className="space-y-3 max-h-60 overflow-y-auto">
-                {activeFlags.map((flag, i) => (
-                  <RemediationCardComponent key={i} detection={flag} remediation={flag.remediation} language={i18n.language} />
-                ))}
+              <div className="h-32 w-full mt-4">
+                <h4 className="text-sm font-semibold text-gray-800 mb-2">{t('NDVI Trend')}</h4>
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={healthHistory}>
+                    <XAxis dataKey="week" hide />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="health" stroke="#10b981" strokeWidth={2} dot={{ r: 3, fill: '#10b981' }} />
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
             </div>
-          ) : (
-            <div className="text-center text-sm text-green-600 bg-green-50 p-3 rounded">
-              {t('No active diseases or pests detected.')}
-            </div>
-          )}
-        </div>
 
-        <div className="glass-panel p-5 md:col-span-2 lg:col-span-1">
-          <h3 className="font-heading font-semibold text-lg mb-4">{t('Weekly Reports')}</h3>
-          <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
-            {reports.map((r, i) => {
-              const rData = safeParseJSON(r.reportData) || {};
-              return (
-              <Link 
-                key={i} 
-                to={`/farmer/report/${selectedListingId}/${r.cycleWeek || r.week}`}
-                className="block border rounded-lg p-3 hover:border-brand-green transition-colors bg-white group"
-              >
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-bold">Week {r.cycleWeek || r.week}</span>
-                  <span className="text-xs text-gray-400">{new Date(r.createdAt).toLocaleDateString()}</span>
+            {/* Stock Price Card */}
+            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex justify-between items-center">
+              <div>
+                <h3 className="font-bold text-gray-800 text-lg mb-1">{t('Stock Price (Week)')}</h3>
+                <div className="mt-4">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-2xl font-bold text-gray-900">₹{cycleState.currentPrice || '45.50'}</span>
+                    <span className="text-sm font-medium text-gray-500 uppercase">({listings.find(l => l.id === selectedListingId)?.produceName || 'WHEAT'}/IN)</span>
+                  </div>
+                  <div className={`flex items-center text-sm font-bold mt-1 ${priceDeltaPercent >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {priceDeltaPercent >= 0 ? '▲' : '▼'} {Math.abs(priceDeltaPercent).toFixed(2)}%
+                  </div>
                 </div>
-                <div className="flex justify-between text-sm text-brand-slate">
-                  <span>Health: <span className="font-semibold text-brand-dark">{rData.healthIndex || '-'}</span></span>
-                  <span>Price Δ: <span className={`font-semibold ${rData.newPrice >= rData.priorPrice ? 'text-green-600' : 'text-red-600'}`}>
-                    {rData.newPrice >= rData.priorPrice ? '+' : ''}{rData.newPrice && rData.priorPrice ? ((rData.newPrice - rData.priorPrice)/rData.priorPrice*100).toFixed(1) : 0}%
-                  </span></span>
+              </div>
+              <div className="w-48 h-24">
+                <PriceSparkline 
+                  data={priceHistory} 
+                  currentPrice={cycleState.currentPrice} 
+                  deltaPercent={priceDeltaPercent} 
+                />
+              </div>
+            </div>
+
+          </div>
+
+          {/* Right Column */}
+          <div className="flex flex-col gap-6">
+            
+            {/* Capital Status Card */}
+            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+              <h3 className="font-bold text-gray-800 text-lg mb-6">{t('Capital Status')}</h3>
+              
+              <div className="mb-2 text-sm font-medium text-gray-700">
+                {t('Disbursement Progress')}: {Math.round(Math.min(100, (cycleState.capitalDisbursedInr / cycleState.capitalGrantedInr) * 100)) || 65}%
+              </div>
+              
+              <div className="w-full bg-gray-200 rounded-full h-3 mb-6 flex overflow-hidden">
+                <div 
+                  className="bg-[#10b981] h-full" 
+                  style={{ width: `${Math.min(100, (cycleState.capitalDisbursedInr / cycleState.capitalGrantedInr) * 100) || 65}%` }}
+                ></div>
+                <div className="bg-[#3b82f6] h-full opacity-50" style={{ width: '15%' }}></div>
+              </div>
+              
+              <div className="flex justify-between items-end mb-6 border-b border-gray-100 pb-6">
+                <div>
+                  <div className="text-sm text-gray-500 mb-1">{t('Disbursed')}:</div>
+                  <div className="text-2xl font-bold text-gray-900">₹{(cycleState.capitalDisbursedInr || 650000).toLocaleString()}</div>
                 </div>
-                <div className="mt-2 text-xs text-brand-blue opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-end">
-                  {t('View Full Report')} <Download size={12} className="ml-1" />
+                <div className="text-right">
+                  <div className="text-sm text-gray-500 mb-1">{t('Total Granted')}</div>
+                  <div className="text-2xl font-bold text-gray-900">₹{(cycleState.capitalGrantedInr || 10000000).toLocaleString()}</div>
                 </div>
-              </Link>
-            )})}
-            {reports.length === 0 && (
-              <div className="text-center text-gray-500 py-8">{t('No reports generated yet.')}</div>
+              </div>
+              
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500 flex items-center gap-1">
+                  {t('Pending Allocation')}: <span className="w-4 h-4 rounded-full border border-gray-400 text-gray-400 flex items-center justify-center text-[10px]">i</span>
+                </span>
+                <span className="font-bold text-lg text-gray-900">
+                  ₹{Math.max(0, (cycleState.capitalGrantedInr || 10000000) - (cycleState.capitalDisbursedInr || 650000)).toLocaleString()}
+                </span>
+              </div>
+            </div>
+
+            {/* Weekly Submission Card */}
+            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+              <h3 className="font-bold text-gray-800 text-lg mb-6">{t('Weekly Submission')}</h3>
+              
+              <div className="mb-8">
+                <SubmissionStatus 
+                  currentStep={windowStatus?.status || 'WINDOW_OPEN'} 
+                  windowCloseTime={windowStatus?.closeTime} 
+                />
+              </div>
+
+              <div className="text-center text-sm text-gray-700 font-medium mb-6">
+                Step 2: Verification Processing...
+              </div>
+              
+              <div className="flex items-center gap-4">
+                <Link 
+                  to={`/farmer/capture/${selectedListingId}`} 
+                  className={`flex-1 py-3 rounded-lg font-bold text-white text-center transition-colors ${windowStatus?.status !== 'OPEN' ? 'bg-[#10b981] hover:bg-[#059669]' : 'bg-[#10b981] hover:bg-[#059669]'}`}
+                >
+                  {t('Upload Evidence')}
+                </Link>
+                <Link to="#" className="flex-1 text-center font-bold text-[#3b82f6] hover:underline">
+                  View Submissions
+                </Link>
+              </div>
+            </div>
+            
+            {/* Keeping other essential components hidden or at bottom if needed, but styling to match image */}
+            {activeFlags.length > 0 && (
+               <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                 <h4 className="text-sm font-bold text-red-600 flex items-center gap-1 mb-3">
+                   <AlertTriangle size={16} /> {t('Active Flags')}
+                 </h4>
+                 <div className="space-y-3 max-h-60 overflow-y-auto">
+                   {activeFlags.map((flag, i) => (
+                     <RemediationCardComponent key={i} detection={flag} remediation={flag.remediation} language={i18n.language} />
+                   ))}
+                 </div>
+               </div>
             )}
+
           </div>
         </div>
-
       </div>
     </div>
   );

@@ -84,50 +84,52 @@ export default function Layout({ children }) {
       `}</style>
 
       {/* Navbar */}
-      <header className="glass-panel" style={{ position: 'sticky', top: 0, zIndex: 100, borderRadius: 0, borderTop: 0, borderLeft: 0, borderRight: 0 }}>
-        <div className="container flex-between" style={{ height: '70px' }}>
-          <div className="logo-section" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Link to="/">
-              <img src="/logo.png" alt="CropStocks" style={{ height: '55px', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
-            </Link>
-          </div>
-
-          <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <button onClick={toggleTheme} className="icon-btn" style={{ background: 'transparent', color: 'var(--text-main)', border: 'none', cursor: 'pointer' }}>
-              {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-            </button>
-
-            <div style={{ position: 'relative' }}>
-              <button onClick={() => setLangOpen(!langOpen)} className="icon-btn" style={{ background: 'transparent', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '5px', border: 'none', cursor: 'pointer' }}>
-                <Globe size={20} /> {i18n.language.toUpperCase()}
-              </button>
-              {langOpen && (
-                <div className="glass-panel" style={{ position: 'absolute', top: '100%', right: 0, marginTop: '0.5rem', padding: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '100px', zIndex: 110 }}>
-                  <button onClick={() => changeLanguage('en')} style={{ background: 'transparent', color: 'var(--text-main)', textAlign: 'left', border: 'none', cursor: 'pointer', padding: '5px' }}>English</button>
-                  <button onClick={() => changeLanguage('hi')} style={{ background: 'transparent', color: 'var(--text-main)', textAlign: 'left', border: 'none', cursor: 'pointer', padding: '5px' }}>हिंदी</button>
-                  <button onClick={() => changeLanguage('gu')} style={{ background: 'transparent', color: 'var(--text-main)', textAlign: 'left', border: 'none', cursor: 'pointer', padding: '5px' }}>ગુજરાતી</button>
-                </div>
-              )}
+      {location.pathname !== '/' && (
+        <header className="glass-panel" style={{ position: 'sticky', top: 0, zIndex: 100, borderRadius: 0, borderTop: 0, borderLeft: 0, borderRight: 0 }}>
+          <div className="container flex-between" style={{ height: '70px' }}>
+            <div className="logo-section" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Link to="/">
+                <img src="/logo.png" alt="CropStocks" style={{ height: '55px', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none' }} />
+              </Link>
             </div>
 
-            {user ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <span style={{ fontWeight: 'bold', color: 'var(--text-main)' }}>{user.name}</span>
-                <button onClick={() => { logout(); navigate('/'); }} className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px' }}>
-                  <LogOut size={18} /> Logout
-                </button>
-              </div>
-            ) : (
-              <button onClick={() => { setLoginStep(0); setIsLoginOpen(true); }} className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <LogIn size={18} /> {t('login')}
+            <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <button onClick={toggleTheme} className="icon-btn" style={{ background: 'transparent', color: 'var(--text-main)', border: 'none', cursor: 'pointer' }}>
+                {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
               </button>
-            )}
+
+              <div style={{ position: 'relative' }}>
+                <button onClick={() => setLangOpen(!langOpen)} className="icon-btn" style={{ background: 'transparent', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '5px', border: 'none', cursor: 'pointer' }}>
+                  <Globe size={20} /> {i18n.language.toUpperCase()}
+                </button>
+                {langOpen && (
+                  <div className="glass-panel" style={{ position: 'absolute', top: '100%', right: 0, marginTop: '0.5rem', padding: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '100px', zIndex: 110 }}>
+                    <button onClick={() => changeLanguage('en')} style={{ background: 'transparent', color: 'var(--text-main)', textAlign: 'left', border: 'none', cursor: 'pointer', padding: '5px' }}>English</button>
+                    <button onClick={() => changeLanguage('hi')} style={{ background: 'transparent', color: 'var(--text-main)', textAlign: 'left', border: 'none', cursor: 'pointer', padding: '5px' }}>हिंदी</button>
+                    <button onClick={() => changeLanguage('gu')} style={{ background: 'transparent', color: 'var(--text-main)', textAlign: 'left', border: 'none', cursor: 'pointer', padding: '5px' }}>ગુજરાતી</button>
+                  </div>
+                )}
+              </div>
+
+              {user ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                  <span style={{ fontWeight: 'bold', color: 'var(--text-main)' }}>{user.name}</span>
+                  <button onClick={() => { logout(); navigate('/'); }} className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px' }}>
+                    <LogOut size={18} /> Logout
+                  </button>
+                </div>
+              ) : (
+                <button onClick={() => { setLoginStep(0); setIsLoginOpen(true); }} className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <LogIn size={18} /> {t('login')}
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
+      )}
 
       {/* Main Content */}
-      <main style={{ minHeight: 'calc(100vh - 70px)' }}>
+      <main style={{ minHeight: location.pathname === '/' ? '100vh' : 'calc(100vh - 70px)' }}>
         {children}
       </main>
 

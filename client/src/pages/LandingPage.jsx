@@ -1,116 +1,318 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Leaf, ShieldCheck, TrendingUp, Users } from 'lucide-react';
+import { Leaf, ArrowRight, Play, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 import heroImg from '../assets/hero.png';
-
 
 export default function LandingPage() {
   const { t } = useTranslation();
 
   return (
-    <div className="animate-fade-in">
+    <div className="font-sans text-gray-800 bg-white">
+      
       {/* Hero Section */}
-      <section style={{
-        minHeight: '80vh',
-        display: 'flex',
-        alignItems: 'center',
-        background: 'var(--bg-main)',
-        padding: '2rem 0'
-      }}>
-        <div className="container" style={{ display: 'grid', gridTemplateColumns: 'revert', gap: '4rem', '@media (minWidth: 768px)': { gridTemplateColumns: 'repeat(2, 1fr)' }, display: 'flex', flexWrap: 'wrap' }}>
+      <div 
+        className="relative min-h-screen bg-cover bg-center flex flex-col" 
+        style={{ backgroundImage: `url(https://images.unsplash.com/photo-1627920769841-3b7c845b4c10?q=80&w=2000&auto=format&fit=crop)` }}
+      >
+        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        
+        {/* Transparent Header */}
+        <header className="relative z-10 flex items-center justify-between px-6 lg:px-12 py-6 text-white border-b border-white/20">
+          <div className="flex items-center gap-2">
+            <Leaf className="text-yellow-400 w-8 h-8" />
+            <span className="font-bold text-2xl tracking-tight">Ecoland</span>
+          </div>
+          
+          <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold">
+            <a href="#" className="hover:text-yellow-400 transition-colors">Home</a>
+            <a href="#" className="hover:text-yellow-400 transition-colors flex items-center gap-1">Essential Pages <span className="text-xs">▼</span></a>
+            <a href="#" className="hover:text-yellow-400 transition-colors">Blogs</a>
+            <a href="#" className="hover:text-yellow-400 transition-colors">Contact Us</a>
+          </nav>
+          
+          <button onClick={() => window.dispatchEvent(new CustomEvent('open-login', { detail: { role: 'investor' } }))} className="bg-[#348a21] hover:bg-[#286f18] text-white px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 transition-all shadow-lg hover:shadow-xl">
+            Get Started Now <ArrowRight size={16} className="bg-[#fbbf24] text-white rounded-full p-0.5" />
+          </button>
+        </header>
 
-          {/* Left Side: Farmer Image Card */}
-          <div style={{ flex: '1 1 400px', display: 'flex', justifyContent: 'center' }}>
-            <div className="glass-panel" style={{ position: 'relative', width: '100%', maxWidth: '500px', overflow: 'hidden', padding: '1rem', borderRadius: 'var(--radius-xl)' }}>
-              <div style={{
-                position: 'relative',
-                width: '100%',
-                height: '450px',
-                borderRadius: 'var(--radius-lg)',
-                overflow: 'hidden'
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  inset: 0,
-                  backgroundImage: `url(${heroImg})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  filter: 'brightness(0.85)'
-                }} />
-                {/* Overlay text on image */}
-                <div style={{ position: 'absolute', bottom: '1rem', left: '1rem', right: '1rem', background: 'var(--glass-bg)', padding: '1rem', borderRadius: 'var(--radius-md)', backdropFilter: 'blur(8px)' }}>
-                  <h3 style={{ color: 'var(--text-main)', marginBottom: '0.2rem' }}>Verified Farms</h3>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Direct investments in agricultural growth.</p>
+        {/* Hero Content */}
+        <div className="relative z-10 container mx-auto px-6 lg:px-12 flex-1 flex flex-col justify-center pb-20">
+          <div className="inline-block border border-yellow-400 text-yellow-400 rounded-full px-5 py-1.5 text-xs font-semibold mb-6 uppercase tracking-wider w-max">
+            We are Producing Natural Products
+          </div>
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6 max-w-3xl">
+            Organic Farming<br />and Agriculture
+          </h1>
+          <p className="text-gray-200 text-lg max-w-2xl mb-10 leading-relaxed font-light">
+            A successful middle-sized farm may generate gross revenue in the range of $500,000 to $1 million annually, depending on the scale and type of operations.
+          </p>
+          <div className="flex flex-wrap gap-4">
+            <button className="bg-[#348a21] hover:bg-[#286f18] text-white px-8 py-3.5 rounded-full font-bold flex items-center gap-2 transition-all shadow-lg">
+              Discover More <ArrowRight size={18} className="bg-[#fbbf24] text-white rounded-full p-0.5" />
+            </button>
+            <button className="border border-white hover:border-yellow-400 hover:text-yellow-400 text-white px-8 py-3.5 rounded-full font-bold flex items-center gap-2 transition-all">
+              See All Service <ArrowRight size={18} className="bg-[#fbbf24] text-white rounded-full p-0.5" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Yellow Banner Section */}
+      <div className="bg-[#fbbf24] py-8 relative overflow-hidden shadow-inner">
+        <div className="container mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-8">
+          
+          <div className="flex items-center gap-4">
+            <div className="flex -space-x-4">
+              <img src="https://i.pravatar.cc/100?img=1" className="w-12 h-12 rounded-full border-2 border-white object-cover shadow-sm" alt="Client" />
+              <img src="https://i.pravatar.cc/100?img=2" className="w-12 h-12 rounded-full border-2 border-white object-cover shadow-sm" alt="Client" />
+              <img src="https://i.pravatar.cc/100?img=3" className="w-12 h-12 rounded-full border-2 border-white object-cover shadow-sm" alt="Client" />
+            </div>
+            <div>
+              <div className="font-bold text-xl text-gray-900 leading-tight">100K+ Client With</div>
+              <div className="font-bold text-xl text-gray-900 leading-tight">Positive Reviews</div>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center relative">
+            <div className="w-24 h-24 rounded-full border border-dashed border-gray-900 flex items-center justify-center animate-spin-slow" style={{ animationDuration: '10s' }}>
+              <div className="text-[10px] uppercase font-bold tracking-widest text-center w-full h-full relative">
+                {/* Simplified circular text effect */}
+              </div>
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="bg-[#348a21] text-white w-12 h-12 rounded-full flex items-center justify-center">
+                <ArrowRight className="-rotate-45" size={24} />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <div className="font-bold text-xl text-gray-900 leading-tight">Healthy Life With</div>
+              <div className="font-bold text-xl text-gray-900 leading-tight">Fresh Products</div>
+            </div>
+            <div className="relative w-24 h-16 rounded-lg overflow-hidden shadow-md group cursor-pointer">
+              <img src="https://images.unsplash.com/photo-1595858178877-3e33f9d50cc1?q=80&w=300&auto=format&fit=crop" className="w-full h-full object-cover" alt="Video thumbnail" />
+              <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center group-hover:bg-opacity-40 transition-all">
+                <Play className="text-[#fbbf24] fill-[#fbbf24]" size={24} />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Services Section */}
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-6 lg:px-12">
+          
+          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+            <div>
+              <div className="inline-block border border-[#348a21] text-[#348a21] rounded-full px-4 py-1 text-xs font-bold mb-4 uppercase tracking-wider">
+                Our Services
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight max-w-xl">
+                We Offers Eco & Agriculture Services
+              </h2>
+            </div>
+            <div className="flex gap-3">
+              <button className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:border-[#348a21] hover:text-[#348a21] transition-colors">
+                <ChevronLeft size={20} />
+              </button>
+              <button className="w-10 h-10 rounded-full bg-[#348a21] flex items-center justify-center text-white shadow-md hover:bg-[#286f18] transition-colors">
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            {/* Card 1 */}
+            <div className="bg-[#348a21] rounded-2xl p-4 text-white group cursor-pointer transition-transform hover:-translate-y-2 duration-300 shadow-xl">
+              <div className="rounded-xl overflow-hidden mb-6 h-48">
+                <img src="https://images.unsplash.com/photo-1592982537447-6f2c395e5927?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Tractor" />
+              </div>
+              <div className="px-2 pb-4">
+                <div className="inline-block border border-white/30 rounded-full px-3 py-1 text-[10px] font-bold mb-3 uppercase tracking-wider">
+                  Agricultural Consulting
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Agriculture Products</h3>
+                <p className="text-white/80 text-sm leading-relaxed mb-4">
+                  Commitment to organic practices, providing fresh, chemical-free produce straight from the farm.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 2 */}
+            <div className="bg-[#348a21] rounded-2xl p-4 text-white group cursor-pointer transition-transform hover:-translate-y-2 duration-300 shadow-xl">
+              <div className="rounded-xl overflow-hidden mb-6 h-48">
+                <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Sprouts" />
+              </div>
+              <div className="px-2 pb-4">
+                <div className="inline-block border border-white/30 rounded-full px-3 py-1 text-[10px] font-bold mb-3 uppercase tracking-wider">
+                  Soil Enhancement
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Soil Fertilization</h3>
+                <p className="text-white/80 text-sm leading-relaxed mb-4">
+                  Comprehensive soil testing and enhancement strategies for optimal crop growth.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div className="bg-[#348a21] rounded-2xl p-4 text-white group cursor-pointer transition-transform hover:-translate-y-2 duration-300 shadow-xl">
+              <div className="rounded-xl overflow-hidden mb-6 h-48">
+                <img src="https://images.unsplash.com/photo-1549429141-86e5893d98f7?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Cows" />
+              </div>
+              <div className="px-2 pb-4">
+                <div className="inline-block border border-white/30 rounded-full px-3 py-1 text-[10px] font-bold mb-3 uppercase tracking-wider">
+                  Animal Husbandry
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Dairy Production</h3>
+                <p className="text-white/80 text-sm leading-relaxed mb-4">
+                  Direct delivery of fresh, farm-grown produce straight to your doorstep for convenience.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Recently Completed Section */}
+      <section className="py-20 bg-[#fef8f3]">
+        <div className="container mx-auto px-6 lg:px-12">
+          
+          <div className="flex flex-col md:flex-row justify-between items-start mb-12 gap-8">
+            <div className="max-w-xl">
+              <div className="inline-block border border-[#348a21] text-[#348a21] rounded-full px-4 py-1 text-xs font-bold mb-4 uppercase tracking-wider">
+                Recently Completed
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+                Recently Completed Project
+              </h2>
+            </div>
+            <p className="text-gray-500 max-w-md text-sm leading-relaxed">
+              Affordable rental of well-maintained farming equipment to support your agricultural needs. Innovative irrigation solutions to ensure efficient water use and healthy crops.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { title: 'Agriculture Farming', img: 'https://images.unsplash.com/photo-1628102491629-778571d893a3?q=80&w=400&auto=format&fit=crop' },
+              { title: 'Fertilizers & Pesticides', img: 'https://images.unsplash.com/photo-1592982537447-6f2c395e5927?q=80&w=400&auto=format&fit=crop' },
+              { title: 'Eco and Agriculture', img: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=400&auto=format&fit=crop' },
+              { title: 'Harvest Innovations', img: 'https://images.unsplash.com/photo-1605000797499-95a51c5269ae?q=80&w=400&auto=format&fit=crop' }
+            ].map((proj, idx) => (
+              <div key={idx} className="group relative rounded-2xl overflow-hidden h-[350px] shadow-lg cursor-pointer">
+                <img src={proj.img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={proj.title} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6">
+                  <h3 className="text-white font-bold text-xl">{proj.title}</h3>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
-
-          {/* Right Side: Info & CTA */}
-          <div style={{ flex: '1 1 500px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2rem' }}>
-            <div>
-              <h1 style={{ fontSize: '3.5rem', marginBottom: '1.5rem', color: 'var(--color-primary-dark)', lineHeight: 1.1 }}>
-                {t('hero_title')}
-              </h1>
-              <p style={{ fontSize: '1.25rem', color: 'var(--text-main)', opacity: 0.9, lineHeight: 1.6 }}>
-                {t('hero_subtitle')}
-              </p>
-            </div>
-            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-              <button onClick={() => window.dispatchEvent(new CustomEvent('open-login', { detail: { role: 'investor' } }))} className="btn btn-primary" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>
-                {t('start_investing')}
-              </button>
-              <button onClick={() => window.dispatchEvent(new CustomEvent('open-login', { detail: { role: 'farmer' } }))} className="btn btn-outline" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>
-                {t('raise_capital')}
-              </button>
-            </div>
+          
+          <div className="mt-8 flex gap-3">
+             <button className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center text-gray-600 hover:border-[#348a21] hover:text-[#348a21] transition-colors">
+               <ChevronLeft size={16} />
+             </button>
+             <button className="w-8 h-8 rounded-full bg-[#348a21] flex items-center justify-center text-white shadow-md hover:bg-[#286f18] transition-colors">
+               <ChevronRight size={16} />
+             </button>
           </div>
-
         </div>
       </section>
 
-      {/* Features Section */}
-      <section style={{ padding: '6rem 0', background: 'var(--bg-main)' }}>
-        <div className="container">
-          <h2 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '4rem', color: 'var(--color-primary-dark)' }}>
-            {t('features')}
+      {/* How We Do Agricultural Work Section */}
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-6 lg:px-12">
+          
+          <div className="flex flex-col lg:flex-row gap-16 items-center">
+            
+            <div className="w-full lg:w-1/2">
+              <div className="rounded-3xl overflow-hidden shadow-2xl relative">
+                <img src="https://images.unsplash.com/photo-1595858178877-3e33f9d50cc1?q=80&w=1000&auto=format&fit=crop" alt="Working" className="w-full h-[600px] object-cover" />
+              </div>
+            </div>
+
+            <div className="w-full lg:w-1/2">
+              <div className="inline-block border border-[#348a21] text-[#348a21] rounded-full px-4 py-1 text-xs font-bold mb-4 uppercase tracking-wider">
+                Our Working Step
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
+                How We Do Agricultural Work
+              </h2>
+              <p className="text-gray-500 mb-12 text-sm leading-relaxed max-w-md">
+                The modern consumer demands quality organic products which is why our selection of farm-grown herbs are top quality, always fresh, and 100% organic certified.
+              </p>
+
+              <div className="space-y-8">
+                {[
+                  { num: '01', title: 'Schedule Your Experience', desc: 'Enrich soil with nutrients for healthy crop growth.' },
+                  { num: '02', title: 'Get Professional Advice', desc: 'Carefully sow seeds to ensure optimal growth.' },
+                  { num: '03', title: 'Meet Our Expert Farmer', desc: 'Monitor and care for crops with sustainable practices.' },
+                  { num: '04', title: 'Now Get a Best Products', desc: 'Harvest at peak freshness and deliver straight to you.' }
+                ].map((step, idx) => (
+                  <div key={idx} className="flex gap-6 items-start">
+                    <div className="text-4xl font-light text-gray-300 font-serif leading-none mt-1">
+                      {step.num}
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h4>
+                      <p className="text-gray-500 text-sm">{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section className="py-24 bg-[#112a14] text-white">
+        <div className="container mx-auto px-6 lg:px-12 text-center">
+          
+          <div className="inline-block border border-yellow-400 text-yellow-400 rounded-full px-4 py-1 text-xs font-bold mb-4 uppercase tracking-wider">
+            Our Farmers
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold leading-tight mb-16 max-w-2xl mx-auto">
+            We Have Lot's Of Experience Team Members
           </h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
-            <div className="glass-panel" style={{ padding: '2rem', textAlign: 'center' }}>
-              <div style={{ background: 'rgba(16, 185, 129, 0.1)', width: '60px', height: '60px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: 'var(--color-primary)' }}>
-                <Leaf size={30} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { name: 'James Albert', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop' },
+              { name: 'David M. Hawer', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop' },
+              { name: 'Dennis R.', img: 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=400&auto=format&fit=crop' },
+              { name: 'Floyd Miles', img: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=400&auto=format&fit=crop' }
+            ].map((member, idx) => (
+              <div key={idx} className="group relative rounded-2xl overflow-hidden bg-gray-800 p-2 border border-white/10">
+                <div className="rounded-xl overflow-hidden h-[300px]">
+                  <img src={member.img} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={member.name} />
+                </div>
+                <div className="pt-4 pb-2">
+                  <h3 className="font-bold text-lg text-white">{member.name}</h3>
+                </div>
               </div>
-              <h3 style={{ marginBottom: '1rem' }}>Satellite Monitoring</h3>
-              <p style={{ color: 'var(--text-muted)', lineHeight: 1.6 }}>Track crop health in real-time with NDVI satellite imagery ensuring your investments are growing.</p>
-            </div>
-
-            <div className="glass-panel" style={{ padding: '2rem', textAlign: 'center' }}>
-              <div style={{ background: 'rgba(16, 185, 129, 0.1)', width: '60px', height: '60px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: 'var(--color-primary)' }}>
-                <ShieldCheck size={30} />
-              </div>
-              <h3 style={{ marginBottom: '1rem' }}>Verified Farmers</h3>
-              <p style={{ color: 'var(--text-muted)', lineHeight: 1.6 }}>Every listing is vetted and tied directly to registered land records and farmer identities.</p>
-            </div>
-
-            <div className="glass-panel" style={{ padding: '2rem', textAlign: 'center' }}>
-              <div style={{ background: 'rgba(16, 185, 129, 0.1)', width: '60px', height: '60px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: 'var(--color-primary)' }}>
-                <TrendingUp size={30} />
-              </div>
-              <h3 style={{ marginBottom: '1rem' }}>Shared Growth</h3>
-              <p style={{ color: 'var(--text-muted)', lineHeight: 1.6 }}>When farmers succeed, you succeed. Harvest profits are distributed securely.</p>
-            </div>
-
-            <div className="glass-panel" style={{ padding: '2rem', textAlign: 'center' }}>
-              <div style={{ background: 'rgba(16, 185, 129, 0.1)', width: '60px', height: '60px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: 'var(--color-primary)' }}>
-                <Users size={30} />
-              </div>
-              <h3 style={{ marginBottom: '1rem' }}>Community Driven</h3>
-              <p style={{ color: 'var(--text-muted)', lineHeight: 1.6 }}>Join thousands of investors supporting local agriculture and global food security.</p>
-            </div>
+            ))}
           </div>
+
         </div>
       </section>
+
+      {/* Footer / About Us teaser */}
+      <section className="py-24 bg-white text-center">
+        <div className="inline-block border border-[#348a21] text-[#348a21] rounded-full px-4 py-1 text-xs font-bold mb-4 uppercase tracking-wider">
+          About Us
+        </div>
+        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
+          We're Best Agriculture
+        </h2>
+      </section>
+
     </div>
   );
 }
