@@ -148,6 +148,22 @@ export default function Layout({ children }) {
             <h2 style={{ marginBottom: '2rem', fontSize: '2rem', color: 'var(--text-main)' }}>{loginRole === 'investor' ? 'Investor Login' : 'Farmer Login'}</h2>
 
             <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              <div style={{ display: 'flex', background: 'var(--bg-main)', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+                <button 
+                  type="button" 
+                  onClick={() => setLoginRole('investor')} 
+                  style={{ flex: 1, padding: '0.75rem', border: 'none', background: loginRole === 'investor' ? 'var(--color-primary)' : 'transparent', color: loginRole === 'investor' ? 'white' : 'var(--text-main)', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s ease' }}
+                >
+                  Investor
+                </button>
+                <button 
+                  type="button" 
+                  onClick={() => setLoginRole('farmer')} 
+                  style={{ flex: 1, padding: '0.75rem', border: 'none', background: loginRole === 'farmer' ? 'var(--color-primary)' : 'transparent', color: loginRole === 'farmer' ? 'white' : 'var(--text-main)', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s ease' }}
+                >
+                  Farmer
+                </button>
+              </div>
               <div>
                 <input required type="email" value={emailInput} onChange={e => setEmailInput(e.target.value)} placeholder={t('email')} className="input-field" style={{ width: '100%', padding: '1rem', border: '1px solid var(--border-color)', borderRadius: '8px' }} />
               </div>
@@ -160,9 +176,6 @@ export default function Layout({ children }) {
                   {t('sign_in')}
                 </button>
               </div>
-              <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'underline' }} onClick={() => setLoginRole(loginRole === 'investor' ? 'farmer' : 'investor')}>
-                {loginRole === 'investor' ? 'Or login as Farmer' : 'Or login as Investor'}
-              </p>
               
               <div style={{ display: 'flex', alignItems: 'center', textTransform: 'uppercase', color: 'var(--text-muted)', fontSize: '0.85rem', margin: '0.5rem 0' }}>
                 <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
