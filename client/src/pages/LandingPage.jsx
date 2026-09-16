@@ -251,7 +251,14 @@ export default function LandingPage() {
             
             <div className="w-full lg:w-1/2">
               <div className="rounded-3xl overflow-hidden shadow-2xl relative">
-                <img src="https://images.unsplash.com/photo-1595858178877-3e33f9d50cc1?q=80&w=1000&auto=format&fit=crop" alt="Working" className="w-full h-[600px] object-cover" />
+                <video 
+                  src="/Title Video.mov" 
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline 
+                  className="w-full h-[600px] object-cover"
+                />
               </div>
             </div>
 
