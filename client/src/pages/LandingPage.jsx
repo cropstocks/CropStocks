@@ -252,7 +252,7 @@ export default function LandingPage() {
             <div className="w-full lg:w-1/2">
               <div className="rounded-3xl overflow-hidden shadow-2xl relative">
                 <video 
-                  src="/Title Video.mov" 
+                  src="/TitleVideo.mov" 
                   autoPlay 
                   loop 
                   muted 
