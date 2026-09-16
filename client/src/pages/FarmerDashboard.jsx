@@ -119,7 +119,7 @@ const FarmerDashboard = () => {
   const activeFlags = safeParseJSON(cycleState.openDiseaseFlags) || [];
 
   return (
-    <div className="min-h-screen">
+    <div className="font-sans text-gray-800 bg-[#fef8f3] min-h-screen pb-12">
       {/* Dashboard Toolbar */}
       <div className="bg-white px-6 py-4 flex items-center justify-between shadow-sm sticky top-[70px] z-40 border-t border-gray-100 mb-6">
         <div className="flex items-center gap-4">
@@ -168,16 +168,33 @@ const FarmerDashboard = () => {
                 />
               </div>
 
-              <div className="h-32 w-full mt-4">
-                <h4 className="text-sm font-semibold text-gray-800 mb-2">{t('NDVI Trend')}</h4>
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={healthHistory}>
-                    <XAxis dataKey="week" hide />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="health" stroke="#348a21" strokeWidth={2} dot={{ r: 3, fill: '#348a21' }} />
-                  </LineChart>
-                </ResponsiveContainer>
+              <div className="flex flex-col md:flex-row gap-6 mt-6">
+                <div className="flex-1">
+                  <h4 className="text-sm font-semibold text-gray-800 mb-4 text-center">{t('Crop Health')}</h4>
+                  <div className="flex justify-center">
+                    <HealthGauge value={latestReportData?.healthScore || cycleState?.currentHealth || 0} size={160} />
+                  </div>
+                </div>
+                <div className="flex-1 h-32">
+                  <h4 className="text-sm font-semibold text-gray-800 mb-2">{t('NDVI Trend')}</h4>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={healthHistory}>
+                      <XAxis dataKey="week" hide />
+                      <Tooltip />
+                      <Line type="monotone" dataKey="health" stroke="#348a21" strokeWidth={2} dot={{ r: 3, fill: '#348a21' }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
+
+              {latestReportData?.summary && (
+                <div className="mt-8 pt-6 border-t border-gray-100">
+                  <h4 className="text-sm font-bold text-gray-800 mb-2">{t('Weekly Report Summary')}</h4>
+                  <p className="text-gray-600 text-sm leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100">
+                    {latestReportData.summary}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Stock Price Card */}

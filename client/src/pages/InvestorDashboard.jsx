@@ -52,13 +52,14 @@ export default function InvestorDashboard() {
   const pnlPercent = totalInvested > 0 ? ((pnl / totalInvested) * 100).toFixed(1) : '0.0';
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-        <div>
-          <h1 className="text-3xl font-bold font-heading text-brand-dark">💰 Investor Portfolio</h1>
-          <p className="text-gray-500 text-sm mt-1">Welcome back, {user?.name}</p>
-        </div>
-        <Link to="/marketplace" className="btn-primary text-sm">
+    <div className="font-sans text-gray-800 bg-[#fef8f3] min-h-screen pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+          <div>
+            <h1 className="text-3xl font-bold font-heading text-gray-900">💰 Investor Portfolio</h1>
+            <p className="text-gray-500 text-sm mt-1">Welcome back, {user?.name}</p>
+          </div>
+        <Link to="/marketplace" className="bg-[#348a21] hover:bg-[#286f18] text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-lg hover:shadow-xl">
           Browse Marketplace →
         </Link>
       </div>
@@ -128,6 +129,7 @@ export default function InvestorDashboard() {
           })}
         </div>
       )}
+      </div>
     </div>
   );
 }
