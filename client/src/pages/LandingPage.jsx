@@ -31,8 +31,8 @@ export default function LandingPage() {
             <img 
               src="/logo.png" 
               alt="CropStocks Logo" 
-              className="w-12 h-12 object-contain drop-shadow-md"
-              style={{ filter: 'sepia(1) saturate(3) hue-rotate(-10deg)' }}
+              className="w-12 h-12 object-cover rounded-full bg-white shadow-md border-2 border-yellow-400"
+              style={{ padding: '2px' }}
             />
             <span className="font-bold text-2xl tracking-tight">CropStocks™</span>
           </div>
