@@ -28,7 +28,7 @@ export_func = """
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'CropStocks_Surveys.csv';
+    a.download = 'CropStocks™_Surveys.csv';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

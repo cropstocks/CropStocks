@@ -4,7 +4,7 @@
 
 > A "stock market for agricultural produce" — connecting farmers who need upfront capital with investors who fund crop/animal husbandry cycles in exchange for profit-sharing at harvest/sale.
 
-![CropStocks Logo](assets/logo.png)
+![CropStocks™ Logo](assets/logo.png)
 
 ---
 
@@ -119,13 +119,13 @@ CropStocks/
 
 ## 🛰️ Satellite Monitoring Microservice
 
-CropStocks includes a standalone Python microservice that handles farmer geolocation onboarding and automated satellite/NDVI monitoring. It runs independently from the main React/Node stack.
+CropStocks™ includes a standalone Python microservice that handles farmer geolocation onboarding and automated satellite/NDVI monitoring. It runs independently from the main React/Node stack.
 
 ### Features
 - Validates farmer GPS coordinates and converts them to square GeoJSON polygons.
 - Registers polygons with satellite imagery providers.
 - Fetches true-color and NDVI imagery using a background task.
-- Computes ML features like `ndvi_mean` and `vegetative_health_index` to feed CropStocks' yield/forecasting models.
+- Computes ML features like `ndvi_mean` and `vegetative_health_index` to feed CropStocks™' yield/forecasting models.
 - Generates historical training datasets from public data sources (e.g. Kaggle, IMD).
 
 ### Setup & Run
@@ -178,7 +178,7 @@ python -m pytest tests/ -v
 
 ## 🌍 Mission
 
-CropStocks aims to:
+CropStocks™ aims to:
 - **Eliminate farmer debt spirals** by replacing informal moneylenders with transparent, community-funded capital
 - **Protect farmers from loss** via platform-backed insurance — zero repayment obligation on crop failure
 - **Provide safe agri-investments** for retail investors with principal protection

@@ -64,7 +64,7 @@ export default function FarmerSurveyForm() {
   return (
     <div className="bg-brand-light font-body min-h-screen pb-10">
       <div className="bg-brand-dark text-white p-4 flex justify-between items-center print:hidden shadow-md sticky top-0 z-50">
-        <h2 className="font-bold text-lg tracking-wider hidden sm:block">CropStocks Survey</h2>
+        <h2 className="font-bold text-lg tracking-wider hidden sm:block">CropStocks™ Survey</h2>
         <div className="flex space-x-2 bg-brand-light/10 p-1 rounded-lg">
           {['English', 'Hindi', 'Gujarati'].map(lang => (
             <button 

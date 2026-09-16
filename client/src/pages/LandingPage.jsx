@@ -30,7 +30,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-2">
             <img 
               src="/homepage-logo.png" 
-              alt="CropStocks Logo" 
+              alt="CropStocks™ Logo" 
               className="w-12 h-12 object-contain"
             />
             <span className="font-bold text-2xl tracking-tight">CropStocks™</span>
@@ -130,7 +130,7 @@ export default function LandingPage() {
                 Key Features
               </div>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight max-w-xl">
-                Why Invest with CropStocks
+                Why Invest with CropStocks™
               </h2>
             </div>
             <div className="flex gap-3">
@@ -262,7 +262,7 @@ export default function LandingPage() {
                 From Investment to Harvest
               </h2>
               <p className="text-gray-500 mb-12 text-sm leading-relaxed max-w-md">
-                CropStocks connects investors directly with vetted farmers, providing transparent tracking and secure returns while eliminating middlemen.
+                CropStocks™ connects investors directly with vetted farmers, providing transparent tracking and secure returns while eliminating middlemen.
               </p>
 
               <div className="space-y-8">

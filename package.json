@@ -2,7 +2,7 @@
   "name": "cropstocks",
   "version": "1.0.0",
   "private": true,
-  "description": "CropStocks — A stock market for agricultural produce",
+  "description": "CropStocks™ — A stock market for agricultural produce",
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "dev:client": "npm run dev --prefix client",
