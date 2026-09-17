@@ -60,7 +60,7 @@ export class SentinelHubProvider {
           type: "sentinel-2-l2a", 
           dataFilter: { 
             timeRange: { from: dateRange.from, to: dateRange.to },
-            maxCloudCoverage: 20
+            maxCloudCoverage: 80
           } 
         }]
       },
@@ -148,7 +148,7 @@ export class SentinelHubProvider {
     try {
       // 1. Fetch real latest imagery
       const toDate = baseDate.toISOString();
-      const fromDate = new Date(baseDate.getTime() - 10 * 24 * 60 * 60 * 1000).toISOString(); // last 10 days
+      const fromDate = new Date(baseDate.getTime() - 60 * 24 * 60 * 60 * 1000).toISOString(); // last 60 days to guarantee data
       const dateRange = { from: fromDate, to: toDate };
       
       const truecolor_url = await this.fetchImage(bbox, this.getTrueColorEval(), dateRange, polygon);
