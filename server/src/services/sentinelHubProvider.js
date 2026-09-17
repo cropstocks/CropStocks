@@ -144,8 +144,8 @@ export class SentinelHubProvider {
           acquisition_date: scanDate.toISOString(),
           cloud_cover_pct: Math.random() * 15,
           satellite_source: "Sentinel-2 (Mock)",
-          truecolor_url: `https://via.placeholder.com/400x300.png?text=True+Color+Day+${i*5}`,
-          ndvi_url: `https://via.placeholder.com/400x300.png?text=NDVI+Day+${i*5}`,
+          truecolor_url: `https://placehold.co/400x300/348a21/FFF?text=True+Color+Day+${i*5}`,
+          ndvi_url: `https://placehold.co/400x300/112a14/FFF?text=NDVI+Day+${i*5}`,
           ndvi_mean: 0.2 + (i * 0.1),
           ndvi_min: 0.1,
           ndvi_max: 0.95
@@ -164,8 +164,8 @@ export class SentinelHubProvider {
           acquisition_date: scanDate.toISOString(),
           cloud_cover_pct: Math.random() * 15,
           satellite_source: "Sentinel-2 (Mock)",
-          truecolor_url: `https://via.placeholder.com/400x300.png?text=True+Color+Day+${i*5}`,
-          ndvi_url: `https://via.placeholder.com/400x300.png?text=NDVI+Day+${i*5}`,
+          truecolor_url: `https://placehold.co/400x300/348a21/FFF?text=True+Color+Day+${i*5}`,
+          ndvi_url: `https://placehold.co/400x300/112a14/FFF?text=NDVI+Day+${i*5}`,
           ndvi_mean: 0.2 + (i * 0.12),
           ndvi_min: 0.1,
           ndvi_max: 0.95
