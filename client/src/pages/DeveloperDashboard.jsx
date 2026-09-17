@@ -81,7 +81,7 @@ export default function DeveloperDashboard() {
     alert('CMS Settings saved successfully!');
   };
 
-  if (loading) return <div className="min-h-screen bg-gray-50 flex items-center justify-center text-green-600 font-semibold animate-pulse">Loading Agrohub Admin Environment...</div>;
+  if (loading) return <div className="min-h-screen bg-gray-50 flex items-center justify-center text-green-600 font-semibold animate-pulse">Loading CropStocks Admin Environment...</div>;
 
   const pendingListings = listings.filter(l => l.status === 'PENDING' || l.status === 'ACTIVE' || l.status === 'FUNDING'); 
   const totalFarmers = new Set(listings.map(l => l.farmerId)).size + surveys.length;
@@ -102,7 +102,7 @@ export default function DeveloperDashboard() {
       <aside className={`bg-white w-64 border-r border-gray-200 flex flex-col transition-all duration-300 z-20 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full fixed h-full'}`}>
         <div className="h-20 flex items-center px-6 border-b border-gray-100">
           <img src="/homepage-logo.png" alt="Logo" className="w-8 h-8 mr-3" onError={(e) => e.target.style.display='none'} />
-          <span className="font-bold text-xl text-gray-900 tracking-tight">AgroAdmin</span>
+          <span className="font-bold text-xl text-gray-900 tracking-tight">CropStocks™</span>
         </div>
         
         <div className="p-4 flex-1">
