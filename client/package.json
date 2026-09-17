@@ -16,13 +16,16 @@
     "vite": "^8.2.0"
   },
   "dependencies": {
+    "@geoman-io/leaflet-geoman-free": "^2.20.1",
     "@vitejs/plugin-react": "^6.0.5",
     "firebase": "^12.18.0",
     "i18next": "^24.2.2",
+    "leaflet": "^1.9.4",
     "lucide-react": "^0.475.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-i18next": "^15.4.1",
+    "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.18.2",
     "recharts": "^2.15.1"
   }

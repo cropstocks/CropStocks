@@ -58,7 +58,7 @@ export default function SignupModal({ isOpen, onClose, defaultRole = 'farmer' })
       onClose();
       // Redirect to the appropriate dashboard
       if (role.toLowerCase() === 'farmer') {
-        window.location.href = '/farmer-dashboard';
+        window.location.href = '/farmer/crop-registration';
       } else {
         window.location.href = '/dashboard';
       }
