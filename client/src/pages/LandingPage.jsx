@@ -69,7 +69,6 @@ export default function LandingPage() {
             <a href="#how-it-works" className="hover:text-yellow-400 transition-colors">How it Works</a>
             <a href="#about" className="hover:text-yellow-400 transition-colors">About Us</a>
             <a href="mailto:support@cropstocks.in" className="hover:text-yellow-400 transition-colors">Contact Us</a>
-            <a href="/developer" className="text-[#fbbf24] border border-[#fbbf24] px-3 py-1 rounded hover:bg-[#fbbf24] hover:text-black transition-colors shadow-[0_0_10px_rgba(251,191,36,0.3)]">Developer Console</a>
           </nav>
           
           <div className="flex items-center gap-4">
