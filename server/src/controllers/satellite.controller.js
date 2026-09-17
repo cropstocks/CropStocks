@@ -4,7 +4,7 @@ import { SentinelHubProvider } from '../services/sentinelHubProvider.js';
 const prisma = new PrismaClient();
 
 // Background task
-async function fetchImageryTask(farmerId, lat, lon, farmSizeAcres) {
+async function fetchImageryTask(farmerId, lat, lon, farmSizeAcres, polygonData) {
   try {
     const provider = new SentinelHubProvider();
     
@@ -16,7 +16,7 @@ async function fetchImageryTask(farmerId, lat, lon, farmSizeAcres) {
     });
 
     // Search for imagery using the real provider (requires lat, lon)
-    const history = await provider.searchLatest(lat, lon, farmerId);
+    const history = await provider.searchLatest(lat, lon, farmerId, polygonData);
 
     const latest = history[history.length - 1];
 
@@ -53,7 +53,7 @@ export const getSatelliteHistory = async (req, res) => {
     const lon = profile.longitude ?? 77.1025;
 
     const provider = new SentinelHubProvider();
-    const history = await provider.searchLatest(lat, lon, profile.userId);
+    const history = await provider.searchLatest(lat, lon, profile.userId, profile.polygonData);
 
     res.json({
       farmer_id: id,
@@ -68,7 +68,7 @@ export const getSatelliteHistory = async (req, res) => {
 
 export const registerFarmer = async (req, res) => {
   try {
-    const { farmer_id, name, phone, state, district, crop_type, latitude, longitude, farm_size_acres } = req.body;
+    const { farmer_id, name, phone, state, district, crop_type, latitude, longitude, farm_size_acres, polygonData } = req.body;
 
     if (latitude < 8.0 || latitude > 37.0 || longitude < 68.0 || longitude > 97.5) {
       return res.status(400).json({ error: "Coordinates are out of range. India bounds only." });
@@ -96,7 +96,8 @@ export const registerFarmer = async (req, res) => {
           userId: farmer_id,
           latitude: parseFloat(latitude),
           longitude: parseFloat(longitude),
-          farmSize: farm_size_acres.toString(),
+          farmSize: farm_size_acres ? farm_size_acres.toString() : "0",
+          polygonData: polygonData,
           satelliteStatus: 'pending'
         }
       });
@@ -106,14 +107,15 @@ export const registerFarmer = async (req, res) => {
         data: {
           latitude: parseFloat(latitude),
           longitude: parseFloat(longitude),
-          farmSize: farm_size_acres.toString(),
+          farmSize: farm_size_acres ? farm_size_acres.toString() : "0",
+          polygonData: polygonData,
           satelliteStatus: 'pending'
         }
       });
     }
 
     // Fire and forget background task
-    fetchImageryTask(farmer_id, latitude, longitude, farm_size_acres);
+    fetchImageryTask(farmer_id, latitude, longitude, farm_size_acres, polygonData);
 
     res.json({
       status: 'registered',

@@ -59,6 +59,7 @@ model FarmerProfile {
   verificationNotes  String?
   documents          String?  // JSON array of file paths
   polygonId          String?
+  polygonData        String?
   satelliteStatus    String?  // pending, ready, unavailable, not_found
   latestAcquisitionDate String?
   truecolorUrl       String?

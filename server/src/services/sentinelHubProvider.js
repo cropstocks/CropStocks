@@ -37,10 +37,25 @@ export class SentinelHubProvider {
     return this.token;
   }
 
-  async fetchImage(bbox, evalscript, dateRange) {
+  async fetchImage(bbox, evalscript, dateRange, polygon = null) {
+    if (!this.token) {
+      await this.getToken();
+    }
+
+    const bounds = polygon ? {
+      geometry: {
+        type: "Polygon",
+        coordinates: [polygon]
+      },
+      properties: { crs: "http://www.opengis.net/def/crs/EPSG/0/4326" }
+    } : {
+      bbox: bbox, 
+      properties: { crs: "http://www.opengis.net/def/crs/EPSG/0/4326" }
+    };
+
     const payload = {
       input: {
-        bounds: { bbox: bbox, properties: { crs: "http://www.opengis.net/def/crs/EPSG/0/4326" } },
+        bounds: bounds,
         data: [{ 
           type: "sentinel-2-l2a", 
           dataFilter: { 
@@ -106,11 +121,27 @@ export class SentinelHubProvider {
     }`;
   }
 
-  async searchLatest(lat, lon, farmerId) {
-    // Generate a bounding box around the point
-    const padding = 0.005; // approx 500m
+  async searchLatest(lat, lon, farmerId, polygonData) {
+    // Generate a bounding box
+    const padding = 0.005; // Roughly 500m
     const bbox = [lon - padding, lat - padding, lon + padding, lat + padding];
     
+    let polygon = null;
+    if (polygonData) {
+      try {
+        const coords = JSON.parse(polygonData);
+        // GeoJSON expects [lon, lat]
+        polygon = coords.map(c => [c.lng, c.lat]);
+        // Close the polygon if not closed
+        if (polygon.length > 0 && 
+            (polygon[0][0] !== polygon[polygon.length-1][0] || polygon[0][1] !== polygon[polygon.length-1][1])) {
+          polygon.push([...polygon[0]]);
+        }
+      } catch (e) {
+        console.error("Failed to parse polygonData", e);
+      }
+    }
+
     const history = [];
     const baseDate = new Date();
     
@@ -120,8 +151,8 @@ export class SentinelHubProvider {
       const fromDate = new Date(baseDate.getTime() - 10 * 24 * 60 * 60 * 1000).toISOString(); // last 10 days
       const dateRange = { from: fromDate, to: toDate };
       
-      const truecolor_url = await this.fetchImage(bbox, this.getTrueColorEval(), dateRange);
-      const ndvi_url = await this.fetchImage(bbox, this.getNdviEval(), dateRange);
+      const truecolor_url = await this.fetchImage(bbox, this.getTrueColorEval(), dateRange, polygon);
+      const ndvi_url = await this.fetchImage(bbox, this.getNdviEval(), dateRange, polygon);
       
       // Calculate fake mock stats, or if statistical API was used we would have real stats
       // Since evaluating stats requires statistical API which is complex, we just fake the numbers

@@ -5,6 +5,7 @@ import { Leaf, MapPin, Upload } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
+import api from '../services/api';
 
 // Fix for default Leaflet icons
 import L from 'leaflet';
@@ -111,7 +112,7 @@ export default function CropRegistration() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!coordinates) {
       alert("Please draw your farm area on the map.");
@@ -119,12 +120,43 @@ export default function CropRegistration() {
     }
     
     setLoading(true);
-    // Simulate API call to register crop
-    setTimeout(() => {
-      setLoading(false);
-      alert("Crop registered successfully with farm area coordinates!");
+    try {
+      // Calculate rough centroid for bbox fallback
+      const lats = coordinates.map(c => c.lat);
+      const lngs = coordinates.map(c => c.lng);
+      const centerLat = lats.reduce((a,b) => a+b, 0) / lats.length;
+      const centerLng = lngs.reduce((a,b) => a+b, 0) / lngs.length;
+
+      const userStr = localStorage.getItem('user');
+      const user = userStr ? JSON.parse(userStr) : null;
+      
+      if (!user) {
+        alert("You must be logged in to register a farm.");
+        setLoading(false);
+        return;
+      }
+
+      const payload = {
+        farmer_id: user.id,
+        name: user.name,
+        phone: user.phone || '0000000000',
+        latitude: centerLat,
+        longitude: centerLng,
+        farm_size_acres: formData.expectedYield || 1, // rough mapping for now
+        polygonData: JSON.stringify(coordinates)
+      };
+
+      // Use standard api wrapper
+      await api.post('/farmers/register', payload);
+
+      alert("Crop registered successfully with exact farm boundaries! Sentinel-2 will now clip the imagery specifically to this polygon.");
       navigate('/farmer-dashboard');
-    }, 1500);
+    } catch (e) {
+      console.error(e);
+      alert("Error saving registration. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Default center (India)
