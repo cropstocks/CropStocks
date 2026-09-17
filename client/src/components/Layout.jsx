@@ -97,7 +97,7 @@ export default function Layout({ children }) {
       `}</style>
 
       {/* Navbar */}
-      {location.pathname !== '/' && (
+      {location.pathname !== '/' && location.pathname !== '/developer' && (
         <header className="bg-black/60 backdrop-blur-md shadow-lg sticky top-0 z-[100] border-b border-white/10 text-white">
           <div className="container mx-auto px-6 py-3 flex items-center justify-between">
             
@@ -151,7 +151,7 @@ export default function Layout({ children }) {
       )}
 
       {/* Main Content */}
-      <main style={{ minHeight: location.pathname === '/' ? '100vh' : 'calc(100vh - 70px)' }}>
+      <main style={{ minHeight: (location.pathname === '/' || location.pathname === '/developer') ? '100vh' : 'calc(100vh - 70px)' }}>
         {children}
       </main>
 

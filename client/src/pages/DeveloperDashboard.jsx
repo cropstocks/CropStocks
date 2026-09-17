@@ -2,22 +2,35 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import { Link } from 'react-router-dom';
+import { 
+  LayoutDashboard, Users, Tractor, Settings, Bell, Search, Menu, 
+  ChevronDown, BarChart3, ShieldCheck, Activity
+} from 'lucide-react';
 
-// Custom dark mode stats card for Dev Dashboard
-const DevStatsCard = ({ title, value, prefix = '', suffix = '' }) => (
-  <div className="bg-[#161b22] border border-[#30363d] p-6 rounded-lg shadow-sm hover:border-[#8b949e] transition-colors">
-    <p className="text-sm font-medium text-[#8b949e] mb-2 font-mono uppercase tracking-wider">{title}</p>
-    <h4 className="text-3xl font-mono font-bold text-[#58a6ff]">
-      {prefix}{typeof value === 'number' ? value.toLocaleString() : value}{suffix}
-    </h4>
+const StatCard = ({ title, value, icon, trend, trendUp }) => (
+  <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+    <div>
+      <p className="text-sm font-medium text-gray-500 mb-1">{title}</p>
+      <h3 className="text-3xl font-bold text-gray-800">{value}</h3>
+      {trend && (
+        <p className={`text-xs mt-2 font-medium ${trendUp ? 'text-green-500' : 'text-red-500'}`}>
+          {trendUp ? '↑' : '↓'} {trend} since last week
+        </p>
+      )}
+    </div>
+    <div className="w-14 h-14 rounded-full bg-green-50 flex items-center justify-center text-green-600">
+      {icon}
+    </div>
   </div>
 );
 
 export default function DeveloperDashboard() {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [listings, setListings] = useState([]);
   const [surveys, setSurveys] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // CMS State
   const [cmsSettings, setCmsSettings] = useState({
@@ -68,139 +81,227 @@ export default function DeveloperDashboard() {
     alert('CMS Settings saved successfully!');
   };
 
-  if (loading) return <div className="min-h-screen bg-[#0d1117] p-12 text-center text-[#58a6ff] font-mono animate-pulse">Initializing Developer Environment...</div>;
+  if (loading) return <div className="min-h-screen bg-gray-50 flex items-center justify-center text-green-600 font-semibold animate-pulse">Loading Agrohub Admin Environment...</div>;
 
   const pendingListings = listings.filter(l => l.status === 'PENDING' || l.status === 'ACTIVE' || l.status === 'FUNDING'); 
   const totalFarmers = new Set(listings.map(l => l.farmerId)).size + surveys.length;
   const activeInvestors = 3; 
 
-  return (
-    <div className="min-h-screen bg-[#0d1117] text-[#c9d1d9] font-sans pb-12">
-      <div className="border-b border-[#30363d] bg-[#161b22] px-4 sm:px-6 lg:px-8 py-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center">
-          <div className="flex items-center gap-3">
-            <svg className="w-8 h-8 text-[#58a6ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-            <div>
-              <h1 className="text-2xl font-bold text-white tracking-tight">Developer Workspace</h1>
-              <p className="text-[#8b949e] text-sm mt-1">Platform architecture, API metrics, and raw data access.</p>
-            </div>
-          </div>
-          <div className="mt-4 md:mt-0 flex gap-3">
-            <div className="bg-[#238636] text-white px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-2 border border-[rgba(240,246,252,0.1)]">
-              <span className="w-2 h-2 rounded-full bg-[#3fb950] animate-pulse"></span>
-              DEV_BRANCH_ACTIVE
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <DevStatsCard title="Total Farmers" value={totalFarmers || 24} />
-          <DevStatsCard title="Active Investors" value={activeInvestors || 12} />
-          <DevStatsCard title="Pending Verifications" value={listings.length} />
-          <DevStatsCard title="API Latency" value="42ms" />
-        </div>
+  const navigation = [
+    { name: 'Dashboard', id: 'dashboard', icon: <LayoutDashboard size={20} /> },
+    { name: 'Farmers & Crops', id: 'farmers', icon: <Tractor size={20} /> },
+    { name: 'Investors', id: 'investors', icon: <Users size={20} /> },
+    { name: 'Verifications', id: 'verification', icon: <ShieldCheck size={20} /> },
+    { name: 'CMS Settings', id: 'cms', icon: <Settings size={20} /> },
+  ];
 
-        <div className="flex space-x-1 mb-6 border-b border-[#30363d] overflow-x-auto">
-          {['overview', 'farmers', 'investors', 'verification', 'cms'].map(tab => (
-            <button 
-              key={tab}
-              onClick={() => setActiveTab(tab)} 
-              className={`py-2.5 px-5 text-sm font-semibold capitalize whitespace-nowrap rounded-t-md transition-colors ${activeTab === tab ? 'bg-[#161b22] border-t border-l border-r border-[#30363d] text-white' : 'text-[#8b949e] hover:text-[#c9d1d9] hover:bg-[#161b22]/50 border-t border-l border-r border-transparent'}`}
-              style={{ marginBottom: '-1px' }}
-            >
-              {tab}
-            </button>
-          ))}
+  return (
+    <div className="min-h-screen bg-[#f3f4f6] font-sans flex text-gray-800">
+      
+      {/* Sidebar */}
+      <aside className={`bg-white w-64 border-r border-gray-200 flex flex-col transition-all duration-300 z-20 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full fixed h-full'}`}>
+        <div className="h-20 flex items-center px-6 border-b border-gray-100">
+          <img src="/homepage-logo.png" alt="Logo" className="w-8 h-8 mr-3" onError={(e) => e.target.style.display='none'} />
+          <span className="font-bold text-xl text-gray-900 tracking-tight">AgroAdmin</span>
         </div>
         
-        <div className="bg-[#161b22] shadow-xl rounded-b-xl rounded-tr-xl border border-[#30363d] min-h-[400px]">
-          {activeTab === 'overview' && (
-            <div className="animate-fade-in p-6">
-              <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <svg className="w-5 h-5 text-[#8b949e]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                System Telemetry
-              </h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-[#0d1117] rounded-md border border-[#30363d] overflow-hidden">
-                  <div className="bg-[#1f2428] px-4 py-2 border-b border-[#30363d] flex justify-between items-center">
-                    <span className="text-xs font-mono text-[#8b949e]">tail -f /var/log/syslog</span>
-                    <span className="flex gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]"></span>
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]"></span>
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#27c93f]"></span>
-                    </span>
-                  </div>
-                  <div className="p-4 font-mono text-xs text-[#8b949e] space-y-1.5 h-64 overflow-y-auto">
-                    <div className="flex gap-3"><span className="text-[#3fb950]">[OK]</span> <span className="text-white">API Sync:</span> <span>Completed farmer db sync (124ms)</span></div>
-                    <div className="flex gap-3"><span className="text-[#d29922]">[WARN]</span> <span className="text-white">Auth:</span> <span>Rate limit approached for IP 192.168.1.5</span></div>
-                    <div className="flex gap-3"><span className="text-[#3fb950]">[OK]</span> <span className="text-white">Cron:</span> <span>Executed payout calculation job</span></div>
-                    <div className="flex gap-3"><span className="text-[#58a6ff]">[INFO]</span> <span className="text-white">Storage:</span> <span>Firebase snapshot created successfully</span></div>
-                    <div className="flex gap-3"><span className="text-[#3fb950]">[OK]</span> <span className="text-white">NDVI:</span> <span>Satellite imagery processed for 3 regions</span></div>
-                    <div className="flex gap-3 mt-4 animate-pulse"><span className="text-[#8b949e]">&gt;</span> <span>Awaiting new events...</span></div>
-                  </div>
-                </div>
+        <div className="p-4 flex-1">
+          <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 px-3">Main Menu</p>
+          <ul className="space-y-2">
+            {navigation.map((item) => (
+              <li key={item.id}>
+                <button
+                  onClick={() => setActiveTab(item.id)}
+                  className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-colors font-medium text-sm ${
+                    activeTab === item.id 
+                      ? 'bg-green-50 text-green-700' 
+                      : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
+                  }`}
+                >
+                  <span className={activeTab === item.id ? 'text-green-600' : 'text-gray-400'}>{item.icon}</span>
+                  {item.name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="p-4 border-t border-gray-100">
+          <Link to="/" className="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-black text-white px-4 py-3 rounded-xl font-semibold text-sm transition-colors">
+            Exit to Main Site
+          </Link>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
+        
+        {/* Topbar */}
+        <header className="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-6 lg:px-10 z-10 shadow-sm">
+          <div className="flex items-center gap-4">
+            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg">
+              <Menu size={24} />
+            </button>
+            <div className="hidden md:flex items-center bg-gray-100 px-4 py-2 rounded-full w-96 border border-gray-200 focus-within:ring-2 focus-within:ring-green-100 focus-within:bg-white transition-colors">
+              <Search size={18} className="text-gray-400 mr-3" />
+              <input type="text" placeholder="Search farms, crops, investors..." className="bg-transparent border-none outline-none text-sm w-full text-gray-700" />
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-5">
+            <button className="relative p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors">
+              <Bell size={20} />
+              <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+            </button>
+            <div className="h-8 w-px bg-gray-200"></div>
+            <div className="flex items-center gap-3 cursor-pointer">
+              <img src="https://i.pravatar.cc/150?img=11" alt="Admin" className="w-9 h-9 rounded-full object-cover border-2 border-green-100" />
+              <div className="hidden md:block">
+                <p className="text-sm font-bold text-gray-800 leading-tight">Admin User</p>
+                <p className="text-xs text-gray-500 font-medium">Superadmin</p>
+              </div>
+              <ChevronDown size={16} className="text-gray-400 hidden md:block" />
+            </div>
+          </div>
+        </header>
+
+        {/* Dashboard Content */}
+        <main className="flex-1 overflow-y-auto p-6 lg:p-10">
+          
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">{navigation.find(n => n.id === activeTab)?.name}</h2>
+              <p className="text-sm text-gray-500 mt-1">Manage and monitor the CropStocks agriculture platform.</p>
+            </div>
+            <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg font-bold text-sm border border-green-200 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+              Live System
+            </div>
+          </div>
+
+          {activeTab === 'dashboard' && (
+            <div className="animate-fade-in space-y-8">
+              {/* Stat Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <StatCard title="Total Farmers" value={totalFarmers || 24} icon={<Tractor size={28} />} trend="12%" trendUp={true} />
+                <StatCard title="Active Investors" value={activeInvestors || 12} icon={<Users size={28} />} trend="5%" trendUp={true} />
+                <StatCard title="Total Revenue" value="₹1.2M" icon={<BarChart3 size={28} />} trend="2.4%" trendUp={true} />
+                <StatCard title="System Health" value="98%" icon={<Activity size={28} />} />
+              </div>
+
+              {/* Main Charts/Tables Area */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
-                <div className="space-y-6">
-                  <div className="bg-[#0d1117] rounded-md border border-[#30363d] p-5">
-                    <h3 className="text-sm font-semibold text-white mb-3">Database Health</h3>
-                    <ul className="text-sm space-y-3">
-                      <li className="flex justify-between items-center"><span className="text-[#8b949e]">Active Connections</span> <span className="font-mono text-[#58a6ff]">42 / 100</span></li>
-                      <li className="flex justify-between items-center"><span className="text-[#8b949e]">Storage Used</span> <span className="font-mono text-white">1.2 GB (12%)</span></li>
-                      <li className="flex justify-between items-center"><span className="text-[#8b949e]">Query Cache Hit</span> <span className="font-mono text-[#3fb950]">94.2%</span></li>
-                    </ul>
+                {/* Registrations Chart placeholder */}
+                <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="font-bold text-lg text-gray-800">Crop Yield vs Investment</h3>
+                    <select className="bg-gray-50 border border-gray-200 text-sm rounded-lg px-3 py-1.5 outline-none font-medium text-gray-600">
+                      <option>This Year</option>
+                      <option>Last Year</option>
+                    </select>
                   </div>
-                  <div className="bg-[#0d1117] rounded-md border border-[#30363d] p-5">
-                    <h3 className="text-sm font-semibold text-white mb-3">Service Endpoints</h3>
-                    <ul className="text-sm space-y-2">
-                      <li className="flex justify-between items-center"><code className="text-xs text-[#ff7b72]">POST /api/auth</code> <span className="text-[#3fb950] text-xs font-bold">200 OK</span></li>
-                      <li className="flex justify-between items-center"><code className="text-xs text-[#79c0ff]">GET /api/listings</code> <span className="text-[#3fb950] text-xs font-bold">200 OK</span></li>
-                      <li className="flex justify-between items-center"><code className="text-xs text-[#a5d6ff]">PUT /api/admin</code> <span className="text-[#d29922] text-xs font-bold">401 UNAUTH</span></li>
-                    </ul>
+                  <div className="h-64 flex items-end justify-between gap-2 border-b border-gray-100 pb-2 relative">
+                     {/* CSS-based Mock Chart */}
+                     <div className="absolute inset-0 flex flex-col justify-between pb-2 z-0">
+                       <div className="border-b border-gray-100 w-full flex-1"></div>
+                       <div className="border-b border-gray-100 w-full flex-1"></div>
+                       <div className="border-b border-gray-100 w-full flex-1"></div>
+                       <div className="border-b border-gray-100 w-full flex-1"></div>
+                     </div>
+                     {[40, 60, 30, 80, 50, 90, 70, 100, 60, 80, 50, 70].map((h, i) => (
+                       <div key={i} className="w-full bg-green-500 rounded-t-sm z-10 relative group" style={{ height: `${h}%` }}>
+                         <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                           {h}k
+                         </div>
+                       </div>
+                     ))}
+                  </div>
+                  <div className="flex justify-between mt-3 text-xs text-gray-400 font-medium">
+                    <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
                   </div>
                 </div>
+
+                {/* Recent Activities */}
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                  <h3 className="font-bold text-lg text-gray-800 mb-6">Recent Activity</h3>
+                  <div className="space-y-6">
+                    {[
+                      { title: 'New Farmer Registered', time: '5 min ago', color: 'bg-blue-500' },
+                      { title: 'Payout Processed (₹50k)', time: '2 hours ago', color: 'bg-green-500' },
+                      { title: 'NDVI Alert: Region B', time: '5 hours ago', color: 'bg-yellow-500' },
+                      { title: 'System Backup Complete', time: '12 hours ago', color: 'bg-purple-500' },
+                      { title: 'Investor KYC Approved', time: '1 day ago', color: 'bg-indigo-500' }
+                    ].map((act, i) => (
+                      <div key={i} className="flex gap-4">
+                        <div className="relative flex flex-col items-center">
+                          <div className={`w-3 h-3 rounded-full ${act.color} ring-4 ring-gray-50 z-10`}></div>
+                          {i !== 4 && <div className="w-0.5 h-full bg-gray-100 absolute top-3"></div>}
+                        </div>
+                        <div className="-mt-1.5 pb-2">
+                          <p className="text-sm font-bold text-gray-700">{act.title}</p>
+                          <p className="text-xs text-gray-400 font-medium mt-1">{act.time}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
               </div>
             </div>
           )}
 
           {activeTab === 'farmers' && (
-            <div className="animate-fade-in">
-              <div className="p-4 border-b border-[#30363d] flex justify-between items-center bg-[#1f2428] rounded-t-xl">
-                <h2 className="text-sm font-semibold text-white">Raw Farmer Data (JSON/Table)</h2>
+            <div className="animate-fade-in bg-white rounded-2xl shadow-sm border border-gray-100">
+              <div className="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <h3 className="font-bold text-lg text-gray-800">Farmer Database</h3>
                 <div className="flex gap-2">
-                  <span className="bg-[#0d1117] text-xs text-[#8b949e] px-2 py-1 rounded border border-[#30363d]">Total Records: {listings.length}</span>
+                  <button className="px-4 py-2 bg-gray-50 text-gray-600 rounded-lg text-sm font-semibold border border-gray-200 hover:bg-gray-100 transition-colors">Export CSV</button>
+                  <button className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors shadow-sm">+ Add Farmer</button>
                 </div>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse text-sm">
+                <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-[#30363d] bg-[#0d1117]">
-                      <th className="py-3 px-4 font-semibold text-[#8b949e]">ID (UUID)</th>
-                      <th className="py-3 px-4 font-semibold text-[#8b949e]">PRODUCE_NAME</th>
-                      <th className="py-3 px-4 font-semibold text-[#8b949e]">REGION</th>
-                      <th className="py-3 px-4 font-semibold text-[#8b949e]">NDVI_SCORE</th>
-                      <th className="py-3 px-4 font-semibold text-[#8b949e]">PAYLOAD</th>
+                    <tr className="bg-gray-50/50">
+                      <th className="py-4 px-6 font-semibold text-xs text-gray-400 uppercase tracking-wider">Farmer Details</th>
+                      <th className="py-4 px-6 font-semibold text-xs text-gray-400 uppercase tracking-wider">Produce</th>
+                      <th className="py-4 px-6 font-semibold text-xs text-gray-400 uppercase tracking-wider">Region</th>
+                      <th className="py-4 px-6 font-semibold text-xs text-gray-400 uppercase tracking-wider">Health Status</th>
+                      <th className="py-4 px-6 font-semibold text-xs text-gray-400 uppercase tracking-wider text-right">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="font-mono text-xs">
+                  <tbody className="divide-y divide-gray-100">
                     {listings.map((l, i) => (
-                      <tr key={l.id} className="border-b border-[#30363d] hover:bg-[#1f2428] transition-colors">
-                        <td className="py-3 px-4 text-[#79c0ff]">{l.farmerId || `FARM-${1000+i}`}</td>
-                        <td className="py-3 px-4 text-white">{l.produceName}</td>
-                        <td className="py-3 px-4 text-[#c9d1d9]">{l.region}</td>
-                        <td className="py-3 px-4">
-                          <span className={`px-2 py-0.5 rounded border ${l.ndviScore > 0.7 ? 'border-[#3fb950] text-[#3fb950] bg-[#3fb950]/10' : 'border-[#d29922] text-[#d29922] bg-[#d29922]/10'}`}>
-                            {l.ndviScore ? l.ndviScore.toFixed(2) : 'NULL'}
+                      <tr key={l.id} className="hover:bg-gray-50/50 transition-colors">
+                        <td className="py-4 px-6">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold text-sm">
+                              {l.farmerId ? l.farmerId.substring(0, 2).toUpperCase() : 'FM'}
+                            </div>
+                            <div>
+                              <p className="text-sm font-bold text-gray-800">{l.farmerId || `FARM-${1000+i}`}</p>
+                              <p className="text-xs text-gray-500 font-medium">Registered 2026</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-4 px-6">
+                          <span className="text-sm font-semibold text-gray-700">{l.produceName}</span>
+                        </td>
+                        <td className="py-4 px-6 text-sm text-gray-500 font-medium">{l.region}</td>
+                        <td className="py-4 px-6">
+                          <span className={`px-3 py-1 rounded-full text-xs font-bold flex w-max items-center gap-1.5 ${l.ndviScore > 0.7 ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${l.ndviScore > 0.7 ? 'bg-green-500' : 'bg-yellow-500'}`}></span>
+                            {l.ndviScore ? (l.ndviScore * 100).toFixed(0) + '% Healthy' : 'Pending'}
                           </span>
                         </td>
-                        <td className="py-3 px-4">
-                          <button className="text-[#8b949e] hover:text-white underline decoration-[#30363d] hover:decoration-white underline-offset-4">{'{}'} View JSON</button>
+                        <td className="py-4 px-6 text-right">
+                          <button className="text-green-600 hover:text-green-800 font-semibold text-sm transition-colors">View Details</button>
                         </td>
                       </tr>
                     ))}
                     {listings.length === 0 && (
-                      <tr><td colSpan="5" className="text-center py-8 text-[#8b949e]">0 rows returned from SELECT * FROM farmers;</td></tr>
+                      <tr><td colSpan="5" className="text-center py-12 text-gray-400 font-medium">No farmer records found.</td></tr>
                     )}
                   </tbody>
                 </table>
@@ -209,66 +310,42 @@ export default function DeveloperDashboard() {
           )}
 
           {activeTab === 'investors' && (
-            <div className="animate-fade-in">
-              <div className="p-4 border-b border-[#30363d] flex justify-between items-center bg-[#1f2428] rounded-t-xl">
-                <h2 className="text-sm font-semibold text-white">Investor Accounts</h2>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse text-sm">
-                  <thead>
-                    <tr className="border-b border-[#30363d] bg-[#0d1117]">
-                      <th className="py-3 px-4 font-semibold text-[#8b949e]">ACCOUNT_ID</th>
-                      <th className="py-3 px-4 font-semibold text-[#8b949e]">TOTAL_INVESTED (INR)</th>
-                      <th className="py-3 px-4 font-semibold text-[#8b949e]">PORTFOLIO_SIZE</th>
-                      <th className="py-3 px-4 font-semibold text-[#8b949e]">KYC_STATUS</th>
-                    </tr>
-                  </thead>
-                  <tbody className="font-mono text-xs">
-                    <tr className="border-b border-[#30363d] hover:bg-[#1f2428]">
-                      <td className="py-3 px-4 text-[#79c0ff]">INV-8492</td>
-                      <td className="py-3 px-4 text-[#3fb950]">150000.00</td>
-                      <td className="py-3 px-4 text-white">3</td>
-                      <td className="py-3 px-4"><span className="text-[#3fb950]">[ VERIFIED ]</span></td>
-                    </tr>
-                    <tr className="border-b border-[#30363d] hover:bg-[#1f2428]">
-                      <td className="py-3 px-4 text-[#79c0ff]">INV-1023</td>
-                      <td className="py-3 px-4 text-[#3fb950]">45000.00</td>
-                      <td className="py-3 px-4 text-white">1</td>
-                      <td className="py-3 px-4"><span className="text-[#d29922]">[ PENDING_REVIEW ]</span></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+            <div className="animate-fade-in bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center py-20">
+              <Users size={48} className="mx-auto text-gray-300 mb-4" />
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Investor Directory</h3>
+              <p className="text-gray-500 max-w-md mx-auto">Full investor profiles, KYC documents, and portfolio tracking will be available in the next platform update.</p>
             </div>
           )}
 
           {activeTab === 'verification' && (
-            <div className="animate-fade-in p-6">
-              <h2 className="text-lg font-semibold text-white mb-4">Registration Pipeline</h2>
+            <div className="animate-fade-in">
               {pendingListings.length === 0 ? (
-                <div className="text-center py-12 text-[#8b949e] bg-[#0d1117] rounded-md border border-[#30363d] font-mono text-sm">Pipeline is empty. No pending crop registrations.</div>
+                <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-dashed border-gray-300">
+                  <ShieldCheck size={48} className="mx-auto text-green-300 mb-4" />
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">All Caught Up!</h3>
+                  <p className="text-gray-500">There are no pending farm verifications in the queue.</p>
+                </div>
               ) : (
                 <div className="space-y-4">
                   {pendingListings.map(l => (
-                    <div key={l.id} className="border border-[#30363d] rounded-md p-4 bg-[#0d1117] flex flex-col md:flex-row justify-between items-start md:items-center">
-                      <div className="mb-4 md:mb-0 w-full md:w-2/3">
+                    <div key={l.id} className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center shadow-sm hover:shadow-md transition-shadow">
+                      <div className="mb-4 md:mb-0">
                         <div className="flex items-center gap-3 mb-2">
-                          <h3 className="font-bold text-white">{l.produceName}</h3>
-                          <span className="bg-[#1f2428] border border-[#30363d] text-[#8b949e] px-2 py-0.5 rounded text-xs font-mono">{l.region}</span>
+                          <h3 className="font-bold text-xl text-gray-900">{l.produceName}</h3>
+                          <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wider">{l.region}</span>
                         </div>
-                        <div className="grid grid-cols-2 gap-4 text-xs font-mono mt-3 p-3 bg-[#161b22] rounded border border-[#30363d]">
-                          <div><span className="text-[#8b949e]">CAPITAL_REQ:</span> <span className="text-[#3fb950]">₹{l.capitalRequired}</span></div>
-                          <div><span className="text-[#8b949e]">CYCLE_DURATION:</span> <span className="text-white">{l.cycleDuration}d</span></div>
-                          <div><span className="text-[#8b949e]">RISK_TIER:</span> <span className="text-[#ff7b72]">{l.riskTier || 'N/A'}</span></div>
-                          <div><span className="text-[#8b949e]">SPLIT (F/I):</span> <span className="text-[#a5d6ff]">{l.profitSplitFarmer}% / {100 - l.profitSplitFarmer}%</span></div>
+                        <div className="flex flex-wrap gap-6 mt-3 text-sm">
+                          <div><span className="text-gray-400">Capital Required:</span> <span className="font-bold text-gray-800 ml-1">₹{l.capitalRequired}</span></div>
+                          <div><span className="text-gray-400">Duration:</span> <span className="font-bold text-gray-800 ml-1">{l.cycleDuration} days</span></div>
+                          <div><span className="text-gray-400">Risk Tier:</span> <span className="font-bold text-yellow-600 ml-1">{l.riskTier || 'Moderate'}</span></div>
                         </div>
                       </div>
-                      <div className="flex flex-col gap-2 w-full md:w-auto">
-                        <button className="w-full bg-[#21262d] border border-[#363b42] hover:bg-[#30363d] hover:border-[#8b949e] text-white px-4 py-2 rounded font-semibold text-sm transition-colors">
-                          Inspect Payload
+                      <div className="flex gap-3 w-full md:w-auto">
+                        <button className="flex-1 md:flex-none bg-gray-50 border border-gray-200 hover:bg-gray-100 text-gray-700 px-5 py-2.5 rounded-xl font-semibold text-sm transition-colors">
+                          Review Docs
                         </button>
-                        <button onClick={() => handleApprove(l.id)} className="w-full bg-[#238636] border border-[rgba(240,246,252,0.1)] hover:bg-[#2ea043] text-white px-4 py-2 rounded font-semibold text-sm transition-colors shadow-sm">
-                          Verify & Approve (POST)
+                        <button onClick={() => handleApprove(l.id)} className="flex-1 md:flex-none bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm shadow-green-200">
+                          Approve Registration
                         </button>
                       </div>
                     </div>
@@ -279,51 +356,55 @@ export default function DeveloperDashboard() {
           )}
 
           {activeTab === 'cms' && (
-            <div className="animate-fade-in p-6">
-              <h2 className="text-lg font-semibold text-white mb-6">Environment Configurations</h2>
-              <form onSubmit={handleCmsSave} className="max-w-2xl bg-[#0d1117] border border-[#30363d] rounded-md p-6">
-                <div className="space-y-5">
+            <div className="animate-fade-in bg-white rounded-2xl shadow-sm border border-gray-100 p-8 max-w-3xl">
+              <h3 className="text-xl font-bold text-gray-900 mb-6">General Settings</h3>
+              <form onSubmit={handleCmsSave} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-xs font-mono text-[#8b949e] mb-1.5 uppercase">APP_SITE_TITLE</label>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Site Title</label>
                     <input 
                       type="text" 
                       value={cmsSettings.siteTitle}
                       onChange={(e) => setCmsSettings({...cmsSettings, siteTitle: e.target.value})}
-                      className="w-full bg-[#010409] border border-[#30363d] rounded-md p-2.5 text-white text-sm focus:ring-1 focus:ring-[#58a6ff] focus:border-[#58a6ff] outline-none font-mono" 
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-gray-800 font-medium focus:ring-2 focus:ring-green-100 focus:border-green-500 outline-none transition-all" 
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-mono text-[#8b949e] mb-1.5 uppercase">APP_HERO_SUBTITLE</label>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Hero Subtitle</label>
                     <input 
                       type="text" 
                       value={cmsSettings.heroSubtitle}
                       onChange={(e) => setCmsSettings({...cmsSettings, heroSubtitle: e.target.value})}
-                      className="w-full bg-[#010409] border border-[#30363d] rounded-md p-2.5 text-white text-sm focus:ring-1 focus:ring-[#58a6ff] focus:border-[#58a6ff] outline-none font-mono" 
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-gray-800 font-medium focus:ring-2 focus:ring-green-100 focus:border-green-500 outline-none transition-all" 
                     />
-                  </div>
-                  <div className="flex items-center p-3 bg-[#161b22] rounded border border-[#30363d]">
-                    <input 
-                      type="checkbox" 
-                      id="maintenance"
-                      checked={cmsSettings.maintenanceMode}
-                      onChange={(e) => setCmsSettings({...cmsSettings, maintenanceMode: e.target.checked})}
-                      className="h-4 w-4 bg-[#010409] border-[#30363d] rounded cursor-pointer accent-[#58a6ff]" 
-                    />
-                    <label htmlFor="maintenance" className="ml-3 block text-sm font-mono text-white cursor-pointer">
-                      ENABLE_MAINTENANCE_MODE (HTTP 503)
-                    </label>
                   </div>
                 </div>
                 
-                <div className="mt-8 pt-6 border-t border-[#30363d]">
-                  <button type="submit" className="bg-[#21262d] border border-[#363b42] hover:bg-[#30363d] hover:border-[#8b949e] text-white px-6 py-2.5 rounded-md font-semibold text-sm transition-colors w-full sm:w-auto shadow-sm">
-                    Deploy Configuration
+                <div className="pt-4">
+                  <label className="flex items-center p-4 bg-gray-50 border border-gray-100 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
+                    <input 
+                      type="checkbox" 
+                      checked={cmsSettings.maintenanceMode}
+                      onChange={(e) => setCmsSettings({...cmsSettings, maintenanceMode: e.target.checked})}
+                      className="w-5 h-5 text-green-600 rounded focus:ring-green-500 cursor-pointer accent-green-600" 
+                    />
+                    <div className="ml-4">
+                      <span className="block text-sm font-bold text-gray-800">Maintenance Mode</span>
+                      <span className="block text-xs text-gray-500 mt-1">Temporarily disable access to the main platform for users.</span>
+                    </div>
+                  </label>
+                </div>
+                
+                <div className="mt-8 pt-6 border-t border-gray-100">
+                  <button type="submit" className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-xl font-semibold text-sm transition-colors shadow-lg">
+                    Save Changes
                   </button>
                 </div>
               </form>
             </div>
           )}
-        </div>
+          
+        </main>
       </div>
     </div>
   );
