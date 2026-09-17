@@ -63,6 +63,16 @@ function GeomanControl({ setCoordinates }) {
   return null;
 }
 
+function MapController({ targetLocation }) {
+  const map = useMap();
+  useEffect(() => {
+    if (targetLocation) {
+      map.flyTo(targetLocation, 16);
+    }
+  }, [targetLocation, map]);
+  return null;
+}
+
 export default function CropRegistration() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -74,6 +84,28 @@ export default function CropRegistration() {
   });
   const [coordinates, setCoordinates] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [targetLocation, setTargetLocation] = useState(null);
+  const [locating, setLocating] = useState(false);
+
+  const handleLocate = (e) => {
+    e.preventDefault();
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+    }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setTargetLocation([position.coords.latitude, position.coords.longitude]);
+        setLocating(false);
+      },
+      (err) => {
+        alert("Unable to retrieve your location. Please check your browser permissions.");
+        setLocating(false);
+      },
+      { enableHighAccuracy: true }
+    );
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -193,7 +225,17 @@ export default function CropRegistration() {
 
             {/* Map Section */}
             <div className="flex-1 flex flex-col">
-              <h2 className="text-xl font-bold mb-2 text-gray-800 border-b pb-2">Draw Farm Boundary</h2>
+              <div className="flex justify-between items-center mb-2 border-b pb-2">
+                <h2 className="text-xl font-bold text-gray-800 m-0">Draw Farm Boundary</h2>
+                <button 
+                  type="button"
+                  onClick={handleLocate}
+                  disabled={locating}
+                  className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg text-sm flex items-center gap-2 shadow-sm transition-colors"
+                >
+                  <MapPin size={16} /> {locating ? 'Locating...' : 'Use Current Location'}
+                </button>
+              </div>
               <p className="text-sm text-gray-500 mb-4">
                 Use the drawing tools on the map below to outline the exact area of your farm. 
                 Satellite imagery is provided for free to help you pinpoint your land.
@@ -207,6 +249,7 @@ export default function CropRegistration() {
                     attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
                   />
                   <GeomanControl setCoordinates={setCoordinates} />
+                  <MapController targetLocation={targetLocation} />
                 </MapContainer>
               </div>
             </div>
