@@ -84,9 +84,6 @@ export default function CropHealthTimeline({ farmerId }) {
               src={currentSnapshot.ndvi_url} 
               alt="NDVI Map" 
               className="w-full h-[250px] object-cover"
-              onError={(e) => {
-                e.target.src = `https://placehold.co/400x300/112a14/FFF?text=NDVI+Not+Found`;
-              }}
             />
           </div>
           
