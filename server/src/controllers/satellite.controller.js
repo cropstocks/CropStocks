@@ -49,8 +49,11 @@ export const getSatelliteHistory = async (req, res) => {
       return res.status(404).json({ error: "Farmer not found" });
     }
 
+    const lat = profile.latitude ?? 28.7041;
+    const lon = profile.longitude ?? 77.1025;
+
     const provider = new SentinelHubProvider();
-    const history = await provider.searchLatest(profile.latitude, profile.longitude, profile.userId);
+    const history = await provider.searchLatest(lat, lon, profile.userId);
 
     res.json({
       farmer_id: id,
