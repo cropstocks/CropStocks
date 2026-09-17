@@ -8,6 +8,7 @@ import SatelliteCompare from '../components/SatelliteCompare';
 import PriceSparkline from '../components/PriceSparkline';
 import SubmissionStatus from '../components/SubmissionStatus';
 import RemediationCardComponent from '../components/RemediationCardComponent';
+import CropHealthTimeline from '../components/CropHealthTimeline';
 import { LineChart, Line, ResponsiveContainer, XAxis, Tooltip } from 'recharts';
 import { 
   Download, AlertTriangle, Globe, LogOut, 
@@ -359,17 +360,8 @@ const FarmerDashboard = () => {
             
             {/* Left 2/3: Satellite */}
             <div className="lg:col-span-2 bg-white shadow-sm border border-gray-200 rounded-2xl p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-gray-900 font-bold">Satellite Imagery — Before / After</h3>
-                <span className="text-xs text-gray-500">Updated 2 days ago</span>
-              </div>
-              <div className="h-[280px] rounded-xl overflow-hidden border border-gray-200">
-                <SatelliteCompare 
-                  currentImage={satelliteCurrent} 
-                  previousImage={satellitePrev} 
-                  currentLabel="This week" 
-                  previousLabel="Last week" 
-                />
+              <div className="mb-4">
+                <CropHealthTimeline farmerId={user?.id} />
               </div>
 
               {/* Bottom embedded charts */}
