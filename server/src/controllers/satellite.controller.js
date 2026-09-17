@@ -9,17 +9,27 @@ class MockSatelliteProvider {
   }
 
   async searchLatest(polygonId) {
-    // Return mock URLs directly, no need to save to disk in the cloud!
-    return {
-      acquisition_date: new Date().toISOString(),
-      cloud_cover_pct: 5.0,
-      satellite_source: "MockSat-1",
-      truecolor_url: "https://via.placeholder.com/400x300.png?text=Mock+True+Color",
-      ndvi_url: "https://via.placeholder.com/400x300.png?text=Mock+NDVI",
-      ndvi_mean: 0.75,
-      ndvi_min: 0.2,
-      ndvi_max: 0.95
-    };
+    // Return a history of mock NDVI updates spaced 5 days apart
+    const history = [];
+    const baseDate = new Date();
+    baseDate.setDate(baseDate.getDate() - 25); // Start 25 days ago
+
+    for (let i = 0; i < 6; i++) {
+      const scanDate = new Date(baseDate);
+      scanDate.setDate(scanDate.getDate() + (i * 5));
+      history.push({
+        acquisition_date: scanDate.toISOString(),
+        cloud_cover_pct: Math.random() * 15,
+        satellite_source: "Sentinel-2 (Mock)",
+        truecolor_url: `https://via.placeholder.com/400x300.png?text=True+Color+Day+${i*5}`,
+        ndvi_url: `https://via.placeholder.com/400x300.png?text=NDVI+Day+${i*5}`,
+        ndvi_mean: 0.2 + (i * 0.12), // Simulate growth
+        ndvi_min: 0.1,
+        ndvi_max: 0.95
+      });
+    }
+
+    return history;
   }
 }
 
@@ -38,16 +48,17 @@ async function fetchImageryTask(farmerId, lat, lon, farmSizeAcres) {
     });
 
     // 3. Search for imagery
-    const acquisition = await provider.searchLatest(polyId);
+    const history = await provider.searchLatest(polyId);
+    const latest = history[history.length - 1];
 
     // 4. Update status with URLs directly!
     await prisma.farmerProfile.update({
       where: { userId: farmerId },
       data: {
         satelliteStatus: 'ready',
-        latestAcquisitionDate: acquisition.acquisition_date,
-        truecolorUrl: acquisition.truecolor_url,
-        ndviUrl: acquisition.ndvi_url,
+        latestAcquisitionDate: latest.acquisition_date,
+        truecolorUrl: latest.truecolor_url,
+        ndviUrl: latest.ndvi_url,
       }
     });
 
@@ -59,6 +70,29 @@ async function fetchImageryTask(farmerId, lat, lon, farmSizeAcres) {
     });
   }
 }
+
+export const getSatelliteHistory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const profile = await prisma.farmerProfile.findUnique({ where: { userId: id } });
+
+    if (!profile) {
+      return res.status(404).json({ error: "Farmer not found" });
+    }
+
+    const provider = new MockSatelliteProvider();
+    const history = await provider.searchLatest(profile.polygonId || 'mock_poly');
+
+    res.json({
+      farmer_id: id,
+      satellite_status: profile.satelliteStatus,
+      history: history
+    });
+  } catch (error) {
+    console.error("History error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 export const registerFarmer = async (req, res) => {
   try {

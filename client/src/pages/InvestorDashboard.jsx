@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import StatsCard from '../components/StatsCard';
 import { api } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
+import CropHealthTimeline from '../components/CropHealthTimeline';
 
 export default function InvestorDashboard() {
   const { user } = useContext(AuthContext);
@@ -127,6 +128,15 @@ export default function InvestorDashboard() {
               </Link>
             );
           })}
+        </div>
+      )}
+
+      {/* Show Sentinel-2 data for active holdings */}
+      {enrichedInvestments.length > 0 && enrichedInvestments[0].listing && (
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">Crop Health & Satellite Updates</h2>
+          <p className="text-sm text-gray-500 mb-6">Track the 5-day NDVI satellite imagery for your top investment ({enrichedInvestments[0].listing.produceName}).</p>
+          <CropHealthTimeline farmerId={enrichedInvestments[0].listing.farmerId} />
         </div>
       )}
       </div>
