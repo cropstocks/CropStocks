@@ -242,6 +242,10 @@ export default function CropRegistration() {
               </p>
               
               <div className="flex-1 min-h-[500px] rounded-xl overflow-hidden border-2 border-gray-200 shadow-inner relative z-0">
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-black/60 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider flex items-center gap-2 shadow-md">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  Latest Imagery Data: {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                </div>
                 <MapContainer center={mapCenter} zoom={mapZoom} style={{ height: '100%', width: '100%' }}>
                   {/* Free ESRI Satellite Tile Layer */}
                   <TileLayer
