@@ -11,7 +11,7 @@ export default function CropHealthTimeline({ farmerId }) {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await api.get(`/satellite/${farmerId}/history`);
+        const res = await api.get(`/farmers/${farmerId}/history`);
         setHistory(res.history || []);
         if (res.history && res.history.length > 0) {
           setCurrentIndex(res.history.length - 1);
