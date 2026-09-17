@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 const FarmerDashboard = () => {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout, loading: authLoading } = useContext(AuthContext);
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   
@@ -62,8 +62,13 @@ const FarmerDashboard = () => {
         setLoading(false);
       }
     };
-    if (user?.id) fetchListings();
-  }, [user?.id]);
+    if (user?.id) {
+      fetchListings();
+    } else if (!authLoading) {
+      // If auth has finished loading but user is still null, we are not logged in.
+      setLoading(false);
+    }
+  }, [user?.id, authLoading]);
 
   useEffect(() => {
     if (selectedListingId) fetchDashboardData();
@@ -89,6 +94,12 @@ const FarmerDashboard = () => {
 
   if (loading) return <div className="p-8 text-center bg-[#fef8f3] text-gray-900 min-h-screen flex items-center justify-center">Loading dashboard...</div>;
   
+  if (!loading && !user) {
+    // Redirect to home if not logged in
+    window.location.href = '/';
+    return null;
+  }
+
   if (!loading && listings.length === 0) {
     return (
       <div className="p-4 bg-[#fef8f3] text-gray-900 min-h-screen flex flex-col items-center justify-center">
