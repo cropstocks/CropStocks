@@ -11,6 +11,8 @@ import AdminReviewQueue from './pages/AdminReviewQueue';
 import FarmerAppealForm from './pages/FarmerAppealForm';
 import FarmerDashboard from './pages/FarmerDashboard';
 
+import DeveloperDashboard from './pages/DeveloperDashboard';
+
 export default function App() {
   return (
     <Router>
@@ -25,6 +27,7 @@ export default function App() {
           <Route path="/farmer/report/:listingId/:week" element={<WeeklyReportView />} />
           <Route path="/farmer/appeal/:listingId" element={<FarmerAppealForm />} />
           <Route path="/admin/reviews" element={<AdminReviewQueue />} />
+          <Route path="/developer" element={<DeveloperDashboard />} />
           {/* We keep other existing routes out of this scope for simplicity as per requirement, or we could leave them. The prompt asks to redesign the frontend. */}
         </Routes>
       </Layout>

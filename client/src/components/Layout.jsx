@@ -129,6 +129,9 @@ export default function Layout({ children }) {
               {user ? (
                 <div className="flex items-center gap-4 ml-2 pl-4 border-l border-gray-200">
                   <div className="flex items-center gap-3">
+                    <Link to="/developer" className="text-sm font-semibold text-gray-300 hover:text-brand-green mr-4 transition-colors hidden md:block">
+                      Developer Console
+                    </Link>
                     <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=348a21&color=fff`} alt="Avatar" className="w-8 h-8 rounded-full" />
                     <span className="font-semibold text-gray-700 text-sm hidden sm:block">{user.name}</span>
                   </div>
