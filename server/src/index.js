@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { mkdirSync } from 'fs';
 import authRoutes from './routes/auth.routes.js';
 import listingRoutes from './routes/listing.routes.js';
 import investmentRoutes from './routes/investment.routes.js';
@@ -19,6 +20,9 @@ import { initializeScheduler } from './services/weeklyLoop/weeklyLoopScheduler.j
 dotenv.config();
 
 const app = express();
+
+// Ensure uploads directory exists (ephemeral on cloud, but needed at runtime)
+mkdirSync('uploads/submissions', { recursive: true });
 
 app.use(cors());
 app.use(express.json());
@@ -45,7 +49,8 @@ app.use('/uploads', express.static('uploads'));
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
   initializeScheduler();
 });
+

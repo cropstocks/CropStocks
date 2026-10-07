@@ -10,9 +10,11 @@ node_modules/
 dist/
 build/
 
-# Database
+# Database (local SQLite, if used for dev)
 server/prisma/dev.db
 server/prisma/dev.db-journal
+*.db
+*.db-journal
 
 # Uploads (user-generated content)
 server/uploads/*
@@ -38,3 +40,9 @@ server/test-api.js
 
 # Vite
 client/.vite/
+
+# Python
+__pycache__/
+*.pyc
+satellite_service/data/
+

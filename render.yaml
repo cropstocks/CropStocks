@@ -1,0 +1,33 @@
+# render.yaml — Render Blueprint for CropStocks
+# Connect your GitHub repo at https://dashboard.render.com/blueprints
+# and Render will auto-create both the web service and database.
+
+databases:
+  - name: cropstocks-db
+    plan: free
+    databaseName: cropstocks
+    user: cropstocks_user
+
+services:
+  - type: web
+    name: cropstocks-api
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cropstocks-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SENTINEL_CLIENT_ID
+        sync: false  # You'll set this manually in Render dashboard
+      - key: SENTINEL_CLIENT_SECRET
+        sync: false  # You'll set this manually in Render dashboard
+      - key: PORT
+        value: 10000

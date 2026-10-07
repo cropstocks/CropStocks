@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",
-    "seed": "node prisma/seed.js"
+    "build": "npx prisma generate && npx prisma migrate deploy",
+    "seed": "node prisma/seed.js",
+    "migrate:dev": "npx prisma migrate dev",
+    "postinstall": "npx prisma generate"
   },
   "dependencies": {
     "express": "^4.21.0",
