@@ -65,7 +65,7 @@ export default function LandingPage() {
           
           <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold">
             <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-yellow-400 transition-colors">Home</button>
-            <a href="/marketplace" className="hover:text-yellow-400 transition-colors">Marketplace</a>
+            <a href="/marketplace" className="hover:text-yellow-400 transition-colors">Marketplace</a>`n              <a href="/cropmart" className="hover:text-yellow-400 transition-colors">CropMarket</a>
             <a href="#how-it-works" className="hover:text-yellow-400 transition-colors">How it Works</a>
             <a href="#about" className="hover:text-yellow-400 transition-colors">About Us</a>
             <a href="mailto:support@cropstocks.in" className="hover:text-yellow-400 transition-colors">Contact Us</a>
