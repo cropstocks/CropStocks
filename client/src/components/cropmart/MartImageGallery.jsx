@@ -5,7 +5,7 @@ const MartImageGallery = ({ images = [] }) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="bg-gray-50 border border-gray-100 rounded-xl overflow-hidden aspect-square flex items-center justify-center p-4">
+      <div className="bg-[var(--bg-main)] border border-[var(--border-color)] rounded-xl overflow-hidden aspect-square flex items-center justify-center p-4">
         <img 
           src={mainImage} 
           alt="Product" 
@@ -19,8 +19,8 @@ const MartImageGallery = ({ images = [] }) => {
             <button
               key={idx}
               onClick={() => setMainImage(img)}
-              className={`w-20 h-20 flex-shrink-0 border-2 rounded-lg overflow-hidden bg-white p-1 transition-all ${
-                mainImage === img ? 'border-brand-green shadow-sm' : 'border-gray-200 hover:border-gray-300'
+              className={`w-20 h-20 flex-shrink-0 border-2 rounded-lg overflow-hidden glass-panel p-1 transition-all ${
+                mainImage === img ? 'border-brand-green shadow-sm' : 'border-[var(--border-color)] hover:border-gray-300'
               }`}
             >
               <img src={img} alt={`Thumbnail ${idx}`} className="w-full h-full object-contain" />

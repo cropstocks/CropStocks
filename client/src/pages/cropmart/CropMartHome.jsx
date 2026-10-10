@@ -25,9 +25,9 @@ const featuredProducts = [
 
 const CropMartHome = () => {
   return (
-    <div className="min-h-screen bg-gray-50 pb-12">
+    <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] pb-12">
       {/* Hero Section */}
-      <div className="bg-brand-green text-white pt-8 pb-16 px-4 relative overflow-hidden">
+      <div className="bg-[var(--gradient-green)] text-white pt-8 pb-16 px-4 relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10 z-0"></div>
         <div className="container mx-auto max-w-7xl relative z-10 flex flex-col items-center text-center">
           <h1 className="text-3xl md:text-5xl font-bold mb-4 font-outfit">Welcome to CropMart</h1>
@@ -38,8 +38,8 @@ const CropMartHome = () => {
 
       <div className="container mx-auto max-w-7xl px-4 -mt-8 relative z-20">
         {/* Categories Grid */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-8 border border-gray-100">
-          <h2 className="text-xl font-bold mb-6 text-gray-800 font-outfit flex items-center justify-between">
+        <div className="glass-panel rounded-xl shadow-md p-6 mb-8 border border-[var(--border-color)]">
+          <h2 className="text-xl font-bold mb-6 text-[var(--text-main)] font-outfit flex items-center justify-between">
             Shop by Category
             <Link to="/cropmart/category/all" className="text-sm text-brand-green hover:text-brand-green-dark flex items-center">
               View All <ChevronRight className="w-4 h-4" />
@@ -54,7 +54,7 @@ const CropMartHome = () => {
 
         {/* Featured Products */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800 font-outfit flex items-center justify-between">
+          <h2 className="text-2xl font-bold mb-6 text-[var(--text-main)] font-outfit flex items-center justify-between">
             Featured Products
             <Link to="/cropmart/category/all" className="text-sm text-brand-green hover:text-brand-green-dark flex items-center">
               View All <ChevronRight className="w-4 h-4" />
@@ -70,8 +70,8 @@ const CropMartHome = () => {
         {/* Banner CTA */}
         <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-8 border border-yellow-100 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2 font-outfit">Grow your agribusiness with us</h2>
-            <p className="text-gray-600">Join thousands of verified sellers and reach farmers across the country.</p>
+            <h2 className="text-2xl font-bold text-[var(--text-main)] mb-2 font-outfit">Grow your agribusiness with us</h2>
+            <p className="text-[var(--text-muted)]">Join thousands of verified sellers and reach farmers across the country.</p>
           </div>
           <Link to="/cropmart/seller/register" className="px-6 py-3 bg-brand-gold hover:bg-brand-gold-dark text-white font-bold rounded-lg whitespace-nowrap transition-colors shadow-sm">
             Become a Seller

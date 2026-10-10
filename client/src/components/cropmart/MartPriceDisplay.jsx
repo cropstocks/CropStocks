@@ -13,11 +13,11 @@ const MartPriceDisplay = ({ price, discountPercentage = 0, className = '' }) => 
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <span className="text-xl font-bold text-gray-900">{formatPrice(discountedPrice)}</span>
+      <span className="text-xl font-bold text-[var(--text-main)]">{formatPrice(discountedPrice)}</span>
       {discountPercentage > 0 && (
         <>
-          <span className="text-sm text-gray-500 line-through">{formatPrice(price)}</span>
-          <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded">
+          <span className="text-sm text-[var(--text-muted)] line-through">{formatPrice(price)}</span>
+          <span className="text-xs font-semibold text-[#348a21] bg-green-50 px-2 py-1 rounded">
             {discountPercentage}% OFF
           </span>
         </>

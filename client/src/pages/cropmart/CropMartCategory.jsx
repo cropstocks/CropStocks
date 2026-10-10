@@ -23,24 +23,24 @@ const CropMartCategory = () => {
   const title = query ? `Search results for "${query}"` : slug === 'all' ? 'All Products' : `Category: ${slug}`;
 
   return (
-    <div className="bg-gray-50 min-h-screen py-8">
+    <div className="bg-[var(--bg-main)] min-h-screen py-8">
       <div className="container mx-auto max-w-7xl px-4">
         {/* Breadcrumb & Header */}
         <div className="mb-6">
-          <div className="text-sm text-gray-500 mb-2">
+          <div className="text-sm text-[var(--text-muted)] mb-2">
             Home / CropMart / {slug === 'all' ? 'All Products' : slug}
           </div>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <h1 className="text-2xl font-bold text-gray-800 font-outfit capitalize">{title}</h1>
+            <h1 className="text-2xl font-bold text-[var(--text-main)] font-outfit capitalize">{title}</h1>
             <div className="flex items-center gap-3">
               <button 
                 onClick={() => setIsMobileFilterOpen(true)}
-                className="lg:hidden px-4 py-2 bg-white border border-gray-200 rounded-lg flex items-center gap-2 text-sm font-medium"
+                className="lg:hidden px-4 py-2 glass-panel border border-[var(--border-color)] rounded-lg flex items-center gap-2 text-sm font-medium"
               >
                 <Filter className="w-4 h-4" /> Filters
               </button>
-              <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-2">
-                <span className="text-sm text-gray-500">Sort by:</span>
+              <div className="flex items-center gap-2 glass-panel border border-[var(--border-color)] rounded-lg px-3 py-2">
+                <span className="text-sm text-[var(--text-muted)]">Sort by:</span>
                 <select 
                   value={sortBy} 
                   onChange={(e) => setSortBy(e.target.value)}
@@ -67,7 +67,7 @@ const CropMartCategory = () => {
 
           {/* Product Grid */}
           <div className="flex-1">
-            <div className="mb-4 text-sm text-gray-600">
+            <div className="mb-4 text-sm text-[var(--text-muted)]">
               Showing {mockProducts.length} products
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">

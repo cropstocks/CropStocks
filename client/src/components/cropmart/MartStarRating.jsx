@@ -31,7 +31,7 @@ const MartStarRating = ({ rating, count, onRatingChange, interactive = false }) 
   return (
     <div className="flex items-center gap-1">
       <div className="flex">{stars}</div>
-      {count !== undefined && <span className="text-sm text-gray-500 ml-1">({count})</span>}
+      {count !== undefined && <span className="text-sm text-[var(--text-muted)] ml-1">({count})</span>}
     </div>
   );
 };

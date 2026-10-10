@@ -16,10 +16,10 @@ const MartFilterSidebar = ({ filters, onFilterChange, isOpen, onClose }) => {
   };
 
   const content = (
-    <div className="p-5 flex flex-col h-full bg-white">
+    <div className="p-5 flex flex-col h-full glass-panel">
       <div className="flex items-center justify-between mb-6 lg:hidden">
         <h2 className="text-lg font-bold flex items-center gap-2"><Filter className="w-5 h-5"/> Filters</h2>
-        <button onClick={onClose} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full">
+        <button onClick={onClose} className="p-2 text-[var(--text-muted)] hover:bg-gray-100 rounded-full">
           <X className="w-5 h-5" />
         </button>
       </div>
@@ -27,7 +27,7 @@ const MartFilterSidebar = ({ filters, onFilterChange, isOpen, onClose }) => {
       <div className="flex-1 overflow-y-auto space-y-6 pr-2">
         {/* Price Range */}
         <div>
-          <h3 className="font-semibold mb-3 text-gray-800">Price Range</h3>
+          <h3 className="font-semibold mb-3 text-[var(--text-main)]">Price Range</h3>
           <div className="flex items-center gap-2">
             <input 
               type="number" 
@@ -36,7 +36,7 @@ const MartFilterSidebar = ({ filters, onFilterChange, isOpen, onClose }) => {
               value={localFilters.priceRange[0]}
               onChange={(e) => setLocalFilters({...localFilters, priceRange: [Number(e.target.value), localFilters.priceRange[1]]})}
             />
-            <span className="text-gray-500">-</span>
+            <span className="text-[var(--text-muted)]">-</span>
             <input 
               type="number" 
               placeholder="Max" 
@@ -47,11 +47,11 @@ const MartFilterSidebar = ({ filters, onFilterChange, isOpen, onClose }) => {
           </div>
         </div>
 
-        <hr className="border-gray-100" />
+        <hr className="border-[var(--border-color)]" />
 
         {/* Condition */}
         <div>
-          <h3 className="font-semibold mb-3 text-gray-800">Condition</h3>
+          <h3 className="font-semibold mb-3 text-[var(--text-main)]">Condition</h3>
           <div className="space-y-2">
             {['New', 'Used', 'Refurbished'].map(cond => (
               <label key={cond} className="flex items-center gap-2 cursor-pointer">
@@ -66,17 +66,17 @@ const MartFilterSidebar = ({ filters, onFilterChange, isOpen, onClose }) => {
                     setLocalFilters({...localFilters, condition: newCond});
                   }}
                 />
-                <span className="text-sm text-gray-600">{cond}</span>
+                <span className="text-sm text-[var(--text-muted)]">{cond}</span>
               </label>
             ))}
           </div>
         </div>
 
-        <hr className="border-gray-100" />
+        <hr className="border-[var(--border-color)]" />
 
         {/* Rating */}
         <div>
-          <h3 className="font-semibold mb-3 text-gray-800">Minimum Rating</h3>
+          <h3 className="font-semibold mb-3 text-[var(--text-main)]">Minimum Rating</h3>
           <div className="space-y-2">
             {[4, 3, 2, 1].map(stars => (
               <label key={stars} className="flex items-center gap-2 cursor-pointer">
@@ -88,17 +88,17 @@ const MartFilterSidebar = ({ filters, onFilterChange, isOpen, onClose }) => {
                   onChange={() => setLocalFilters({...localFilters, rating: stars})}
                 />
                 <MartStarRating rating={stars} />
-                <span className="text-sm text-gray-600">& Up</span>
+                <span className="text-sm text-[var(--text-muted)]">& Up</span>
               </label>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="mt-6 pt-4 border-t border-gray-100 flex gap-3">
+      <div className="mt-6 pt-4 border-t border-[var(--border-color)] flex gap-3">
         <button 
           onClick={() => setLocalFilters({priceRange: [0, 100000], rating: 0, condition: [], brands: []})}
-          className="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
+          className="flex-1 py-2 px-4 border border-gray-300 text-[var(--text-main)] rounded-lg hover:bg-[var(--bg-main)] font-medium transition-colors"
         >
           Reset
         </button>
@@ -118,14 +118,14 @@ const MartFilterSidebar = ({ filters, onFilterChange, isOpen, onClose }) => {
       {isOpen && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
           <div className="fixed inset-0 bg-black/50" onClick={onClose}></div>
-          <div className="relative w-[280px] max-w-[80vw] h-full bg-white shadow-xl animate-slide-right">
+          <div className="relative w-[280px] max-w-[80vw] h-full glass-panel shadow-xl animate-slide-right">
             {content}
           </div>
         </div>
       )}
 
       {/* Desktop Sidebar */}
-      <div className="hidden lg:block w-64 flex-shrink-0 bg-white border border-gray-100 rounded-xl overflow-hidden h-fit sticky top-24">
+      <div className="hidden lg:block w-64 flex-shrink-0 glass-panel border border-[var(--border-color)] rounded-xl overflow-hidden h-fit sticky top-24">
         {content}
       </div>
     </>

@@ -33,13 +33,13 @@ const MartOrderTimeline = ({ status }) => {
                 className={`w-10 h-10 rounded-full flex items-center justify-center border-4 ${
                   isCompleted 
                     ? 'bg-green-500 border-white text-white shadow-md' 
-                    : 'bg-white border-gray-200 text-gray-400'
+                    : 'glass-panel border-[var(--border-color)] text-gray-400'
                 } transition-colors duration-300`}
               >
                 <Icon className="w-5 h-5" />
               </div>
               <span className={`text-xs font-semibold text-center w-20 ${
-                isCurrent ? 'text-green-600' : isCompleted ? 'text-gray-800' : 'text-gray-400'
+                isCurrent ? 'text-[#348a21]' : isCompleted ? 'text-[var(--text-main)]' : 'text-gray-400'
               }`}>
                 {step.label}
               </span>

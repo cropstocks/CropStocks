@@ -55,21 +55,21 @@ const MartSearchBar = ({ categories = [] }) => {
 
   return (
     <div ref={wrapperRef} className="relative w-full max-w-2xl">
-      <form onSubmit={handleSearch} className="flex items-center w-full bg-white rounded-full border-2 border-brand-green/20 focus-within:border-brand-green overflow-hidden transition-colors shadow-sm">
+      <form onSubmit={handleSearch} className="flex items-center w-full glass-panel rounded-full border-2 border-brand-green/20 focus-within:border-brand-green overflow-hidden transition-colors shadow-sm">
         
         {/* Category Dropdown (Desktop) */}
-        <div className="hidden md:flex items-center bg-gray-50 border-r border-gray-200">
+        <div className="hidden md:flex items-center bg-[var(--bg-main)] border-r border-[var(--border-color)]">
           <select 
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="pl-4 pr-8 py-3 bg-transparent text-sm text-gray-700 outline-none appearance-none cursor-pointer font-medium"
+            className="pl-4 pr-8 py-3 bg-transparent text-sm text-[var(--text-main)] outline-none appearance-none cursor-pointer font-medium"
           >
             <option value="all">All Categories</option>
             {categories.map(cat => (
               <option key={cat.id || cat.slug} value={cat.slug}>{cat.name}</option>
             ))}
           </select>
-          <ChevronDown className="w-4 h-4 text-gray-500 absolute left-[120px] pointer-events-none" />
+          <ChevronDown className="w-4 h-4 text-[var(--text-muted)] absolute left-[120px] pointer-events-none" />
         </div>
 
         {/* Search Input */}
@@ -78,12 +78,12 @@ const MartSearchBar = ({ categories = [] }) => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search for seeds, tractors, fertilizers..."
-          className="flex-1 px-4 py-3 outline-none text-gray-800 placeholder-gray-400 text-sm md:text-base w-full"
+          className="flex-1 px-4 py-3 outline-none text-[var(--text-main)] placeholder-gray-400 text-sm md:text-base w-full"
         />
 
         {/* Clear Button */}
         {query && (
-          <button type="button" onClick={() => setQuery('')} className="p-2 text-gray-400 hover:text-gray-600">
+          <button type="button" onClick={() => setQuery('')} className="p-2 text-gray-400 hover:text-[var(--text-muted)]">
             <X className="w-4 h-4" />
           </button>
         )}
@@ -99,12 +99,12 @@ const MartSearchBar = ({ categories = [] }) => {
 
       {/* Suggestions Dropdown */}
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-gray-100 z-50 py-2">
+        <div className="absolute top-full left-0 right-0 mt-2 glass-panel rounded-xl shadow-lg border border-[var(--border-color)] z-50 py-2">
           {suggestions.map((suggestion, idx) => (
             <div 
               key={idx}
               onClick={() => handleSuggestionClick(suggestion)}
-              className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-3 text-sm text-gray-700 transition-colors"
+              className="px-4 py-2 hover:bg-[var(--bg-main)] cursor-pointer flex items-center gap-3 text-sm text-[var(--text-main)] transition-colors"
             >
               <Search className="w-4 h-4 text-gray-400" />
               {suggestion}
