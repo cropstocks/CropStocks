@@ -10,7 +10,6 @@ import WeeklyReportView from './pages/WeeklyReportView';
 import AdminReviewQueue from './pages/AdminReviewQueue';
 import FarmerAppealForm from './pages/FarmerAppealForm';
 import FarmerDashboard from './pages/FarmerDashboard';
-import CropRegistration from './pages/CropRegistration';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // CropMart Pages
@@ -40,7 +39,6 @@ export default function App() {
           <Route path="/farmer/report/:listingId/:week" element={<WeeklyReportView />} />
           <Route path="/farmer/appeal/:listingId" element={<FarmerAppealForm />} />
           <Route path="/admin/reviews" element={<AdminReviewQueue />} />
-          <Route path="/farmer/crop-registration" element={<CropRegistration />} />
           
           {/* CropMart Routes */}
           <Route path="/cropmart" element={<CropMartHome />} />
