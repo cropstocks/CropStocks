@@ -23,9 +23,14 @@ export default function Navbar() {
     { to: '/admin/dashboard', label: 'Admin Panel' },
   ];
 
+  const vendorLinks = [
+    { to: '/cropmart/seller/dashboard', label: 'Seller Dashboard' },
+  ];
+
   const roleLinks = user?.role === 'FARMER' ? farmerLinks
     : user?.role === 'INVESTOR' ? investorLinks
-    : user?.role === 'ADMIN' ? adminLinks : [];
+    : user?.role === 'ADMIN' ? adminLinks
+    : user?.role === 'VENDOR' ? vendorLinks : [];
 
   return (
     <nav className="bg-[#2a2a2a] shadow-lg sticky top-0 z-50 print:hidden text-white border-b border-white/10">
@@ -43,6 +48,9 @@ export default function Navbar() {
             </Link>
             <Link to="/marketplace" className="text-white hover:text-yellow-400 text-sm font-semibold transition-colors">
               {t('marketplace')}
+            </Link>
+            <Link to="/cropmart" className="text-white hover:text-yellow-400 text-sm font-semibold transition-colors flex items-center gap-1">
+              🛒 CropMart
             </Link>
 
             {user ? (
@@ -118,6 +126,9 @@ export default function Navbar() {
           <div className="px-2 pt-2 pb-3 space-y-1">
             <Link to="/marketplace" className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 hover:text-yellow-400">
               {t('marketplace')}
+            </Link>
+            <Link to="/cropmart" className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 hover:text-yellow-400 flex items-center gap-1">
+              🛒 CropMart
             </Link>
             {user ? (
               <>

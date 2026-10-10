@@ -14,6 +14,10 @@ import submissionRoutes from './routes/submission.routes.js';
 import reportRoutes from './routes/report.routes.js';
 import reviewRoutes from './routes/review.routes.js';
 import appealRoutes from './routes/appeal.routes.js';
+import cropmartRoutes from './routes/cropmart.routes.js';
+import cropmartBuyerRoutes from './routes/cropmartBuyer.routes.js';
+import cropmartSellerRoutes from './routes/cropmartSeller.routes.js';
+import cropmartAdminRoutes from './routes/cropmartAdmin.routes.js';
 import { initializeScheduler } from './services/weeklyLoop/weeklyLoopScheduler.js';
 
 dotenv.config();
@@ -40,7 +44,10 @@ app.use('/api/submissions', submissionRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/appeals', appealRoutes);
-
+app.use('/api/cropmart', cropmartRoutes);
+app.use('/api/cropmart/buyer', cropmartBuyerRoutes);
+app.use('/api/cropmart/seller', cropmartSellerRoutes);
+app.use('/api/cropmart/admin', cropmartAdminRoutes);
 app.use('/uploads', express.static('uploads'));
 
 const PORT = process.env.PORT || 5000;
