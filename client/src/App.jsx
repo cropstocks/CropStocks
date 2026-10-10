@@ -10,8 +10,6 @@ import WeeklyReportView from './pages/WeeklyReportView';
 import AdminReviewQueue from './pages/AdminReviewQueue';
 import FarmerAppealForm from './pages/FarmerAppealForm';
 import FarmerDashboard from './pages/FarmerDashboard';
-<<<<<<< Updated upstream
-=======
 import CropRegistration from './pages/CropRegistration';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -27,7 +25,6 @@ import CropMartSellerDashboard from './pages/cropmart/CropMartSellerDashboard';
 import CropMartAddProduct from './pages/cropmart/CropMartAddProduct';
 import CropMartSellerRegister from './pages/cropmart/CropMartSellerRegister';
 import CropMartAdminPanel from './pages/cropmart/CropMartAdminPanel';
->>>>>>> Stashed changes
 
 export default function App() {
   return (
@@ -43,8 +40,6 @@ export default function App() {
           <Route path="/farmer/report/:listingId/:week" element={<WeeklyReportView />} />
           <Route path="/farmer/appeal/:listingId" element={<FarmerAppealForm />} />
           <Route path="/admin/reviews" element={<AdminReviewQueue />} />
-<<<<<<< Updated upstream
-=======
           <Route path="/farmer/crop-registration" element={<CropRegistration />} />
           
           {/* CropMart Routes */}
@@ -60,8 +55,6 @@ export default function App() {
           <Route path="/cropmart/seller/products/new" element={<ProtectedRoute><CropMartAddProduct /></ProtectedRoute>} />
           <Route path="/cropmart/seller/products/:id/edit" element={<ProtectedRoute><CropMartAddProduct /></ProtectedRoute>} />
           <Route path="/cropmart/admin" element={<ProtectedRoute allowedRoles={['ADMIN']}><CropMartAdminPanel /></ProtectedRoute>} />
-          
->>>>>>> Stashed changes
           {/* We keep other existing routes out of this scope for simplicity as per requirement, or we could leave them. The prompt asks to redesign the frontend. */}
         </Routes>
       </Layout>
